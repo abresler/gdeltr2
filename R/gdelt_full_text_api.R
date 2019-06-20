@@ -4930,6 +4930,7 @@ get_gdelt_codebook_ft_api <-
            use_or = FALSE,
            mode = 'ArtList',
            #ArtList, ImageCollage,  ImageCollageInfo, ImageCollageShare, TimelineVol, TimelineVolInfo, TimelineTone, TimelineLang, TimelineSourceCountry, ToneChart, WordCloudEnglish, WordCloudNative, WordCloudTheme, WordCloudImageTags, WordCloudImageWebTags
+           format = "JSON",
            timespan = "24 hours",
            dates = NULL,
            maximum_records = 250,
@@ -5004,7 +5005,7 @@ get_gdelt_codebook_ft_api <-
         query_parameters = query_params,
         use_or = use_or,
         mode = mode,
-        format = "JSON",
+        format = format,
         timespan = timespan,
         dates = dates,
         source_language = source_language,
@@ -5814,3 +5815,191 @@ dictionary_country_domains <- function() {
   data %>%
     purrr::set_names(c("domainSite", "slugCountry", "nameCountry"))
 }
+
+
+#' GDELT V2 API URL Df
+#'
+#' Creates data frame of gdeltv2 API queries.
+#'
+#' @param terms
+#' @param domains
+#' @param image_face_tone
+#' @param image_num_faces
+#' @param image_ocr
+#' @param image_tag
+#' @param image_web_tag
+#' @param image_web_count
+#' @param source_country
+#' @param source_language
+#' @param gkg_theme
+#' @param tone
+#' @param tone_absolute_value
+#' @param use_or
+#' @param mode
+#' @param timespan
+#' @param format
+#' @param dates
+#' @param maximum_records
+#' @param translate
+#' @param timeline_smooth
+#' @param sort_by
+#' @param return_message
+#'
+#' @return
+#' @export
+#'
+#' @examples
+v2_api_url_df <-
+  function(terms = NA,
+           domains = NA,
+           image_face_tone = NA,
+           image_num_faces = NA,
+           image_ocr = NA,
+           image_tag = NA,
+           image_web_tag = NA,
+           image_web_count = NA,
+           source_country = NA,
+           source_language = "English",
+           gkg_theme = NA,
+           tone = NA,
+           tone_absolute_value = NA,
+           use_or = FALSE,
+           mode = 'ArtGallery',
+           #ArtList, ImageCollage,  ImageCollageInfo, ImageCollageShare, TimelineVol, TimelineVolInfo, TimelineTone, TimelineLang, TimelineSourceCountry, ToneChart, WordCloudEnglish, WordCloudNative, WordCloudTheme, WordCloudImageTags, WordCloudImageWebTags
+           timespan = "104 weeks",
+           format = "html",
+           dates = NULL,
+           maximum_records = 250,
+           translate = NULL,
+           timeline_smooth = 5,
+           sort_by = 'DateDesc',
+           return_message = TRUE) {
+    df_grid <- expand.grid(term = terms,
+                           domain = domains,
+                           image_face_tone = image_face_tone,
+                           image_num_faces = image_num_faces,
+                           image_ocr = image_ocr,
+                           image_tag = image_tag,
+                           image_web_tag = image_web_tag,
+                           tone = tone,
+                           tone_absolute_value = tone,
+                           source_language = source_language,
+                           gkg_theme = gkg_theme,
+                           image_web_count = image_web_count,
+                           source_country = source_country,
+                           stringsAsFactors = F) %>%
+      as_tibble()
+    all_data <-
+      1:nrow(df_grid) %>%
+      map_dfr(function(x) {
+        df_row <- df_grid %>% slice(x)
+        if (!is.na(df_row$term)) {
+          term_slug <- df_row$term
+        } else {
+          term_slug <- NULL
+        }
+
+        if (!is.na(df_row$domain)) {
+          domain_slug <- df_row$domain
+        } else {
+          domain_slug <- NULL
+        }
+
+        if (!is.na(df_row$image_face_tone)) {
+          image_face_tone_slug <- df_row$image_face_tone
+        } else {
+          image_face_tone_slug <- NULL
+        }
+
+        if (!is.na(df_row$image_num_faces)) {
+          image_num_faces_slug <- df_row$image_num_faces
+        } else {
+          image_num_faces_slug <- NULL
+        }
+
+        if (!is.na(df_row$image_ocr)) {
+          image_ocr_slug <- df_row$image_ocr
+        } else {
+          image_ocr_slug <- NULL
+        }
+
+        if (!is.na(df_row$image_tag)) {
+          image_tag_slug <- df_row$image_tag
+        } else {
+          image_tag_slug <- NULL
+        }
+
+        if (!is.na(df_row$image_web_tag)) {
+          image_web_tag_slug <- df_row$image_web_tag
+        } else {
+          image_web_tag_slug <- NULL
+        }
+
+        if (!is.na(df_row$image_web_count)) {
+          image_web_count_slug <- df_row$image_web_count
+        } else {
+          image_web_count_slug <- NULL
+        }
+
+        if (!is.na(df_row$source_country)) {
+          source_country_slug <- df_row$source_country
+        } else {
+          source_country_slug <- NULL
+        }
+
+        if (!is.na(df_row$gkg_theme)) {
+          gkg_theme_slug <- df_row$gkg_theme
+        } else {
+          gkg_theme_slug <- NULL
+        }
+
+        if (!is.na(df_row$tone)) {
+          tone_slug <- df_row$tone
+        } else {
+          tone_slug <- NULL
+        }
+
+        if (!is.na(df_row$tone_absolute_value)) {
+          tone_absolute_value_slug <- df_row$tone_absolute_value
+        } else {
+          tone_absolute_value_slug <- NULL
+        }
+
+        if (!is.na(df_row$source_language)) {
+          source_language_slug <- df_row$source_language
+        } else {
+          source_language_slug <- NULL
+        }
+
+        .generate_v2_url_df(
+          term = term_slug,
+          domain = domain_slug,
+          image_face_tone = image_face_tone_slug,
+          image_num_faces = image_num_faces_slug,
+          image_ocr = image_ocr_slug,
+          image_tag = image_tag_slug,
+          image_web_tag = image_web_count_slug,
+          image_web_count = image_web_count_slug,
+          source_country = source_country_slug,
+          source_language = source_language_slug,
+          gkg_theme = gkg_theme_slug,
+          tone = tone_slug,
+          tone_absolute_value = tone_absolute_value_slug,
+          use_or = use_or,
+          mode = mode,
+          timespan = timespan,
+          dates = dates,
+          maximum_records = maximum_records,
+          translate = translate,
+          timeline_smooth = timeline_smooth,
+          sort_by = sort_by,
+          nest_data = FALSE,
+          format = format,
+          return_message = return_message
+
+        )
+      })
+
+    all_data %>%
+      mutate(urlGDELTV2FTAPI = glue("{urlGDELTV2FTAPI}&mode={mode}") %>% as.character())
+  }
