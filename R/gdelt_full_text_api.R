@@ -4931,6 +4931,7 @@ get_gdelt_codebook_ft_api <-
            mode = 'ArtList',
            #ArtList, ImageCollage,  ImageCollageInfo, ImageCollageShare, TimelineVol, TimelineVolInfo, TimelineTone, TimelineLang, TimelineSourceCountry, ToneChart, WordCloudEnglish, WordCloudNative, WordCloudTheme, WordCloudImageTags, WordCloudImageWebTags
            format = "JSON",
+           quote_terms = F,
            timespan = "24 hours",
            dates = NULL,
            maximum_records = 250,
@@ -4948,6 +4949,11 @@ get_gdelt_codebook_ft_api <-
 
     if (!dates %>% purrr::is_null()) {
       timespan <- NULL
+    }
+
+    if (length(term) > 0 && quote_terms) {
+      term <-
+        glue::glue('"{term}"') %>% as.character()
     }
 
     query_params <-
@@ -5101,6 +5107,7 @@ get_gdelt_codebook_ft_api <-
            #ArtList, ImageCollage,  ImageCollageInfo, ImageCollageShare, TimelineVol, TimelineVolInfo, TimelineTone, TimelineLang, TimelineSourceCountry, ToneChart, WordCloudEnglish, WordCloudNative, WordCloudTheme, WordCloudImageTags, WordCloudImageWebTags
            timespans = "12 weeks",
            dates = NA,
+           quote_terms = F,
            maximum_records = 250,
            translate = NULL,
            timeline_smooth = 5,
@@ -5181,6 +5188,7 @@ get_gdelt_codebook_ft_api <-
           image_web_count = df_row$image_web_count,
           source_country = df_row$source_country,
           source_language = df_row$source_language,
+          quote_terms = quote_terms,
           gkg_theme = df_row$gkg_theme,
           tone = tone,
           tone_absolute_value = tone_absolute_value,
@@ -5343,6 +5351,7 @@ get_data_ft_v2_api <-
            #ArtList, ImageCollage,  ImageCollageInfo, ImageCollageShare, TimelineVol, TimelineVolInfo, TimelineTone, TimelineLang, TimelineSourceCountry, ToneChart, WordCloudEnglish, WordCloudNative, WordCloudTheme, WordCloudImageTags, WordCloudImageWebTags
            timespans = c("24 hours"),
            dates = NA,
+           quote_terms = F,
            maximum_records = 250,
            translate = NULL,
            timeline_smooth = 5,
@@ -5398,6 +5407,7 @@ get_data_ft_v2_api <-
         images_ocr = images_ocr,
         images_tag = images_tag,
         images_web_tag = images_web_tag,
+        quote_terms = quote_terms,
         images_web_count = images_web_count,
         source_countries = source_countries,
         source_languages = source_languages,
@@ -5844,6 +5854,7 @@ dictionary_country_domains <- function() {
 #' @param timeline_smooth
 #' @param sort_by
 #' @param return_message
+#' @param quote_terms
 #'
 #' @return
 #' @export
@@ -5867,6 +5878,7 @@ v2_api_url_df <-
            mode = 'ArtGallery',
            #ArtList, ImageCollage,  ImageCollageInfo, ImageCollageShare, TimelineVol, TimelineVolInfo, TimelineTone, TimelineLang, TimelineSourceCountry, ToneChart, WordCloudEnglish, WordCloudNative, WordCloudTheme, WordCloudImageTags, WordCloudImageWebTags
            timespan = "104 weeks",
+           quote_terms = F,
            format = "html",
            dates = NULL,
            maximum_records = 250,
