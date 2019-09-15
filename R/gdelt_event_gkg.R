@@ -551,16 +551,13 @@ get_codes_cameo_ethnic <- function() {
 
 get_codes_gkg_themes <- function() {
   url <-
-    'http://data.gdeltproject.org/documentation/GKG-MASTER-THEMELIST.TXT'
+    'http://data.gdeltproject.org/api/v2/guides/LOOKUP-GKGTHEMES.TXT'
 
   code_df <-
     url %>%
     read_tsv(col_names = F) %>%
-    suppressWarnings() %>%
-    suppressMessages()
+    setNames(c("codeGKGTheme", "countEvents"))
 
-  names(code_df) <-
-    c('codeGKGTheme')
   code_df <-
     code_df %>%
     mutate(
