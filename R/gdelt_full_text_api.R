@@ -3163,7 +3163,7 @@ generate_dates <-
     df <-
       df %>%
       mutate(data = list(data)) %>%
-      tidyr::unnest()
+      tidyr::unnest_legacy()
 
     columns <-
       c(names(df)[names(df) %in% col_order],
@@ -3754,7 +3754,7 @@ plot_trelliscopes <-
 
         data <-
           df_row %>% dplyr::select(-packageVisualization) %>%
-          tidyr::unnest()
+          tidyr::unnest_legacy()
 
         viz <-
           plot_trelliscope(
@@ -4868,13 +4868,13 @@ get_gdelt_codebook_ft_api <-
     if (data %>% tibble::has_name("series")) {
       data <-
         data %>%
-        tidyr::unnest()
+        tidyr::unnest_legacy()
     }
 
     if (data %>% tibble::has_name("toparts")) {
       data <-
         data %>%
-        unnest()
+        unnest_legacy()
     }
     df_name <-
       .get_gdelt_ft_api_names()
@@ -5244,7 +5244,7 @@ get_gdelt_codebook_ft_api <-
     if (!nest_data) {
       all_data <-
         all_data %>%
-        tidyr::unnest()
+        tidyr::unnest_legacy()
     }
 
     all_data
