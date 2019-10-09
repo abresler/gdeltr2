@@ -26,8 +26,7 @@ exponentially, for example in May 2014 GDELT processed 3,928,926 where
 as in May 2016 it processed 6,198,461. GDELT continues to evolve and
 integrate advanced machine learning tools including [Google Cloud
 Vision](https://cloud.google.com/vision/), a data store that became
-available in February
-2016.
+available in February 2016.
 
 #### <strong>This package wraps GDELT’s four primary data stores</strong>
 
@@ -393,9 +392,28 @@ search_test <-
 
 ``` r
 location_codes <-
-  get_codes_stability_locations()
+  dictionary_stability_locations()
 location_test <-
-  get_data_locations_instability_api(
+  instability_api_locations(
+    location_ids = c("US", "IS", "CA", "TU", "CH", "UK", "IR"),
+    use_multi_locations = c(T, F),
+    variable_names = c('instability', 'tone', 'protest', 'conflict'),
+    time_periods = c('daily'),
+    nest_data = F,
+    days_moving_average = NA,
+    return_wide = T,
+    return_message = T
+  )
+
+location_test %>%
+  dplyr::filter(codeLocation %>% is.na()) %>%
+  group_by(nameLocation) %>%
+  summarise_at(.vars = c('instability', 'tone', 'protest', 'conflict'),
+               funs(mean)) %>%
+  arrange(desc(instability))location_codes <-
+  dictionary_stability_locations()
+location_test <-
+  instability_api_locations(
     location_ids = c("US", "IS", "CA", "TU", "CH", "UK", "IR"),
     use_multi_locations = c(T, F),
     variable_names = c('instability', 'tone', 'protest', 'conflict'),

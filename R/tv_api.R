@@ -194,8 +194,8 @@ parse_summary_inventory_data_urls <-
 #' @importFrom readr read_csv
 #' @import curl dplyr curl lubridate
 #' @examples
-#' get_data_tv_summaries(date_start = "2018-02-02", date_end = Sys.Date(), return_message = T)
-get_data_tv_summaries <-
+#' tv_summaries(date_start = "2018-02-02", date_end = Sys.Date(), return_message = T)
+tv_summaries <-
   function(date_start = "2018-02-02",
            date_end = Sys.Date(),
            return_message = T) {

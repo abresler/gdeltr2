@@ -2290,7 +2290,7 @@ parse_gkg_mentioned_numerics <- function(gdelt_data,
 
   all_counts <-
     seq_along(counts_data$mentionedNumericsCounts) %>%
-    future_map_dfr(function(x) {
+    map_dfr(function(x) {
       parse_mentioned_numerics(field = counts_data$mentionedNumericsCounts[x],
                                return_wide = F) %>%
         dplyr::mutate(idGKG = counts_data$idGKG[x])
@@ -2454,7 +2454,7 @@ parse_gkg_mentioned_people <- function(gdelt_data,
 
   all_counts <-
     seq_along(counts_data$people_col) %>%
-    future_map_dfr(function(x) {
+    map_dfr(function(x) {
       parse_mentioned_people_counts(field = counts_data$people_col[x],
                                     return_wide = F) %>%
         dplyr::mutate(idGKG = counts_data$idGKG[x])
@@ -2621,7 +2621,7 @@ parse_gkg_mentioned_organizations <- function(gdelt_data,
 
   all_counts <-
     seq_along(counts_data$org_col) %>%
-    future_map_dfr(function(x) {
+    map_dfr(function(x) {
       parse_mentioned_organization_counts(field = counts_data$org_col[x],
                                           return_wide = F) %>%
         dplyr::mutate(idGKG = counts_data$idGKG[x])
@@ -2752,7 +2752,7 @@ parse_gkg_mentioned_names <- function(gdelt_data,
 
   all_counts <-
     seq_along(counts_data$mentionedNamesCounts) %>%
-    future_map_dfr(function(x) {
+    map_dfr(function(x) {
       parse_mentioned_names_counts(field = counts_data$mentionedNamesCounts[x],
                                    return_wide = F) %>%
         dplyr::mutate(idGKG = counts_data$idGKG[x])
@@ -2924,7 +2924,7 @@ parse_gkg_mentioned_themes <- function(gdelt_data,
 
   all_counts <-
     seq_along(counts_data$theme_col) %>%
-    future_map_dfr(function(x) {
+    map_dfr(function(x) {
       parse_mentioned_names_themes(field = counts_data$theme_col[x],
                                    return_wide = F) %>%
         dplyr::mutate(idGKG = counts_data$idGKG[x])
@@ -3081,7 +3081,7 @@ parse_gkg_mentioned_social_embeds <-
 
     all_counts <-
       seq_along(counts_data$source_col) %>%
-      future_map_dfr(function(x) {
+      map_dfr(function(x) {
         parse_embeds(field = counts_data$source_col[x],
                      return_wide = F) %>%
           dplyr::mutate(idGKG = counts_data$idGKG[x])
@@ -3209,7 +3209,7 @@ parse_gkg_mentioned_article_tone <-
 
     all_counts <-
       seq_along(counts_data$tone) %>%
-      future_map_dfr(function(x) {
+      map_dfr(function(x) {
         parse_article_tones(field = counts_data$tone[x], return_wide = F) %>%
           dplyr::mutate(idGKG = counts_data$idGKG[x])
       }) %>%
@@ -3428,7 +3428,7 @@ parse_gkg_mentioned_event_counts <- function(gdelt_data,
 
   all_counts <-
     seq_along(counts_data$count_col) %>%
-    future_map_dfr(function(x) {
+    map_dfr(function(x) {
       parse_field_count(field = counts_data$count_col[x],
                         return_wide = F) %>%
         dplyr::mutate(idGKG = counts_data$idGKG[x])
@@ -3656,7 +3656,7 @@ parse_gkg_mentioned_locations <-
 
     all_counts <-
       seq_along(counts_data$loc_col) %>%
-      future_map_dfr(function(x) {
+      map_dfr(function(x) {
         parse_location_count(field = counts_data$loc_col[x],
                              return_wide = F) %>%
           dplyr::mutate(idGKG = counts_data$idGKG[x])
@@ -3802,7 +3802,7 @@ parse_gkg_mentioned_dates <- function(gdelt_data,
 
   all_counts <-
     seq_along(counts_data$dates) %>%
-    future_map_dfr(function(x) {
+    map_dfr(function(x) {
       parse_dates(field = counts_data$dates[x], return_wide =  F) %>%
         dplyr::mutate(idGKG = counts_data$idGKG[x])
     }) %>%
@@ -3936,7 +3936,7 @@ parse_gkg_mentioned_quotes <-
 
     all_counts <-
       seq_along(counts_data$quotations) %>%
-      future_map_dfr(function(x) {
+      map_dfr(function(x) {
         parse_quotes(field = counts_data$quotations[x], return_wide = F) %>%
           dplyr::mutate(idGKG = counts_data$idGKG[x])
       }) %>%
@@ -4073,7 +4073,7 @@ parse_gkg_mentioned_gcams <- function(gdelt_data,
 
   all_counts <-
     seq_along(counts_data$gcam) %>%
-    future_map_dfr(function(x) {
+    map_dfr(function(x) {
       parse_gcam_data(field = counts_data$gcam[x],
                       return_wide = F) %>%
         dplyr::mutate(idGKG = counts_data$idGKG[x])
@@ -4228,7 +4228,7 @@ parse_gkg_mentioned_source_data <-
 
     all_counts <-
       seq_along(counts_data$source_col) %>%
-      future_map_dfr(function(x) {
+      map_dfr(function(x) {
         parse_source_name(field = counts_data$source_col[x],
                           return_wide = return_wide) %>%
           dplyr::mutate(idGKG = counts_data$idGKG[x])
@@ -4327,7 +4327,7 @@ parse_gkg_mentioned_source_data <-
 
     all_data <-
       urls %>%
-      future_map_dfr(function(x) {
+      map_dfr(function(x) {
         data <-
           get_gdelt_url_data_safe(
             url = x,
@@ -4411,7 +4411,7 @@ get_data_gkg_days_detailed <-
 
   all_data <-
     seq_len(var_matrix %>% nrow()) %>%
-    future_map_dfr(
+    map_dfr(
       function(x)
         .get_data_gkg_day_detailed_safe(
           date_data = var_matrix$date[x],
@@ -4516,7 +4516,7 @@ get_data_gkg_day_summary <- function(date_data = "2016-06-01",
 
   all_data <-
     urls %>%
-    future_map_dfr(function(x) {
+    map_dfr(function(x) {
       get_gdelt_url_data_safe(
         url = x,
         remove_files = remove_files,
@@ -4594,7 +4594,7 @@ get_data_gkg_days_summary <- function(dates = c("2016-06-01"),
 
   all_data <-
     seq_len(var_matrix %>% nrow) %>%
-    future_map_dfr(
+    map_dfr(
       function(x)
         get_data_gkg_day_summary_safe(
           date_data = var_matrix$date[x],
@@ -4667,7 +4667,7 @@ get_data_gdelt_period_event <- function(period = 1983,
 
   all_data <-
     urls %>%
-    future_map_dfr(function(x) {
+    map_dfr(function(x) {
       get_gdelt_url_data_safe(
         url = x,
         remove_files = remove_files,
@@ -4715,7 +4715,7 @@ get_data_gdelt_periods_event <- function(periods = c(1983, 1989),
     str_replace_all('\\-', '')
   all_data <-
     seq_along(periods) %>%
-    future_map_dfr(
+    map_dfr(
       function(x)
         get_data_gdelt_period_event_safe(
           period = periods[x],
@@ -4944,7 +4944,7 @@ get_urls_vgkg_most_recent  <- function() {
 
     all_data <-
       urls %>%
-      future_map_dfr(function(x) {
+      map_dfr(function(x) {
         .get_data_vgkg_url_safe(
           url = x,
           remove_json_column = remove_json_column,
@@ -5002,7 +5002,7 @@ get_data_vgkg_dates <-
 
     all_data <-
       dates %>%
-      future_map_dfr(
+      map_dfr(
         function(x)
           .get_data_vgkg_day_safe(
             date_data = x,
@@ -5058,7 +5058,7 @@ get_data_vgkg_dates <-
       xml_df <-
         xml_df$item %>%
         unique %>%
-        future_map_dfr(function(x) {
+        map_dfr(function(x) {
           item_value <-
             xml_df %>%
             filter(item == x) %>%
@@ -5102,7 +5102,7 @@ parse_xml_extras <-
 
     xml_extra_df <-
       1:nrow(xml_data) %>%
-      future_map_dfr(function(x) {
+      map_dfr(function(x) {
         row_data <-
           xml_data %>%
           slice(x)
@@ -5344,7 +5344,7 @@ parse_vgkg_labels <- function(gdelt_data,
 
   allxmlLabels <-
     gdelt_data$idVGKG %>%
-    future_map_dfr(function(x) {
+    map_dfr(function(x) {
       parse_xml_labels_safe(data = gdelt_data, id_vgkg = x)
     }) %>%
     suppressWarnings()
@@ -5439,7 +5439,7 @@ parse_vgkg_landmarks <- function(gdelt_data,
 
   all_data <-
     gdelt_data$idVGKG %>%
-    future_map_dfr(function(x) {
+    map_dfr(function(x) {
       parse_xml_landmarks_safe(data = gdelt_data, id_vgkg = x)
     }) %>%
     suppressWarnings()
@@ -5525,7 +5525,7 @@ parse_vgkg_logos <- function(gdelt_data,
 
   all_data <-
     gdelt_data$idVGKG %>%
-    future_map_dfr(function(x) {
+    map_dfr(function(x) {
       parse_xml_logos_safe(data = gdelt_data, id_vgkg = x)
     }) %>%
     suppressWarnings()
@@ -5624,7 +5624,7 @@ parse_vgkg_safe_search <- function(gdelt_data,
 
   all_data <-
     gdelt_data$idVGKG %>%
-    future_map_dfr(function(x) {
+    map_dfr(function(x) {
       parse_xml_safe_search_safe(data = gdelt_data, id_vgkg = x)
     }) %>%
     suppressWarnings()
@@ -5729,7 +5729,7 @@ parse_vgkg_faces <- function(gdelt_data,
 
   all_data <-
     gdelt_data$idVGKG %>%
-    future_map_dfr(function(x) {
+    map_dfr(function(x) {
       parse_xml_faces_search_safe(data = gdelt_data, id_vgkg = x)
     }) %>%
     suppressWarnings()
@@ -5811,7 +5811,7 @@ parse_vgkg_ocr <- function(gdelt_data,
 
   all_data <-
     gdelt_data$idVGKG %>%
-    future_map_dfr(function(x) {
+    map_dfr(function(x) {
       parse_xml_ocr_safe(data = gdelt_data, id_vgkg = x)
     }) %>%
     suppressWarnings()
@@ -5890,7 +5890,7 @@ parse_vgkg_languages <- function(gdelt_data,
 
   all_data <-
     gdelt_data$idVGKG %>%
-    future_map_dfr(function(x) {
+    map_dfr(function(x) {
       parse_language_types_safe(data = gdelt_data, id_vgkg = x)
     }) %>%
     suppressWarnings()
@@ -6036,7 +6036,7 @@ get_tv_schema  <- function() {
 #' @importFrom tidyr separate
 #' @examples
 #' get_urls_gkg_daily_summaries(remove_count_files = T)
-get_urls_gkg_tv_daily_summaries <-
+dictionary_gkg_tv_daily_summaries <-
   function(return_message = T) {
     url <-
       'http://data.gdeltproject.org/gdeltv2_iatelevision/masterfilelist.txt'
@@ -6179,7 +6179,7 @@ get_urls_gkg_tv_daily_summaries <-
   } else {
     if (!'gkg_tv_urls' %>% exists()) {
       gkg_tv_urls <-
-        get_urls_gkg_tv_daily_summaries()
+        dictionary_gkg_tv_daily_summaries()
 
       assign(x = 'gkg_tv_urls', eval(gkg_tv_urls), env = .GlobalEnv)
     }
@@ -6195,7 +6195,7 @@ get_urls_gkg_tv_daily_summaries <-
 
   all_data <-
     urls %>%
-    future_map_dfr(function(x) {
+    map_dfr(function(x) {
       get_data_gkg_tv_safe(url = x,
                       return_message = return_message)
     }) %>%
@@ -6223,9 +6223,8 @@ get_urls_gkg_tv_daily_summaries <-
 #' @return
 #' @export
 #' @import purrr
-#' @importFrom furrr future_map_dfr
 #' @examples
-get_data_gkg_tv_days <-
+gkg_tv_days <-
   function(dates = c("2016-06-01", "2016-02-01"),
            only_most_recent = F,
            return_message = T) {
@@ -6234,7 +6233,7 @@ get_data_gkg_tv_days <-
 
     all_data <-
       dates %>%
-      future_map_dfr(
+      map_dfr(
         function(x)
           get_data_gkg_tv_day_safe(
             date_data = x,
@@ -6269,7 +6268,7 @@ date_columns_to_numeric <-
     name_df <-
       data %>%
       dplyr::select(dplyr::matches(column_keyword)) %>%
-      future_map(class) %>%
+      map(class) %>%
       unlist() %>%
       data.frame(col_class = .) %>%
       tibble::rownames_to_column()

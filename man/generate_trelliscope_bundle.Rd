@@ -39,15 +39,15 @@ generate_trelliscope_bundle(include_image_panel = TRUE,
 \item{domains}{a vector of webdomains}
 
 \item{gkg_themes}{global knowledge graph theme
-#' use \code{get_gdelt_codebook_ft_api(code_book = "gkg"))} for options}
+#' use \code{dictionary_ft_codebook(code_book = "gkg"))} for options}
 
 \item{images_ocr}{vector of words to search for OCR'd text}
 
 \item{images_tag}{vector of image tags from the image tag code book.
-use \code{get_gdelt_codebook_ft_api(code_book = "imagetag"))} for options}
+use \code{dictionary_ft_codebook(code_book = "imagetag"))} for options}
 
 \item{images_web_tag}{vector of image tags from the image web tag code book.
-use \code{get_gdelt_codebook_ft_api(code_book = "imageweb"))}}
+use \code{dictionary_ft_codebook(code_book = "imageweb"))}}
 
 \item{images_face_tone}{vector of facial tone scores}
 
@@ -71,7 +71,7 @@ you can use the \code{generate_dates()} function to generate a vector of
 default \code{NULL}}
 
 \item{source_countries}{character source countries
-#' see \code{get_gdelt_codebook_ft_api(code_book = "countries")} for options}
+#' see \code{dictionary_ft_codebook(code_book = "countries")} for options}
 
 \item{tone}{numeric tone - default (NA)}
 

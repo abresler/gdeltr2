@@ -424,7 +424,7 @@ get_data_ft_v1_api_terms <-
       purrr::possibly(.get_data_ft_api_term, tibble())
     all_data <-
       1:nrow(var_matrix) %>%
-      future_map_dfr(function(x) {
+      map_dfr(function(x) {
         .get_data_ft_api_term_safe(
           term = var_matrix$term[x],
           domain = var_matrix$domain[x],
@@ -565,7 +565,7 @@ get_data_ft_v1_api_domains <-
 
     all_data <-
       seq_len(var_matrix %>% nrow()) %>%
-      future_map_dfr(
+      map_dfr(
         function(x)
           .get_data_ft_api_term_safe(
             term = var_matrix$term[x],
@@ -914,9 +914,9 @@ get_data_ft_v1_api_domains <-
 #' @export
 #' @import dplyr jsonlite ggthemes ggplot2
 #' @examples
-#' get_data_sentiment_ft_api_domains(domains = c("foxnews.com", "cnn.com", "washingtonpost.com"), term = "Donald Trump", visualization = T)
+#' ft_urls_sentiment(domains = c("foxnews.com", "cnn.com", "washingtonpost.com"), term = "Donald Trump", visualization = T)
 #'
-get_data_sentiment_ft_api_domains <-
+ft_urls_sentiment <-
   function(domains = c('nytimes.com', 'washingtonpost.com'),
            visualization = TRUE,
            term = NA,
@@ -948,7 +948,7 @@ get_data_sentiment_ft_api_domains <-
 
     all_data <-
       seq_len(var_matrix %>% nrow()) %>%
-      future_map_dfr(
+      map_dfr(
         function(x)
           get_data_sentiment_ft_api_safe(
             term = var_matrix$term[x],
@@ -1037,9 +1037,9 @@ get_data_sentiment_ft_api_domains <-
 #' @export
 #' @import dplyr jsonlite ggthemes ggplot2
 #' @examples
-#' get_data_sentiment_ft_api_terms(terms = c("Zika", "Brooklyn Nets"), visualization = T)
+#' ft_terms_sentiment(terms = c("Zika", "Brooklyn Nets"), visualization = T)
 
-get_data_sentiment_ft_api_terms <-
+ft_terms_sentiment <-
   function(terms = c("Zika", '"Golden State Warriors"'),
            visualization = NULL,
            domain = NA,
@@ -1072,7 +1072,7 @@ get_data_sentiment_ft_api_terms <-
 
     all_data <-
       seq_len(var_matrix %>% nrow()) %>%
-      future_map_dfr(
+      map_dfr(
         function(x)
           .get_data_sentiment_ft_api_safe(
             term = var_matrix$term[x],
@@ -1159,7 +1159,7 @@ get_data_sentiment_ft_api_terms <-
 #' @importFrom readr read_tsv
 #' @importFrom purrr set_names
 #' @examples
-get_codes_stability_locations <-
+dictionary_stability_locations <-
   function() {
     country_df <-
       'http://data.gdeltproject.org/blog/stability-dashboard-api/GEOLOOKUP-COUNTRY.TXT' %>%
@@ -1219,7 +1219,7 @@ get_codes_stability_locations <-
            return_message = T) {
     if (!'location_codes' %>% exists) {
       location_codes <-
-        get_codes_stability_locations()
+        dictionary_stability_locations()
 
       assign(x = 'location_codes',
              eval(location_codes),
@@ -1447,8 +1447,8 @@ get_codes_stability_locations <-
 #' @importFrom magrittr extract2
 #' @importFrom grDevices colors
 #' @examples
-#' get_data_locations_instability_api(location_ids = c('US', 'IS', "TU"), random_locations = NULL, variable_names = c('instability', 'conflict', 'tone', 'protest', 'artvolnorm'), visualization = T, days_moving_average = NA, time_periods = 'daily', use_multi_locations = F, return_wide = T, nest_data = F, return_message = T)
-get_data_locations_instability_api <-
+#' instability_api_locations(location_ids = c('US', 'IS', "TU"), random_locations = NULL, variable_names = c('instability', 'conflict', 'tone', 'protest', 'artvolnorm'), visualization = T, days_moving_average = NA, time_periods = 'daily', use_multi_locations = F, return_wide = T, nest_data = F, return_message = T)
+instability_api_locations <-
   function(location_ids = c('US', 'IS', "TU"),
            random_locations = NULL,
            variable_names = c('instability', 'conflict', 'tone', 'protest', 'artvolnorm'),
@@ -1469,7 +1469,7 @@ get_data_locations_instability_api <-
 
     if (!random_locations %>% purrr::is_null()) {
       random_locs <-
-        get_codes_stability_locations() %>%
+        dictionary_stability_locations() %>%
         mutate(ncharLoc = nchar(idLocation)) %>%
         filter(ncharLoc == 2) %>%
         .$idLocation %>% sample(random_locations)
@@ -1490,7 +1490,7 @@ get_data_locations_instability_api <-
 
     all_data <-
       seq_len(var_matrix %>% nrow()) %>%
-      future_map_dfr((function(x) {
+      map_dfr((function(x) {
         .get_data_location_instability_api_safe(
           location_id = var_matrix$id_location[x],
           variable_name = var_matrix$variable_name[x],
@@ -1541,14 +1541,14 @@ get_data_locations_instability_api <-
 #' @importFrom readr read_csv
 #' @importFrom magrittr extract2
 #' @examples
-#' get_data_ft_trending_terms()
-get_data_ft_trending_terms <-
+#' ft_trending_terms()
+ft_trending_terms <-
   function(sort_data = T) {
     data <-
       'http://live.gdeltproject.org/autocomplete_last15.csv' %>%
-      read_csv() %>%
-      set_names('nameTerm') %>%
-      suppressMessages()
+      fread() %>%
+      as_tibble() %>%
+      set_names('nameTerm')
 
     data <-
       data %>%
@@ -1603,8 +1603,8 @@ get_data_ft_trending_terms <-
 #' @export
 #' @import readr dplyr stringr purrr tibble readr
 #' @examples
-#' get_gdelt_codebook_geo_api(code_book = 'imagetags')
-get_gdelt_codebook_geo_api <-
+#' dictionary_geo_codebook(code_book = 'imagetags')
+dictionary_geo_codebook <-
   function(code_book = 'adm') {
     df_codebooks <-
       tibble(
@@ -1736,7 +1736,7 @@ get_gdelt_codebook_geo_api <-
 
     df_call <-
       seq_along(query_parameters) %>%
-      future_map_dfr(function(x) {
+      map_dfr(function(x) {
         function_param <-
           names(query_parameters[x])
         value <-
@@ -1856,8 +1856,8 @@ get_gdelt_codebook_geo_api <-
 #' @export
 #' @import purrr glue readr stringr dplyr curl tibble tidyr httr
 #' @examples
-#' generate_geo_query(query_parameters = list(term = "Brooklyn Nets"))
-generate_geo_query <-
+#' ft_geo_query(query_parameters = list(term = "Brooklyn Nets"))
+ft_geo_query <-
   function(query_parameters = list(
     term = NULL,
     domain = NULL,
@@ -2006,7 +2006,7 @@ generate_geo_query <-
         mutate(idRow = 1:n())
       df_lat_lon <-
         seq_along(df_geo$geometry.coordinates) %>%
-        future_map_dfr(function(x) {
+        map_dfr(function(x) {
           tibble(
             item = c('longitudeArticle', 'latitudeArticle'),
             value = df_geo$geometry.coordinates[[x]]
@@ -2240,7 +2240,7 @@ generate_geo_query <-
     parts <- path %>% str_split("/") %>% flatten_chr()
 
     seq_along(parts) %>%
-      future_map(function(x) {
+      map(function(x) {
         if (x == 1) {
           directory <- parts[x]
           if (!dir.exists(directory)) {
@@ -2332,7 +2332,7 @@ generate_geo_query <-
       data <-
         data %>%
         dplyr::group_by(!!!nest_names) %>%
-        tidyr::nest()
+        tidyr::nest_legacy()
 
       data <-
         data %>%
@@ -3297,7 +3297,7 @@ generate_dates <-
       data <-
         data %>%
         dplyr::group_by(!!!nest_names) %>%
-        tidyr::nest()
+        tidyr::nest_legacy()
 
       data <-
         data %>%
@@ -3547,8 +3547,7 @@ plot_trelliscope <-
            group_columns = NULL,
            path = NULL,
            rows = 1,
-           columns = 2,
-           ...) {
+           columns = 2) {
     is_image <-
       trelliscope_type %>% str_to_lower() == 'image'
 
@@ -3719,7 +3718,7 @@ plot_trelliscopes <-
 
     all_data <-
       all_data %>%
-      nest(.key = data, -packageVisualization)
+      nest_legacy(.key = data, -packageVisualization)
 
     if (names(trelliscope_parameters) %>% str_detect("rows") %>% sum(na.rm = TRUE) > 0) {
       row_no <- trelliscope_parameters$rows
@@ -4535,11 +4534,11 @@ plot_hc_trelliscope <-
 #' @export
 #' @import dplyr stringr purrr glue readr
 #' @examples
-#' get_gdelt_codebook_ft_api(code_book = "gkg")
-#' get_gdelt_codebook_ft_api(code_book = "imagetags")
-#' get_gdelt_codebook_ft_api(code_book = "imageweb")
-#' get_gdelt_codebook_ft_api(code_book = "languages")
-get_gdelt_codebook_ft_api <-
+#' dictionary_ft_codebook(code_book = "gkg")
+#' dictionary_ft_codebook(code_book = "imagetags")
+#' dictionary_ft_codebook(code_book = "imageweb")
+#' dictionary_ft_codebook(code_book = "languages")
+dictionary_ft_codebook <-
   function(code_book = 'gkg',
            visualize_trelliscope = FALSE,
            path = NULL) {
@@ -4845,7 +4844,7 @@ get_gdelt_codebook_ft_api <-
     if (data %>% tibble::has_name("imageweburls")) {
       df_urls <-
         seq_along(data$imageweburls) %>%
-        future_map_dfr(function(x) {
+        map_dfr(function(x) {
           value <- data$imageweburls[[x]]
 
           if (value %>% length() == 0) {
@@ -5167,7 +5166,7 @@ get_gdelt_codebook_ft_api <-
 
     all_url_df <-
       1:nrow(df_terms) %>%
-      future_map_dfr(function(x) {
+      map_dfr(function(x) {
         df_row <-
           df_terms %>%
           slice(x)
@@ -5224,7 +5223,7 @@ get_gdelt_codebook_ft_api <-
       .parse_v2_urls_safe(return_message = return_message)
 
     all_data <-
-      all_data %>% tidyr::nest(-urlGDELTV2FTAPI)
+      all_data %>% tidyr::nest_legacy(-urlGDELTV2FTAPI)
 
     names(all_data)[[2]] <-
       'dataSearch'
@@ -5264,14 +5263,14 @@ get_gdelt_codebook_ft_api <-
 #' @param images_num_faces vector of face count
 #' @param images_ocr vector of words to search for OCR'd text
 #' @param images_tag vector of image tags from the image tag code book.
-#' use \code{get_gdelt_codebook_ft_api(code_book = "imagetag"))} for options
+#' use \code{dictionary_ft_codebook(code_book = "imagetag"))} for options
 #' @param images_web_tag vector of image tags from the image web tag code book.
-#' use \code{get_gdelt_codebook_ft_api(code_book = "imageweb"))}
+#' use \code{dictionary_ft_codebook(code_book = "imageweb"))}
 #' @param images_web_count numeric vector of number of times photo appeared
 #' @param source_countries character source countries
-#' #' see \code{get_gdelt_codebook_ft_api(code_book = "countries")} for options
+#' #' see \code{dictionary_ft_codebook(code_book = "countries")} for options
 #' @param gkg_themes global knowledge graph theme
-#' #' use \code{get_gdelt_codebook_ft_api(code_book = "gkg"))} for options
+#' #' use \code{dictionary_ft_codebook(code_book = "gkg"))} for options
 #' @param tone numeric tone - default (NA)
 #' @param tone_absolute_value numeric tone absolute value (default NA)
 #' @param use_or if \code{TRUE} chains multiple items using and or statement
@@ -5321,7 +5320,6 @@ get_gdelt_codebook_ft_api <-
 #' }
 #' @param nest_data if \code{TRUE} returns a nested \code{tibble()}
 #' @param return_message if \code{TRUE} returns a message
-#' @param ... - additional parameters
 #'
 #' @import tidyr dplyr rlang highcharter trelliscopejs anytime lubridate purrr purrrlyr tibble glue stringr jsonlite
 #' @return a \code{tibble} or a form of visualization
@@ -5330,9 +5328,9 @@ get_gdelt_codebook_ft_api <-
 #' @examples
 #' terms <- c('"Brooklyn Nets"', '"Donovan Mitchell"', 'Blackston Real Estate', '"Tom Brady"')
 #' web_sites <- c("realdeal.com", "netsdaily.com", "wsj.com", "archdaily.com", "alphr.com")
-#' get_data_ft_v2_api(terms = terms, domains = web_sites, timespans = "28 Weeks")
+#' ft_v2_api(terms = terms, domains = web_sites, timespans = "28 Weeks")
 
-get_data_ft_v2_api <-
+ft_v2_api <-
   function(terms = NA,
            domains = NA,
            images_face_tone = NA,
@@ -5365,8 +5363,7 @@ get_data_ft_v2_api <-
              group_columns = NULL
            ),
            nest_data = FALSE,
-           return_message = TRUE,
-           ...) {
+           return_message = TRUE) {
     if (terms %>% purrr::is_null()) {
       terms <- NA
     }
@@ -5479,14 +5476,14 @@ get_data_ft_v2_api <-
 #' @param images_num_faces vector of face count
 #' @param images_ocr vector of words to search for OCR'd text
 #' @param images_tag vector of image tags from the image tag code book.
-#' use \code{get_gdelt_codebook_ft_api(code_book = "imagetag"))} for options
+#' use \code{dictionary_ft_codebook(code_book = "imagetag"))} for options
 #' @param images_web_tag vector of image tags from the image web tag code book.
-#' use \code{get_gdelt_codebook_ft_api(code_book = "imageweb"))}
+#' use \code{dictionary_ft_codebook(code_book = "imageweb"))}
 #' @param images_web_count numeric vector of number of times photo appeared
 #' @param source_countries character source countries
-#' #' see \code{get_gdelt_codebook_ft_api(code_book = "countries")} for options
+#' #' see \code{dictionary_ft_codebook(code_book = "countries")} for options
 #' @param gkg_themes global knowledge graph theme
-#' #' use \code{get_gdelt_codebook_ft_api(code_book = "gkg"))} for options
+#' #' use \code{dictionary_ft_codebook(code_book = "gkg"))} for options
 #' @param tone numeric tone - default (NA)
 #' @param tone_absolute_value numeric tone absolute value (default NA)
 #' @param timespans character vector of the time frame - no more than 12 weeks -
@@ -5570,7 +5567,7 @@ generate_trelliscope_bundle <-
         glue::glue("{base_path}/image_panel") %>% as.character() %>% str_replace_all('//', '/')
 
       trelliscopeImage <-
-        get_data_ft_v2_api(
+        ft_v2_api(
           terms = terms,
           domains = domains,
           images_face_tone = images_face_tone,
@@ -5615,7 +5612,7 @@ generate_trelliscope_bundle <-
       path <-
         glue::glue("{base_path}/sentiment_bin") %>% as.character() %>% str_replace_all('//', '/')
       trelliscopeBIN <-
-        get_data_ft_v2_api(
+        ft_v2_api(
           terms = terms,
           domains = domains,
           images_face_tone = images_face_tone,
@@ -5663,7 +5660,7 @@ generate_trelliscope_bundle <-
         glue::glue("{base_path}/timeline_info") %>% as.character() %>% str_replace_all('//', '/')
 
       trelliscopeTimeline <-
-        gdeltr2::get_data_ft_v2_api(
+        gdeltr2::ft_v2_api(
           terms = terms,
           domains = domains,
           images_face_tone = images_face_tone,
@@ -5708,7 +5705,7 @@ generate_trelliscope_bundle <-
       path <-
         glue::glue("{base_path}/timeline_tone") %>% as.character() %>% str_replace_all('//', '/')
       trelliscopeTimelinetone <-
-        get_data_ft_v2_api(
+        ft_v2_api(
           terms = terms,
           domains = domains,
           images_face_tone = images_face_tone,
@@ -5760,7 +5757,7 @@ generate_trelliscope_bundle <-
       path <-
         glue::glue("{base_path}/wordclouds") %>% as.character() %>% str_replace_all('//', '/')
       trelliscopeWordcloud <-
-        get_data_ft_v2_api(
+        ft_v2_api(
           terms = terms,
           domains = domains,
           images_face_tone = images_face_tone,
