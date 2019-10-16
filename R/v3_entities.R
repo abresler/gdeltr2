@@ -1,7 +1,53 @@
 
+# utils -------------------------------------------------------------------
+
+
 
 # dict --------------------------------------------------------------------
 
+.extract_time <-
+  function(url) {
+    parts <- url %>% str_split("/") %>% flatten_chr()
+    time <- parts[length(parts)] %>% str_remove_all("\\.geg-g1.json.gz") %>% lubridate::ymd_hms() %>% lubridate::with_tz(Sys.timezone())
+    time
+  }
+
+.recent_entities_time <- function() {
+  read_lines("http://data.gdeltproject.org/gdeltv3/geg_g1/LASTUPDATE.TXT") %>%
+    .extract_time()
+}
+
+.dictionary_v3_entity_names <-
+  function() {
+    tibble(nameGDELT = c("urlArticle", "name", "type", "numMentions", "avgSalience",
+                         "context", "mid", "wikipediaUrl"),
+           nameActual = c("urlArticle", "nameEntity", "typeEntity", "countMentions", "meanSalience",
+                          "textContext", "midGoogle", "urlWikipedia")
+
+    )
+  }
+
+.munge_entity_names <-
+  function(data) {
+    names_dict <- names(data)
+
+    dict <- .dictionary_v3_entity_names()
+    actual_names <-
+      names_dict %>%
+      map_chr(function(name) {
+        df_row <-
+          dict %>% filter(nameGDELT == name)
+        if (nrow(df_row) == 0) {
+          glue::glue("Missing {name}") %>% message()
+          return(name)
+        }
+
+        df_row$nameActual
+      })
+
+    data %>%
+      set_names(actual_names)
+  }
 
 .dictionary_v3_entities <-
   function() {
@@ -35,7 +81,34 @@
 dictionary_v3_entity_urls <-
   function(){
     .tt <- memoise::memoise(.dictionary_v3_entities)
-    .tt()
+    data <- .tt()
+    most_recent_dict <- data %>% select(datetimeData) %>% pull() %>% max()
+    most_recent <- .recent_entities_time()
+    missing_dates  <-
+      seq(from = most_recent_dict, to = most_recent,
+          by = '15 min')
+    options(scipen = 99999)
+    df_missing <-
+      tibble(datetimeData = missing_dates) %>%
+      mutate(
+        isoPeriod = datetimeData %>% format("%Y%m%d%H%M%S") %>% as.numeric(),
+        urlAPI = glue(
+          "http://data.gdeltproject.org/gdeltv3/geg_g1/{isoPeriod}.geg-g1.json.gz"
+        ) %>% as.character(),
+        dateData = as.Date(datetimeData),
+        yearData = year(dateData) %>% as.numeric(),
+        monthData = month(dateData) %>% as.numeric()
+      ) %>%
+      select(-isoPeriod) %>%
+      select(yearData, monthData, dateData, datetimeData, everything())
+
+
+    data <-
+      data %>%
+      bind_rows(df_missing) %>%
+      distinct()
+
+    data
   }
 
 
@@ -48,8 +121,9 @@ dictionary_v3_entity_urls <-
     df_entities <-
       data %>%
       select(urlArticle, dataEntities) %>%
-      unnest(cols = dataEntities) %>%
-      setNames(c("urlArticle", "nameEntity", "typeEntity", "countMentions", "meanSalience", "midGoogle", "urlWikipedia"))
+      unnest(cols = dataEntities)
+
+    df_entities <- df_entities %>% .munge_entity_names()
 
     df_entities <-
       df_entities %>%
@@ -70,25 +144,31 @@ dictionary_v3_entity_urls <-
            return_message = T) {
 
     if (return_message) {
-    time <- url %>% str_remove_all("http://data.gdeltproject.org/gdeltv3/geg_gcnlapi/|.geg-gcnlapi.json.gz")  %>%
-        lubridate::ymd_hms() %>% lubridate::with_tz(Sys.timezone())
+
     glue::glue("Acquiring V3 Entity API data for {time}") %>% message()
     }
 
-    data <- curl(url) %>%
+    data <-
+      curl(url) %>%
       gzcon() %>%
       stream_in() %>%
-      as_tibble() %>%
+      as_tibble()
+
+    data <-
+      data %>%
       setNames(c("datetimeArticle", "urlArticle", "dataEntities")) %>%
       mutate(
-        datetimeArticle = ymd_hms(datetimeArticle),
+        datetimeArticle = ymd_hms(datetimeArticle) %>% lubridate::with_tz(Sys.timezone()),
         dateArticle = as.Date(datetimeArticle),
         yearArticle = year(dateArticle) %>% as.numeric(),
         monthArticle = month(dateArticle) %>% as.numeric(),
         domainArticle = urlArticle %>% urltools::domain(),
         urlAPI = url
       ) %>%
-      select(yearArticle, monthArticle, dateArticle, datetimeArticle, domainArticle, everything()) %>%
+      select(yearArticle, monthArticle, dateArticle, datetimeArticle, domainArticle, everything())
+
+    data <-
+      data %>%
       .parse_json_entity_data()
 
     data

@@ -1529,20 +1529,7 @@ instability_api_locations <-
 
 # Trending terms ----------------------------------------------------------
 
-
-
-#' Gets most recent terms
-#'
-#' @param sort_data
-#'
-#' @return
-#' @export
-#' @import tidyr stringr rvest purrr dplyr
-#' @importFrom readr read_csv
-#' @importFrom magrittr extract2
-#' @examples
-#' ft_trending_terms()
-ft_trending_terms <-
+.ft_trending_terms <-
   function(sort_data = T) {
     data <-
       'http://live.gdeltproject.org/autocomplete_last15.csv' %>%
@@ -1564,6 +1551,25 @@ ft_trending_terms <-
     }
 
     return(data)
+  }
+
+
+#' Gets most recent terms
+#'
+#' @param sort_data
+#'
+#' @return
+#' @export
+#' @import tidyr stringr rvest purrr dplyr
+#' @importFrom readr read_csv
+#' @importFrom magrittr extract2
+#' @examples
+#' ft_trending_terms()
+ft_trending_terms <-
+  function(sort_data = T) {
+    .tt <- memoise(.ft_trending_terms)
+    data <- .tt(sort_data = sort_data)
+    data
   }
 
 
