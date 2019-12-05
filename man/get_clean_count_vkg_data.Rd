@@ -4,11 +4,18 @@
 \alias{get_clean_count_vkg_data}
 \title{Parse XML Labels}
 \usage{
-get_clean_count_vkg_data(all_counts, extra_key = NA,
-  count_col = "idImageLabel", return_wide = T)
+get_clean_count_vkg_data(
+  all_counts,
+  extra_key = NA,
+  count_col = "idImageLabel",
+  return_wide = T
+)
 }
 \arguments{
 \item{id_dateTime}{}
+}
+\value{
+
 }
 \description{
 Parse XML Labels

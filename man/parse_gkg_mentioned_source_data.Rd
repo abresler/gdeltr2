@@ -4,11 +4,18 @@
 \alias{parse_gkg_mentioned_source_data}
 \title{Returns source name or source url from a gkg data frame}
 \usage{
-parse_gkg_mentioned_source_data(gdelt_data, source_column = "sources",
-  filter_na = T, return_wide = F)
+parse_gkg_mentioned_source_data(
+  gdelt_data,
+  source_column = "sources",
+  filter_na = T,
+  return_wide = F
+)
 }
 \arguments{
 \item{source_column}{options \code{c('sources', 'source', 'sources.url', 'source.url'))}}
+}
+\value{
+
 }
 \description{
 Returns source name or source url from a gkg data frame

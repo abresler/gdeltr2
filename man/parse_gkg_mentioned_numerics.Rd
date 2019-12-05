@@ -4,8 +4,15 @@
 \alias{parse_gkg_mentioned_numerics}
 \title{Returns long or wide mentioned numerics from a GKG data frame}
 \usage{
-parse_gkg_mentioned_numerics(gdelt_data, filter_na = T,
-  include_char_loc = T, return_wide = T)
+parse_gkg_mentioned_numerics(
+  gdelt_data,
+  filter_na = T,
+  include_char_loc = T,
+  return_wide = T
+)
+}
+\value{
+
 }
 \description{
 Returns long or wide mentioned numerics from a GKG data frame

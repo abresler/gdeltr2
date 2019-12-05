@@ -4,8 +4,7 @@
 \alias{generate_dates}
 \title{Generates sequences of dates}
 \usage{
-generate_dates(start_date = NULL, end_date = NULL,
-  time_interval = "days")
+generate_dates(start_date = NULL, end_date = NULL, time_interval = "days")
 }
 \arguments{
 \item{start_date}{date to start

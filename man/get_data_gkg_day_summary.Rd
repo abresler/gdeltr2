@@ -4,10 +4,15 @@
 \alias{get_data_gkg_day_summary}
 \title{Retrieves gkg summary file for a given day}
 \usage{
-get_data_gkg_day_summary(date_data = "2016-06-01",
-  file_directory = NULL, folder_name = "gdelt_data",
-  is_count_file = F, remove_files = T, empty_trash = T,
-  return_message = T)
+get_data_gkg_day_summary(
+  date_data = "2016-06-01",
+  file_directory = NULL,
+  folder_name = "gdelt_data",
+  is_count_file = F,
+  remove_files = T,
+  empty_trash = T,
+  return_message = T
+)
 }
 \arguments{
 \item{date_data}{Date of the data, must be in year, month day form.}

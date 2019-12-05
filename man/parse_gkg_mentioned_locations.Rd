@@ -4,13 +4,21 @@
 \alias{parse_gkg_mentioned_locations}
 \title{Returns mentioned locations from a gkg data frame}
 \usage{
-parse_gkg_mentioned_locations(gdelt_data, location_column = "locations",
-  isCharLoc = F, filter_na = T, return_wide = T)
+parse_gkg_mentioned_locations(
+  gdelt_data,
+  location_column = "locations",
+  isCharLoc = F,
+  filter_na = T,
+  return_wide = T
+)
 }
 \arguments{
 \item{location_column}{options \code{c('location', 'locations', 'locationsCharLoc', 'locationCharLoc', 'charLoc'))}}
 
 \item{return_wide}{}
+}
+\value{
+
 }
 \description{
 Returns mentioned locations from a gkg data frame

@@ -6,6 +6,9 @@
 \usage{
 get_codes_cameo_type()
 }
+\value{
+
+}
 \description{
 Retrieves GDELT CAMEO type code book
 }

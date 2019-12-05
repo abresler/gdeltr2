@@ -9,6 +9,11 @@ parse_xml_extras(data, return_wide = FALSE)
 \arguments{
 \item{return_wide}{}
 }
+\value{
+
+
+
+}
 \description{
 Parse XML Extra
 }

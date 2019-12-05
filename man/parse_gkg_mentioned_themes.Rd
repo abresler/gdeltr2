@@ -4,11 +4,18 @@
 \alias{parse_gkg_mentioned_themes}
 \title{Returns mentioned themes from a gkg data frame}
 \usage{
-parse_gkg_mentioned_themes(gdelt_data, filter_na = T,
-  theme_column = "themes", return_wide = T)
+parse_gkg_mentioned_themes(
+  gdelt_data,
+  filter_na = T,
+  theme_column = "themes",
+  return_wide = T
+)
 }
 \arguments{
 \item{organization_column}{options \code{c('theme', 'themes', 'countThemes', 'themesCharLoc', 'charLoc'))}}
+}
+\value{
+
 }
 \description{
 Returns mentioned themes from a gkg data frame

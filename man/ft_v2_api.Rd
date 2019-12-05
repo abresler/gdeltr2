@@ -4,17 +4,35 @@
 \alias{ft_v2_api}
 \title{Query GDELT V2 Full Text API}
 \usage{
-ft_v2_api(terms = NA, domains = NA, images_face_tone = NA,
-  images_num_faces = NA, images_ocr = NA, images_tag = NA,
-  images_web_tag = NA, images_web_count = NA, source_countries = NA,
-  source_languages = "English", gkg_themes = NA, tone = NA,
-  tone_absolute_value = NA, use_or = FALSE, modes = "ArtList",
-  timespans = c("24 hours"), dates = NA, quote_terms = F,
-  maximum_records = 250, translate = NULL, timeline_smooth = 5,
-  sort_by = "DateDesc", visualize_results = TRUE,
-  trelliscope_parameters = list(path = NULL, rows = 1, columns = 2,
-  id_columns = NULL, group_columns = NULL), nest_data = FALSE,
-  return_message = TRUE)
+ft_v2_api(
+  terms = NA,
+  domains = NA,
+  images_face_tone = NA,
+  images_num_faces = NA,
+  images_ocr = NA,
+  images_tag = NA,
+  images_web_tag = NA,
+  images_web_count = NA,
+  source_countries = NA,
+  source_languages = "English",
+  gkg_themes = NA,
+  tone = NA,
+  tone_absolute_value = NA,
+  use_or = FALSE,
+  modes = "ArtList",
+  timespans = c("24 hours"),
+  dates = NA,
+  quote_terms = F,
+  maximum_records = 250,
+  translate = NULL,
+  timeline_smooth = 5,
+  sort_by = "DateDesc",
+  visualize_results = TRUE,
+  trelliscope_parameters = list(path = NULL, rows = 1, columns = 2, id_columns = NULL,
+    group_columns = NULL),
+  nest_data = FALSE,
+  return_message = TRUE
+)
 }
 \arguments{
 \item{terms}{a vector of terms}

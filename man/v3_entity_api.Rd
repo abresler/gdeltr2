@@ -4,8 +4,11 @@
 \alias{v3_entity_api}
 \title{V3 Entity API data}
 \usage{
-v3_entity_api(start_date = Sys.Date() - 10, end_date = Sys.Date() - 10,
-  return_message)
+v3_entity_api(
+  start_date = Sys.Date() - 10,
+  end_date = Sys.Date() - 10,
+  return_message = T
+)
 }
 \arguments{
 \item{start_date}{start date in YMD format}
@@ -13,6 +16,9 @@ v3_entity_api(start_date = Sys.Date() - 10, end_date = Sys.Date() - 10,
 \item{end_date}{if not \code{NULL} end date}
 
 \item{return_message}{if \code{TRUE} return message}
+}
+\value{
+
 }
 \description{
 Acquires data from the GDELT

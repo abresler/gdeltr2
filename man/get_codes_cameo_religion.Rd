@@ -6,6 +6,9 @@
 \usage{
 get_codes_cameo_religion()
 }
+\value{
+
+}
 \description{
 Retrives GDELT CAMEO religion code book
 }

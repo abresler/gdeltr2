@@ -9,6 +9,9 @@ ft_trending_terms(sort_data = T)
 \arguments{
 \item{sort_data}{}
 }
+\value{
+
+}
 \description{
 Gets most recent terms
 }

@@ -4,8 +4,11 @@
 \alias{tv_summaries}
 \title{GDELT TV Show Summary}
 \usage{
-tv_summaries(date_start = "2018-02-02", date_end = Sys.Date(),
-  return_message = T)
+tv_summaries(
+  date_start = "2018-02-02",
+  date_end = Sys.Date(),
+  return_message = T
+)
 }
 \arguments{
 \item{date_start}{Start date of data, cannot be before June 16th, 2009}

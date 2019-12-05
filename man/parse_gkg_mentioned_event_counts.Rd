@@ -4,13 +4,20 @@
 \alias{parse_gkg_mentioned_event_counts}
 \title{Returns mentioned CAMEO event count from a gkg data frame}
 \usage{
-parse_gkg_mentioned_event_counts(gdelt_data, count_column = "counts",
-  filter_na = T, return_wide = T)
+parse_gkg_mentioned_event_counts(
+  gdelt_data,
+  count_column = "counts",
+  filter_na = T,
+  return_wide = T
+)
 }
 \arguments{
 \item{count_column}{options \code{c('count', 'counts'))}}
 
 \item{return_wide}{}
+}
+\value{
+
 }
 \description{
 Returns mentioned CAMEO event count from a gkg data frame

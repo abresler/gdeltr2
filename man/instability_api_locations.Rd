@@ -4,11 +4,18 @@
 \alias{instability_api_locations}
 \title{Returns instability data for given locations}
 \usage{
-instability_api_locations(location_ids = c("US", "IS", "TU"),
-  random_locations = NULL, variable_names = c("instability",
-  "conflict", "tone", "protest", "artvolnorm"), days_moving_average = NA,
-  time_periods = "daily", use_multi_locations = F, return_wide = T,
-  visualize = F, nest_data = F, return_message = T)
+instability_api_locations(
+  location_ids = c("US", "IS", "TU"),
+  random_locations = NULL,
+  variable_names = c("instability", "conflict", "tone", "protest", "artvolnorm"),
+  days_moving_average = NA,
+  time_periods = "daily",
+  use_multi_locations = F,
+  return_wide = T,
+  visualize = F,
+  nest_data = F,
+  return_message = T
+)
 }
 \arguments{
 \item{location_ids}{Specify the location IDs}

@@ -4,8 +4,11 @@
 \alias{plot_trelliscopes}
 \title{Plot list of trelliscope}
 \usage{
-plot_trelliscopes(data, group_columns = NULL,
-  trelliscope_parameters = list(path = NULL, rows = 1, columns = 2))
+plot_trelliscopes(
+  data,
+  group_columns = NULL,
+  trelliscope_parameters = list(path = NULL, rows = 1, columns = 2)
+)
 }
 \arguments{
 \item{data}{a data frame}
@@ -18,6 +21,9 @@ plot_trelliscopes(data, group_columns = NULL,
 \item columns: columns for trelliscope
 \item id_columns: initial columns
 }}
+}
+\value{
+
 }
 \description{
 Plot list of trelliscope

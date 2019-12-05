@@ -4,28 +4,37 @@
 \alias{plot_hc_trelliscope}
 \title{Plot a highchart trelliscope}
 \usage{
-plot_hc_trelliscope(data, remove_columns = c("countMaximumRecords",
-  "urlGDELTV2FTAPI", "isOR", "urlArticleMobile"),
-  group_columns = list(regex = NULL, columns = c("itemQuery",
-  "valueQuery", "periodtimeSearch"), exclude = NULL),
-  id_columns = list(is_except = FALSE, columns = c("itemQuery",
-  "valueQuery", "periodtimeSearch", "termSearch"), regex = NULL),
-  include_title = TRUE, trelliscope_parameters = list(rows = 1, columns
-  = 3, path = NULL))
+plot_hc_trelliscope(
+  data,
+  remove_columns = c("countMaximumRecords", "urlGDELTV2FTAPI", "isOR",
+    "urlArticleMobile"),
+  group_columns = list(regex = NULL, columns = c("itemQuery", "valueQuery",
+    "periodtimeSearch"), exclude = NULL),
+  id_columns = list(is_except = FALSE, columns = c("itemQuery", "valueQuery",
+    "periodtimeSearch", "termSearch"), regex = NULL),
+  include_title = TRUE,
+  trelliscope_parameters = list(rows = 1, columns = 3, path = NULL)
+)
 
-plot_hc_trelliscope(data, remove_columns = c("countMaximumRecords",
-  "urlGDELTV2FTAPI", "isOR", "urlArticleMobile"),
-  group_columns = list(regex = NULL, columns = c("itemQuery",
-  "valueQuery", "periodtimeSearch"), exclude = NULL),
-  id_columns = list(is_except = FALSE, columns = c("itemQuery",
-  "valueQuery", "periodtimeSearch", "termSearch"), regex = NULL),
-  include_title = TRUE, trelliscope_parameters = list(rows = 1, columns
-  = 3, path = NULL))
+plot_hc_trelliscope(
+  data,
+  remove_columns = c("countMaximumRecords", "urlGDELTV2FTAPI", "isOR",
+    "urlArticleMobile"),
+  group_columns = list(regex = NULL, columns = c("itemQuery", "valueQuery",
+    "periodtimeSearch"), exclude = NULL),
+  id_columns = list(is_except = FALSE, columns = c("itemQuery", "valueQuery",
+    "periodtimeSearch", "termSearch"), regex = NULL),
+  include_title = TRUE,
+  trelliscope_parameters = list(rows = 1, columns = 3, path = NULL)
+)
 }
 \arguments{
 \item{trelliscope_parameters}{}
+}
+\value{
 
-\item{trelliscope_parameters}{}
+
+
 }
 \description{
 Plot a highchart trelliscope

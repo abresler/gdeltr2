@@ -6,6 +6,9 @@
 \usage{
 get_urls_gkg_most_recent_log()
 }
+\value{
+
+}
 \description{
 Gets most recent GKG log URLs
 }

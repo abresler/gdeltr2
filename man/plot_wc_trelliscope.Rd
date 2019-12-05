@@ -4,24 +4,37 @@
 \alias{plot_wc_trelliscope}
 \title{Plot wordcloud trelliscope}
 \usage{
-plot_wc_trelliscope(data, remove_columns = c("countMaximumRecords",
-  "urlGDELTV2FTAPI", "isOR", "urlArticleMobile"),
+plot_wc_trelliscope(
+  data,
+  remove_columns = c("countMaximumRecords", "urlGDELTV2FTAPI", "isOR",
+    "urlArticleMobile"),
   group_columns = list(regex = "Search", columns = NULL, exclude = NULL),
-  id_columns = list(is_except = TRUE, columns = c("idPanel", "data",
-  "plot"), regex = NULL), word_size = 0.65, widget_size = c(500, 500),
-  trelliscope_parameters = list(rows = 1, columns = 3, path = NULL))
+  id_columns = list(is_except = TRUE, columns = c("idPanel", "data", "plot"), regex =
+    NULL),
+  word_size = 0.65,
+  widget_size = c(500, 500),
+  trelliscope_parameters = list(rows = 1, columns = 3, path = NULL)
+)
 
-plot_wc_trelliscope(data, remove_columns = c("countMaximumRecords",
-  "urlGDELTV2FTAPI", "isOR", "urlArticleMobile"),
+plot_wc_trelliscope(
+  data,
+  remove_columns = c("countMaximumRecords", "urlGDELTV2FTAPI", "isOR",
+    "urlArticleMobile"),
   group_columns = list(regex = "Search", columns = NULL, exclude = NULL),
-  id_columns = list(is_except = TRUE, columns = c("idPanel", "data",
-  "plot"), regex = NULL), word_size = 0.65, widget_size = c(500, 500),
-  trelliscope_parameters = list(rows = 1, columns = 3, path = NULL))
+  id_columns = list(is_except = TRUE, columns = c("idPanel", "data", "plot"), regex =
+    NULL),
+  word_size = 0.65,
+  widget_size = c(500, 500),
+  trelliscope_parameters = list(rows = 1, columns = 3, path = NULL)
+)
 }
 \arguments{
 \item{trelliscope_parameters}{}
+}
+\value{
 
-\item{trelliscope_parameters}{}
+
+
 }
 \description{
 Plot wordcloud trelliscope

@@ -4,14 +4,18 @@
 \alias{visualize_gkg_trelliscope}
 \title{Trelliscope gkg data}
 \usage{
-visualize_gkg_trelliscope(data, domains = c("wsj.com", "law360",
-  "nytimes.com", "dailymail", "recode", "architizer", "globest", "realert",
-  "seekingalpha.com", "bloomberg.com", "curbed.com",
-  "commercialobserver.com", "globest.com", "realdeal.com",
-  "techcrunch.com", "nytimes.com", "architizer", "pehub", "rew-online",
-  "nypost"), random_domains = 0, only_pictures = TRUE,
-  extra_columns = NULL, trelliscope_parameters = list(title = NULL,
-  path = NULL, rows = NULL, columns = NULL), gkg_parse = "names")
+visualize_gkg_trelliscope(
+  data,
+  domains = c("wsj.com", "law360", "nytimes.com", "dailymail", "recode", "architizer",
+    "globest", "realert", "seekingalpha.com", "bloomberg.com", "curbed.com",
+    "commercialobserver.com", "globest.com", "realdeal.com", "techcrunch.com",
+    "nytimes.com", "architizer", "pehub", "rew-online", "nypost"),
+  random_domains = 0,
+  only_pictures = TRUE,
+  extra_columns = NULL,
+  trelliscope_parameters = list(title = NULL, path = NULL, rows = NULL, columns = NULL),
+  gkg_parse = "names"
+)
 }
 \arguments{
 \item{trelliscope_parameters}{\itemize{
@@ -36,6 +40,9 @@ visualize_gkg_trelliscope(data, domains = c("wsj.com", "law360",
 \item 'themes',
 \item 'xml
 }}
+}
+\value{
+
 }
 \description{
 Trelliscope gkg data

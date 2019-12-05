@@ -9,6 +9,9 @@ dictionary_gkg_tv_daily_summaries(return_message = T)
 \arguments{
 \item{return_message}{}
 }
+\value{
+
+}
 \description{
 Gets Global Knowledge Graph TV Summary Files
 }

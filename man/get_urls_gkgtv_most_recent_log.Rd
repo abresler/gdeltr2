@@ -6,6 +6,9 @@
 \usage{
 get_urls_gkgtv_most_recent_log()
 }
+\value{
+
+}
 \description{
 Gets most recent GKG TV log URLs
 }

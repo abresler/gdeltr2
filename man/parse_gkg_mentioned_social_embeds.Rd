@@ -4,14 +4,20 @@
 \alias{parse_gkg_mentioned_social_embeds}
 \title{Returns social embed information from a gkg data frame}
 \usage{
-parse_gkg_mentioned_social_embeds(gdelt_data,
-  social_embed_column = "urlSocialMediaImageEmbeds", filter_na = T,
-  return_wide = T)
+parse_gkg_mentioned_social_embeds(
+  gdelt_data,
+  social_embed_column = "urlSocialMediaImageEmbeds",
+  filter_na = T,
+  return_wide = T
+)
 }
 \arguments{
 \item{social_embed_column}{options \code{c('urlSocialMediaImageEmbeds', 'images', 'urlSocialMediaVideoEmbeds', 'video', 'videos'))}}
 
 \item{return_wide}{}
+}
+\value{
+
 }
 \description{
 Returns social embed information from a gkg data frame

@@ -4,8 +4,11 @@
 \alias{dictionary_ft_codebook}
 \title{GDELT Full Text API 2.0 Codebooks}
 \usage{
-dictionary_ft_codebook(code_book = "gkg",
-  visualize_trelliscope = FALSE, path = NULL)
+dictionary_ft_codebook(
+  code_book = "gkg",
+  visualize_trelliscope = FALSE,
+  path = NULL
+)
 }
 \arguments{
 \item{code_book}{code book selection \itemize{
@@ -21,6 +24,9 @@ dictionary_ft_codebook(code_book = "gkg",
 interactive trelliscope}
 
 \item{path}{file path where you want to save the trelliscope if \code{TRUE}}
+}
+\value{
+
 }
 \description{
 GDELT Full Text API 2.0 Codebooks

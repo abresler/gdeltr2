@@ -4,8 +4,11 @@
 \alias{gkg_tv_days}
 \title{Gets GKG TV data for specified days}
 \usage{
-gkg_tv_days(dates = c("2016-06-01", "2016-02-01"),
-  only_most_recent = F, return_message = T)
+gkg_tv_days(
+  dates = c("2016-06-01", "2016-02-01"),
+  only_most_recent = F,
+  return_message = T
+)
 }
 \arguments{
 \item{dates}{specified dates, year, month day format}
@@ -14,6 +17,9 @@ gkg_tv_days(dates = c("2016-06-01", "2016-02-01"),
 \code{c(T, F)}}
 
 \item{return_message}{}
+}
+\value{
+
 }
 \description{
 Gets GKG TV data for specified days

@@ -6,6 +6,9 @@
 \usage{
 get_codes_cameo_known_groups()
 }
+\value{
+
+}
 \description{
 Retrieves GDELT CAMEO known group code book
 }

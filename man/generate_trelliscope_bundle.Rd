@@ -4,19 +4,38 @@
 \alias{generate_trelliscope_bundle}
 \title{Generate Trelliscope Bundle}
 \usage{
-generate_trelliscope_bundle(include_image_panel = TRUE,
-  include_timeline_info = TRUE, include_timeline_tone = FALSE,
+generate_trelliscope_bundle(
+  include_image_panel = TRUE,
+  include_timeline_info = TRUE,
+  include_timeline_tone = FALSE,
   include_sentiment_bin = TRUE,
   wordcloud_modes = c("WordCloudImageTags", "WordCloudImageWebTags"),
-  terms = NA, domains = NA, gkg_themes = NA, images_ocr = NA,
-  images_tag = NA, images_web_tag = NA, images_face_tone = NA,
-  images_num_faces = NA, images_web_count = NA,
-  timespans = c("24 hours"), wordcloud_timespans = c("1 month"),
-  dates = NA, source_countries = NA, tone = NA,
-  tone_absolute_value = NA, maximum_records = 250, translate = NULL,
-  timeline_smooth = 5, sort_by = "DateDesc", base_path = NULL,
-  rows = 1, columns = 2, id_columns = NULL, group_columns = NULL,
-  return_message = TRUE)
+  terms = NA,
+  domains = NA,
+  gkg_themes = NA,
+  images_ocr = NA,
+  images_tag = NA,
+  images_web_tag = NA,
+  images_face_tone = NA,
+  images_num_faces = NA,
+  images_web_count = NA,
+  timespans = c("24 hours"),
+  wordcloud_timespans = c("1 month"),
+  dates = NA,
+  source_countries = NA,
+  tone = NA,
+  tone_absolute_value = NA,
+  maximum_records = 250,
+  translate = NULL,
+  timeline_smooth = 5,
+  sort_by = "DateDesc",
+  base_path = NULL,
+  rows = 1,
+  columns = 2,
+  id_columns = NULL,
+  group_columns = NULL,
+  return_message = TRUE
+)
 }
 \arguments{
 \item{include_image_panel}{if \code{TRUE} includes ArtList}
@@ -92,6 +111,9 @@ default \code{NULL}}
 \item{rows}{rows of}
 
 \item{return_message}{}
+}
+\value{
+
 }
 \description{
 Generates a bundle of trelliscopes for publishing to the web

@@ -4,10 +4,16 @@
 \alias{get_data_gkg_days_detailed}
 \title{Get dates detailed data from a specified table}
 \usage{
-get_data_gkg_days_detailed(dates = c("2016-07-19"),
-  table_name = c("gkg"), file_directory = NULL,
-  folder_name = "gdelt_data", only_most_recent = F, remove_files = T,
-  empty_trash = T, return_message = T)
+get_data_gkg_days_detailed(
+  dates = c("2016-07-19"),
+  table_name = c("gkg"),
+  file_directory = NULL,
+  folder_name = "gdelt_data",
+  only_most_recent = F,
+  remove_files = T,
+  empty_trash = T,
+  return_message = T
+)
 }
 \arguments{
 \item{table_name}{the name of the table
@@ -25,6 +31,9 @@ options \code{c('gkg', 'export', 'mentions'))}}
 \code{T, F}}
 
 \item{date_data}{must be a date in Year - Month - Day format}
+}
+\value{
+
 }
 \description{
 Get dates detailed data from a specified table

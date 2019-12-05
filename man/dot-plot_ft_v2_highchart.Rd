@@ -4,11 +4,17 @@
 \alias{.plot_ft_v2_highchart}
 \title{Title}
 \usage{
-.plot_ft_v2_highchart(data, search_mode = "TimelineVolInfo",
-  include_title = TRUE)
+.plot_ft_v2_highchart(
+  data,
+  search_mode = "TimelineVolInfo",
+  include_title = TRUE
+)
 }
 \arguments{
 \item{include_title}{}
+}
+\value{
+
 }
 \description{
 Title

@@ -4,13 +4,17 @@
 \alias{visualize_vgkg_trelliscope}
 \title{Visualize Cloudvision trelliscope}
 \usage{
-visualize_vgkg_trelliscope(data, vgkg_parse = "landmarks",
-  domains = c("wsj.com", "seekingalpha.com", "bloomberg.com",
-  "curbed.com", "commercialobserver.com", "globest.com", "realdeal.com",
-  "techcrunch.com", "nytimes.com", "architizer", "pehub", "rew-online.com",
-  "nypost.com"), trelliscope_parameters = list(title = NULL, path = NULL,
-  rows = NULL, columns = NULL), random_domains = 0,
-  only_pictures = TRUE, extra_columns = NULL)
+visualize_vgkg_trelliscope(
+  data,
+  vgkg_parse = "landmarks",
+  domains = c("wsj.com", "seekingalpha.com", "bloomberg.com", "curbed.com",
+    "commercialobserver.com", "globest.com", "realdeal.com", "techcrunch.com",
+    "nytimes.com", "architizer", "pehub", "rew-online.com", "nypost.com"),
+  trelliscope_parameters = list(title = NULL, path = NULL, rows = NULL, columns = NULL),
+  random_domains = 0,
+  only_pictures = TRUE,
+  extra_columns = NULL
+)
 }
 \arguments{
 \item{vgkg_parse}{\itemize{
@@ -30,6 +34,9 @@ visualize_vgkg_trelliscope(data, vgkg_parse = "landmarks",
 }}
 
 \item{only_pictures}{}
+}
+\value{
+
 }
 \description{
 Visualize Cloudvision trelliscope

@@ -4,11 +4,20 @@
 \alias{ft_terms_sentiment}
 \title{Get V1 API sentiment for terms}
 \usage{
-ft_terms_sentiment(terms = c("Zika", "\\"Golden State Warriors\\""),
-  visualization = NULL, domain = NA, last_minutes = NA,
-  is_tone = T, tone_less_than = NA, tone_more_than = NA,
-  source_language = NA, sort_by = "date", dedeup_results = T,
-  nest_data = F, return_message = T)
+ft_terms_sentiment(
+  terms = c("Zika", "\\"Golden State Warriors\\""),
+  visualization = NULL,
+  domain = NA,
+  last_minutes = NA,
+  is_tone = T,
+  tone_less_than = NA,
+  tone_more_than = NA,
+  source_language = NA,
+  sort_by = "date",
+  dedeup_results = T,
+  nest_data = F,
+  return_message = T
+)
 }
 \arguments{
 \item{terms}{vector of terms}

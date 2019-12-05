@@ -4,14 +4,21 @@
 \alias{get_gdelt_url_data}
 \title{Get GDELT url data}
 \usage{
-
-  get_gdelt_url_data(url = "http://data.gdeltproject.org/gdeltv2/20160531000000.gkg.csv.zip",
-  file_directory = NULL, folder_name = "gdelt_data",
-  remove_existing_folder = T, remove_files = T, empty_trash = T,
-  return_message = T)
+get_gdelt_url_data(
+  url = "http://data.gdeltproject.org/gdeltv2/20160531000000.gkg.csv.zip",
+  file_directory = NULL,
+  folder_name = "gdelt_data",
+  remove_existing_folder = T,
+  remove_files = T,
+  empty_trash = T,
+  return_message = T
+)
 }
 \arguments{
 \item{return_message}{}
+}
+\value{
+
 }
 \description{
 Get GDELT url data

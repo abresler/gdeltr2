@@ -3,7 +3,6 @@
 \docType{package}
 \name{gdeltr2}
 \alias{gdeltr2}
-\alias{gdeltr2-package}
 \title{gdeltr2}
 \description{
 Tools for interacting with GDELT

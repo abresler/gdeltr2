@@ -6,6 +6,9 @@
 \usage{
 get_codes_gcam()
 }
+\value{
+
+}
 \description{
 Retrives most recent GDELT Global Content Analysis Measures (GCAM) code book
 }

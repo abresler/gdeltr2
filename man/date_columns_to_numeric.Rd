@@ -4,8 +4,12 @@
 \alias{date_columns_to_numeric}
 \title{Convert date columns to numeric}
 \usage{
-date_columns_to_numeric(data, column_keyword = "date",
-  exclude_col_type = c("character"), return_message = T)
+date_columns_to_numeric(
+  data,
+  column_keyword = "date",
+  exclude_col_type = c("character"),
+  return_message = T
+)
 }
 \arguments{
 \item{column_keyword}{Keyword of the data frame's columns to look for that signifies dates
@@ -15,6 +19,9 @@ date_columns_to_numeric(data, column_keyword = "date",
 \code{c('character')}}
 
 \item{return_message}{return a message}
+}
+\value{
+
 }
 \description{
 Convert date columns to numeric

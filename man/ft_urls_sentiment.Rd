@@ -4,11 +4,20 @@
 \alias{ft_urls_sentiment}
 \title{Get V1 sentiment from specified domains}
 \usage{
-ft_urls_sentiment(domains = c("nytimes.com", "washingtonpost.com"),
-  visualization = TRUE, term = NA, last_minutes = NA, is_tone = T,
-  tone_less_than = NA, tone_more_than = NA, source_language = NA,
-  sort_by = "date", dedeup_results = T, nest_data = F,
-  return_message = T)
+ft_urls_sentiment(
+  domains = c("nytimes.com", "washingtonpost.com"),
+  visualization = TRUE,
+  term = NA,
+  last_minutes = NA,
+  is_tone = T,
+  tone_less_than = NA,
+  tone_more_than = NA,
+  source_language = NA,
+  sort_by = "date",
+  dedeup_results = T,
+  nest_data = F,
+  return_message = T
+)
 }
 \arguments{
 \item{domains}{vector of domain names}

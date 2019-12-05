@@ -4,11 +4,13 @@
 \alias{get_urls_gkg_daily_summaries}
 \title{Gets Global Knowledge Graph summary files by day since April 2013}
 \usage{
-get_urls_gkg_daily_summaries(remove_count_files = F,
-  return_message = T)
+get_urls_gkg_daily_summaries(remove_count_files = F, return_message = T)
 }
 \arguments{
 \item{return_message}{}
+}
+\value{
+
 }
 \description{
 Gets Global Knowledge Graph summary files by day since April 2013

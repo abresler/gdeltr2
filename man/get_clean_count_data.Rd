@@ -4,8 +4,12 @@
 \alias{get_clean_count_data}
 \title{Gets clean count data}
 \usage{
-get_clean_count_data(all_counts, extra_key = NA,
-  count_col = "idArticle.tone", return_wide = F)
+get_clean_count_data(
+  all_counts,
+  extra_key = NA,
+  count_col = "idArticle.tone",
+  return_wide = F
+)
 }
 \arguments{
 \item{return_wide}{}

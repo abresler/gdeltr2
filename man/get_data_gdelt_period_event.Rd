@@ -4,9 +4,14 @@
 \alias{get_data_gdelt_period_event}
 \title{Retreive GDELT data for a given period}
 \usage{
-get_data_gdelt_period_event(period = 1983, file_directory = NULL,
-  folder_name = "gdelt_data", remove_files = T, empty_trash = T,
-  return_message = T)
+get_data_gdelt_period_event(
+  period = 1983,
+  file_directory = NULL,
+  folder_name = "gdelt_data",
+  remove_files = T,
+  empty_trash = T,
+  return_message = T
+)
 }
 \arguments{
 \item{period}{the GDELT period}

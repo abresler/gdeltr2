@@ -4,8 +4,11 @@
 \alias{get_data_gdelt_period_event_totals}
 \title{Retrieves GDELT event summary by period}
 \usage{
-get_data_gdelt_period_event_totals(period = "yearly", by_country = T,
-  return_message = T)
+get_data_gdelt_period_event_totals(
+  period = "yearly",
+  by_country = T,
+  return_message = T
+)
 }
 \arguments{
 \item{period}{can be \code{c("yearly", "daily", "monthly")}}
@@ -14,6 +17,9 @@ get_data_gdelt_period_event_totals(period = "yearly", by_country = T,
 can be \code{c(TRUE, FALSE)}}
 
 \item{return_message}{returns message}
+}
+\value{
+
 }
 \description{
 Retrieves GDELT event summary by period

@@ -6,6 +6,9 @@
 \usage{
 dictionary_outlets()
 }
+\value{
+
+}
 \description{
 Returns a dictionary of GDELT's tracked outlets
 including website, logo, icon and English name

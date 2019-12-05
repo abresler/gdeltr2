@@ -244,7 +244,7 @@ parse_v3_entity_api_urls <-
 v3_entity_api <-
   function(start_date = Sys.Date()-10,
            end_date =Sys.Date()-10,
-           return_message) {
+           return_message = T) {
     if (length(start_date) == 0) {
       stop("Enter start date")
     }

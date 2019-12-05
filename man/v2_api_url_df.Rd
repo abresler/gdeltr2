@@ -4,17 +4,38 @@
 \alias{v2_api_url_df}
 \title{GDELT V2 API URL Df}
 \usage{
-v2_api_url_df(terms = NA, domains = NA, image_face_tone = NA,
-  image_num_faces = NA, image_ocr = NA, image_tag = NA,
-  image_web_tag = NA, image_web_count = NA, source_country = NA,
-  source_language = "English", gkg_theme = NA, tone = NA,
-  tone_absolute_value = NA, use_or = FALSE, mode = "ArtGallery",
-  timespan = "104 weeks", quote_terms = F, format = "html",
-  dates = NULL, maximum_records = 250, translate = NULL,
-  timeline_smooth = 5, sort_by = "DateDesc", return_message = TRUE)
+v2_api_url_df(
+  terms = NA,
+  domains = NA,
+  image_face_tone = NA,
+  image_num_faces = NA,
+  image_ocr = NA,
+  image_tag = NA,
+  image_web_tag = NA,
+  image_web_count = NA,
+  source_country = NA,
+  source_language = "English",
+  gkg_theme = NA,
+  tone = NA,
+  tone_absolute_value = NA,
+  use_or = FALSE,
+  mode = "ArtGallery",
+  timespan = "104 weeks",
+  quote_terms = F,
+  format = "html",
+  dates = NULL,
+  maximum_records = 250,
+  translate = NULL,
+  timeline_smooth = 5,
+  sort_by = "DateDesc",
+  return_message = TRUE
+)
 }
 \arguments{
 \item{quote_terms}{}
+}
+\value{
+
 }
 \description{
 Creates data frame of gdeltv2 API queries.

@@ -11,6 +11,9 @@ v3_social_data(dates = NULL, return_message = T)
 
 \item{return_message}{if \code{true} returns message}
 }
+\value{
+
+}
 \description{
 Data of articles linking
 to social media mentions
