@@ -682,7 +682,7 @@ get_data_gdelt_period_event_totals <-
     if (period == 'daily') {
       period_data <-
         period_data %>%
-        mutate(dateData = idDate %>% lubridat::ymd() %>% as.Date()) %>%
+        mutate(dateData = idDate %>% lubridate::ymd() %>% as.Date()) %>%
         dplyr::select(periodData, isByCountry, dateData, everything())
     }
 
