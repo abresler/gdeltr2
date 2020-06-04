@@ -6,6 +6,7 @@
 \usage{
 ft_v2_api(
   terms = NA,
+  quote_terms = F,
   domains = NA,
   images_face_tone = NA,
   images_num_faces = NA,
@@ -22,7 +23,6 @@ ft_v2_api(
   modes = "ArtList",
   timespans = c("24 hours"),
   dates = NA,
-  quote_terms = F,
   maximum_records = 250,
   translate = NULL,
   timeline_smooth = 5,

@@ -82,14 +82,12 @@ dictionary_v3_entity_urls <-
   function(){
     .tt <- memoise::memoise(.dictionary_v3_entities)
     data <- .tt()
-    most_recent_dict <- data %>% select(datetimeData) %>% pull() %>% max()
-    most_recent <- .recent_entities_time()
-    missing_dates  <-
-      seq(from = most_recent_dict, to = most_recent,
-          by = '15 min')
+    most_recent_dict <-
+      data %>% select(datetimeData) %>% pull() %>% max()
+
     options(scipen = 99999)
     df_missing <-
-      tibble(datetimeData = missing_dates) %>%
+      data %>%
       mutate(
         isoPeriod = datetimeData %>% format("%Y%m%d%H%M%S") %>% as.numeric(),
         urlAPI = glue(
@@ -101,12 +99,6 @@ dictionary_v3_entity_urls <-
       ) %>%
       select(-isoPeriod) %>%
       select(yearData, monthData, dateData, datetimeData, everything())
-
-
-    data <-
-      data %>%
-      bind_rows(df_missing) %>%
-      distinct()
 
     data
   }
@@ -142,10 +134,10 @@ dictionary_v3_entity_urls <-
 .parse_entity_json_url <-
   function(url = "http://data.gdeltproject.org/gdeltv3/geg_gcnlapi/20170709211500.geg-gcnlapi.json.gz",
            return_message = T) {
-
+    time <- .extract_time(url = url)
     if (return_message) {
 
-    glue::glue("Acquiring V3 Entity API data for {time}") %>% message()
+      glue::glue("Acquiring V3 Entity API data for {time}") %>% message()
     }
 
     data <-
@@ -156,7 +148,17 @@ dictionary_v3_entity_urls <-
 
     data <-
       data %>%
-      setNames(c("datetimeArticle", "urlArticle", "dataEntities")) %>%
+      setNames(
+        c(
+          "datetimeArticle",
+          "urlArticle",
+          "laguageArticle",
+          "polarity",
+          "magnitude",
+          "score",
+          "dataEntities"
+        )
+      ) %>%
       mutate(
         datetimeArticle = ymd_hms(datetimeArticle) %>% lubridate::with_tz(Sys.timezone()),
         dateArticle = as.Date(datetimeArticle),
@@ -165,7 +167,14 @@ dictionary_v3_entity_urls <-
         domainArticle = urlArticle %>% urltools::domain(),
         urlAPI = url
       ) %>%
-      select(yearArticle, monthArticle, dateArticle, datetimeArticle, domainArticle, everything())
+      select(
+        yearArticle,
+        monthArticle,
+        dateArticle,
+        datetimeArticle,
+        domainArticle,
+        everything()
+      )
 
     data <-
       data %>%
@@ -242,8 +251,8 @@ parse_v3_entity_api_urls <-
 #'
 #' @examples
 v3_entity_api <-
-  function(start_date = Sys.Date()-10,
-           end_date =Sys.Date()-10,
+  function(start_date = Sys.Date()-1,
+           end_date =Sys.Date(),
            return_message = T) {
     if (length(start_date) == 0) {
       stop("Enter start date")

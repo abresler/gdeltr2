@@ -5,8 +5,8 @@
 \title{V3 Entity API data}
 \usage{
 v3_entity_api(
-  start_date = Sys.Date() - 10,
-  end_date = Sys.Date() - 10,
+  start_date = Sys.Date() - 1,
+  end_date = Sys.Date(),
   return_message = T
 )
 }

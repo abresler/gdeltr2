@@ -1,5 +1,6 @@
 
 
+
 # utilities ---------------------------------------------------------------
 
 .remove_full_na_column <-
@@ -485,7 +486,7 @@ get_data_ft_v1_api_terms <-
         select(idArticle, everything()) %>%
         arrange(idArticle) %>%
         mutate_at(c('dateTimeArticle', 'dateArticle'),
-                  funs(. %>% as.character()))
+                  as.character)
       if (has_path) {
         path_loc <-
           df_parameters$path
@@ -645,7 +646,7 @@ get_data_ft_v1_api_domains <-
         select(idArticle, everything()) %>%
         arrange(idArticle) %>%
         mutate_at(c('dateArticle', 'dateTimeArticle'),
-                  funs(. %>% as.character()))
+                  as.character)
 
       if (has_path) {
         path_loc <-
@@ -972,7 +973,7 @@ ft_urls_sentiment <-
         ggplot(aes(x = dateTimeSentiment, y = valueTone)) +
         geom_line(aes(color = domainSearch)) +
         scale_y_continuous(limits = c(-7, 7)) +
-        facet_wrap( ~ domainSearch, scales = "free") +
+        facet_wrap(~ domainSearch, scales = "free") +
         hrbrthemes::theme_ipsum(grid = "XY") +
         scale_x_datetime(expand = c(0, 0)) +
         theme(legend.position = "none") +
@@ -1098,7 +1099,7 @@ ft_terms_sentiment <-
         ggplot(aes(x = dateTimeSentiment, y = valueTone)) +
         geom_line(aes(color = term)) +
         scale_y_continuous(limits = c(-7, 7)) +
-        facet_wrap( ~ term, scales = "free") +
+        facet_wrap(~ term, scales = "free") +
         hrbrthemes::theme_ipsum(grid = "XY") +
         scale_x_datetime(expand = c(0, 0)) +
         theme(legend.position = "none") +
@@ -1510,7 +1511,7 @@ instability_api_locations <-
         ggplot(aes(x = dateData, y = value)) +
         geom_line(aes(color = item)) +
         scale_y_continuous(limits = c(-7, 7)) +
-        facet_wrap( ~ nameLocation, scales = "free") +
+        facet_wrap(~ nameLocation, scales = "free") +
         hrbrthemes::theme_ipsum(grid = "XY") +
         scale_x_date(expand = c(0, 0)) +
         theme(legend.position = "bottom") +
@@ -2216,8 +2217,8 @@ ft_geo_query <-
            widget_size = c(300, 300)) {
     df <-
       data %>%
-      dplyr::rename(word = labelTime,
-                    freq = countValue) %>%
+      dplyr::rename(word = label,
+                    freq = size) %>%
       dplyr::select(word, freq)
     wc <-
       df %>%
@@ -2563,7 +2564,7 @@ plot_wc_trelliscope <-
       data <-
         data %>%
         mutate(xAxis = idBIN,
-               yAxis = countValue,
+               yAxis = size,
                xAxisName = idBIN)
     }
 
@@ -3188,8 +3189,8 @@ generate_dates <-
            widget_size = c(300, 300)) {
     df <-
       data %>%
-      dplyr::rename(word = labelTime,
-                    freq = countValue) %>%
+      dplyr::rename(word = label,
+                    freq = size) %>%
       dplyr::select(word, freq)
     wc <-
       df %>%
@@ -3433,7 +3434,7 @@ plot_panel_trelliscope <-
            trelliscope_parameters = list(rows = 1,
                                          columns = 3,
                                          path = NULL)) {
-    if (image_column %>% purrr::is_null()) {
+    if (length(image_column) == 0) {
       data <-
         data %>%
         mutate(urlImage = NA)
@@ -3442,8 +3443,7 @@ plot_panel_trelliscope <-
     data <-
       data %>%
       .munge_for_trelliscope(remove_columns = remove_columns,
-                             group_columns = group_columns) %>%
-      suppressWarnings()
+                             group_columns = group_columns)
 
     if (!data %>% tibble::has_name('urlImage')) {
       names(data)[names(data) %>% str_detect(image_column)] <-
@@ -3473,9 +3473,7 @@ plot_panel_trelliscope <-
 
     data <-
       data %>%
-      dplyr::select(-one_of('idPanel')) %>%
-      suppressWarnings() %>%
-      suppressMessages()
+      dplyr::select(-one_of('idPanel'))
 
     data <-
       data %>%
@@ -3515,7 +3513,7 @@ plot_panel_trelliscope <-
 
       viz <-
         data %>%
-        mutate(urlImage = trelliscopejs::img_panel(urlImage)) %>%
+        mutate(panel = trelliscopejs::img_panel(urlImage)) %>%
         trelliscopejs::trelliscope(
           name = title,
           nrow = df_trelliscope_params$rows,
@@ -3530,15 +3528,13 @@ plot_panel_trelliscope <-
     }
 
     data %>%
-      mutate(urlImage = trelliscopejs::img_panel(urlImage)) %>%
+      mutate(panel = trelliscopejs::img_panel(urlImage)) %>%
       trelliscopejs::trelliscope(
         name = title,
         nrow = df_trelliscope_params$rows,
         ncol = df_trelliscope_params$columns,
-        state = list(
-          labels = c(column_ids),
-          sort = list(sort_spec("idArticle"))
-        )
+        state = list(labels = c(column_ids),
+                     sort = list(sort_spec("idArticle")))
       )
 
   }
@@ -3718,9 +3714,8 @@ plot_trelliscopes <-
     all_data <-
       data %>%
       mutate(modeSearch = modeSearch %>% str_to_upper()) %>%
-      left_join(df_mode_type %>% mutate(modeSearch = modeSearch %>% str_to_upper())) %>%
-      dplyr::select(packageVisualization, modeSearch, everything()) %>%
-      suppressMessages()
+      left_join(df_mode_type %>% mutate(modeSearch = modeSearch %>% str_to_upper(), by = "modeSearch")) %>%
+      dplyr::select(packageVisualization, modeSearch, everything())
 
     all_data <-
       all_data %>%
@@ -4058,7 +4053,7 @@ codebook_trelliscope <-
       data <-
         data %>%
         mutate(xAxis = idBIN,
-               yAxis = countValue,
+               yAxis = size,
                xAxisName = idBIN)
     }
 
@@ -4637,151 +4632,151 @@ dictionary_ft_codebook <-
   translate = NULL,
   timeline_smooth = 5,
   sort_by = 'DateDesc') {
-  base <- "https://api.gdeltproject.org/api/v2/doc/doc?query="
+    base <- "https://api.gdeltproject.org/api/v2/doc/doc?query="
 
-  for (i in seq_along(query_parameters)) {
-    query_parameters[query_parameters[i] %>% names()] %>% is.na()
-  }
-  query_slug <-
-    .parse_query(query_parameters = query_parameters)
-
-  if (query_slug %>% length() > 1) {
-    if (use_or) {
-      qs <-
-        query_slug %>% str_c(collapse  = "%20OR%20")
-      query_slug <- glue::glue("({qs})")
-    } else {
-      query_slug <-
-        query_slug %>% str_c(collapse  = "%20") %>% URLencode()
+    for (i in seq_along(query_parameters)) {
+      query_parameters[query_parameters[i] %>% names()] %>% is.na()
     }
-  }
+    query_slug <-
+      .parse_query(query_parameters = query_parameters)
 
-  if (source_language %>% length() > 0) {
-    source_language_slug <-
-      glue::glue("&sourcelang:{source_language}")
-  } else {
-    source_language_slug <- ""
-  }
+    if (query_slug %>% length() > 1) {
+      if (use_or) {
+        qs <-
+          query_slug %>% str_c(collapse  = "%20OR%20")
+        query_slug <- glue::glue("({qs})")
+      } else {
+        query_slug <-
+          query_slug %>% str_c(collapse  = "%20") %>% URLencode()
+      }
+    }
 
-  mode_options <-
-    c(
-      "ArtList",
-      "ImageCollage",
-      "ImageCollageInfo",
-      "ImageCollageShare",
-      "TimelineVol",
-      "TimelineVolInfo",
-      "TimelineTone",
-      "TimelineLang",
-      "TimelineSourceCountry",
-      "ToneChart",
-      "WordCloudImageTags",
-      "WordCloudImageWebTags"
-    ) %>% str_to_lower()
+    if (source_language %>% length() > 0) {
+      source_language_slug <-
+        glue::glue("&sourcelang:{source_language}")
+    } else {
+      source_language_slug <- ""
+    }
 
-  mode <-
-    mode %>% str_to_lower()
+    mode_options <-
+      c(
+        "ArtList",
+        "ImageCollage",
+        "ImageCollageInfo",
+        "ImageCollageShare",
+        "TimelineVol",
+        "TimelineVolInfo",
+        "TimelineTone",
+        "TimelineLang",
+        "TimelineSourceCountry",
+        "ToneChart",
+        "WordCloudImageTags",
+        "WordCloudImageWebTags"
+      ) %>% str_to_lower()
 
-  mode_slug <-
-    .generate_slug(
-      parameter = 'mode',
-      sep = '=',
-      value = mode,
-      value_options = mode_options
-    )
+    mode <-
+      mode %>% str_to_lower()
 
-  format_options <-
-    c("HTML", "CSV", "JSON", "JSONP", "RSS", "RSS archive", "") %>%
-    str_to_lower()
-
-  format_slug <-
-    .generate_slug(
-      parameter = 'format',
-      sep = '=',
-      value = format %>% str_to_lower(),
-      value_options = format_options
-    )
-
-  if (timespan %>% length() > 0) {
-    df_timespan <-
-      timespan %>% .parse_timespan()
-
-    period <- df_timespan$period_time
-
-    metric <- df_timespan$period_timeframe %>% str_to_lower()
-
-    id_metric <-
-      case_when(
-        metric %>% str_detect("minutes") ~ '',
-        metric %>% str_detect("hour") ~ 'h',
-        metric %>% str_detect("day") ~ 'd',
-        metric %>% str_detect("week") ~ 'w',
-        metric %>% str_detect("month") ~ 'm',
-        metric %>% str_detect("year") ~ "y"
+    mode_slug <-
+      .generate_slug(
+        parameter = 'mode',
+        sep = '=',
+        value = mode,
+        value_options = mode_options
       )
 
-    timespan_slug <-
-      glue::glue("&timespan={period}{id_metric}")
+    format_options <-
+      c("HTML", "CSV", "JSON", "JSONP", "RSS", "RSS archive", "") %>%
+      str_to_lower()
 
-  } else {
-    timespan_slug <- ''
-  }
+    format_slug <-
+      .generate_slug(
+        parameter = 'format',
+        sep = '=',
+        value = format %>% str_to_lower(),
+        value_options = format_options
+      )
 
-  if (dates %>% length() > 0) {
-    dates_df <-
-      dates %>% .parse_datetimes()
+    if (timespan %>% length() > 0) {
+      df_timespan <-
+        timespan %>% .parse_timespan()
 
-    start_time <-
-      dates_df$datetime_start %>%
-      as.character() %>% str_replace_all('\\ |\\:|\\-', '')
+      period <- df_timespan$period_time
 
-    end_time <-
-      dates_df$datetime_end %>%
-      as.character() %>% str_replace_all('\\ |\\:|\\-', '')
+      metric <- df_timespan$period_timeframe %>% str_to_lower()
 
-    datetime_slug <-
-      glue::glue('&startdatetime={start_time}&enddatetime={end_time}')
-  } else {
-    datetime_slug <- ''
-  }
+      id_metric <-
+        case_when(
+          metric %>% str_detect("minutes") ~ '',
+          metric %>% str_detect("hour") ~ 'h',
+          metric %>% str_detect("day") ~ 'd',
+          metric %>% str_detect("week") ~ 'w',
+          metric %>% str_detect("month") ~ 'm',
+          metric %>% str_detect("year") ~ "y"
+        )
 
-  sort_options <-
-    c('DateDesc', 'DateAsc', 'DateAsc',
-      'ToneAsc') %>%
-    str_to_lower()
+      timespan_slug <-
+        glue::glue("&timespan={period}{id_metric}")
 
-  sort_slug <-
-    .generate_slug(
-      parameter = 'sort',
-      sep = '=',
-      value = sort_by,
-      value_options = sort_options
-    )
+    } else {
+      timespan_slug <- ''
+    }
 
-  max_slug <-
-    .generate_slug(
-      parameter = 'maxrecords',
-      sep = '=',
-      value = maximum_records,
-      value_options = 1:250
-    )
+    if (dates %>% length() > 0) {
+      dates_df <-
+        dates %>% .parse_datetimes()
+
+      start_time <-
+        dates_df$datetime_start %>%
+        as.character() %>% str_replace_all('\\ |\\:|\\-', '')
+
+      end_time <-
+        dates_df$datetime_end %>%
+        as.character() %>% str_replace_all('\\ |\\:|\\-', '')
+
+      datetime_slug <-
+        glue::glue('&startdatetime={start_time}&enddatetime={end_time}')
+    } else {
+      datetime_slug <- ''
+    }
+
+    sort_options <-
+      c('DateDesc', 'DateAsc', 'DateAsc',
+        'ToneAsc') %>%
+      str_to_lower()
+
+    sort_slug <-
+      .generate_slug(
+        parameter = 'sort',
+        sep = '=',
+        value = sort_by,
+        value_options = sort_options
+      )
+
+    max_slug <-
+      .generate_slug(
+        parameter = 'maxrecords',
+        sep = '=',
+        value = maximum_records,
+        value_options = 1:250
+      )
 
 
-  url_api <-
-    glue(
-      "{base}",
-      "{query_slug}",
-      "{source_language_slug}",
-      "{mode_slug}",
-      "{format_slug}",
-      "{timespan_slug}",
-      "{datetime_slug}",
-      "{max_slug}",
-      "{sort_slug}"
-    ) %>%
-    str_to_lower()
+    url_api <-
+      glue(
+        "{base}",
+        "{query_slug}",
+        "{source_language_slug}",
+        "{mode_slug}",
+        "{format_slug}",
+        "{timespan_slug}",
+        "{datetime_slug}",
+        "{max_slug}",
+        "{sort_slug}"
+      ) %>%
+      str_to_lower()
 
-  url_api
+    url_api
   }
 
 
@@ -4812,13 +4807,13 @@ dictionary_ft_codebook <-
         ),
         nameActual = c(
           "idBIN",
-          "countValue",
+          "size",
           "datetimeData",
           "domainArticle",
           "urlImage",
           "countImageUses",
           "urlsImageWeb",
-          "labelTime",
+          "label",
           "languageArticle",
           "datetimeArticle",
           "nameSeries",
@@ -4838,14 +4833,108 @@ dictionary_ft_codebook <-
 
 .parse_json_api_2 <-
   function(url = "http://api.gdeltproject.org/api/v2/doc/doc?query=domain:netsdaily.com&timespan=1m&maxrecords=250&format=json") {
+    httr::set_config(httr::config(ssl_verifypeer = 0L))
+    res <-
+      GET(url) %>%
+      httr::content(as = "text")
+
     data <-
-      url %>%
+      res %>%
       jsonlite::fromJSON(simplifyDataFrame = TRUE)
 
+    data_names <- names(data)
+
+
+    if (data_names %>% str_detect("timeline") %>% sum(na.rm = T) > 0)  {
+      tbl_params <- data$query_details %>% flatten_df()
+      data <-
+        as_tibble(data$timeline) %>%
+        unnest_legacy()
+      series_name <-
+        data <-
+        data %>%
+        unnest_legacy()
+
+      df_name <-
+        .get_gdelt_ft_api_names()
+
+      actual_names <-
+        names(data) %>%
+        map_chr(function(x) {
+          df_name %>%
+            filter(nameGDELT == x) %>%
+            pull(nameActual)
+        })
+
+      data <-
+        data %>%
+        purrr::set_names(actual_names)
+
+      data <-
+        data %>%
+        mutate_if(is.character,
+                  funs(ifelse(. == '', NA, .)))
+
+      has_datetime <-
+        data %>% names() %>% str_detect("^datetime[A-Z]") %>% sum(na.rm = TRUE) > 0
+
+      if (has_datetime) {
+        data <-
+          data %>%
+          mutate_at(
+            .vars = data %>% dplyr::select(dplyr::matches("^datetime[A-Z]")) %>% names(),
+            funs(
+              . %>% lubridate::ymd_hms() %>% lubridate::with_tz(Sys.timezone())
+            )
+          )
+      }
+
+      return(data)
+    }
+
+    if (data_names %>% str_detect("tonechart")  %>% sum(na.rm = T) > 0) {
+      data <-
+        as_tibble(data$tonechart) %>% unnest()
+
+      df_name <-
+        .get_gdelt_ft_api_names()
+
+      actual_names <-
+        names(data) %>%
+        map_chr(function(x) {
+          df_name %>%
+            filter(nameGDELT == x) %>%
+            pull(nameActual)
+        })
+
+      data <-
+        data %>%
+        purrr::set_names(actual_names)
+
+      data <-
+        data %>%
+        mutate_if(is.character,
+                  funs(ifelse(. == '', NA, .)))
+
+      has_datetime <-
+        data %>% names() %>% str_detect("^datetime[A-Z]") %>% sum(na.rm = TRUE) > 0
+
+      if (has_datetime) {
+        data <-
+          data %>%
+          mutate_at(
+            .vars = data %>% dplyr::select(dplyr::matches("^datetime[A-Z]")) %>% names(),
+            funs(
+              . %>% lubridate::ymd_hms() %>% lubridate::with_tz(Sys.timezone())
+            )
+          )
+      }
+
+      return(data)
+    }
 
     data <-
-      data[[names(data)]] %>%
-      as_tibble()
+      as_tibble(data)
 
     if (data %>% tibble::has_name("imageweburls")) {
       df_urls <-
@@ -4880,6 +4969,11 @@ dictionary_ft_codebook <-
       data <-
         data %>%
         unnest_legacy()
+    }
+
+    if (data %>% has_name("wordcloud")) {
+      data <- data$wordcloud %>%
+        unnest()
     }
     df_name <-
       .get_gdelt_ft_api_names()
@@ -5061,35 +5155,15 @@ dictionary_ft_codebook <-
     "http://api.gdeltproject.org/api/v2/doc/doc?query=theme:econ_bitcoin%20sourcelang:english&mode=artlist&format=json&timespan=12w&maxrecords=250&sort=datedesc"
   ),
   return_message = TRUE) {
-    df <-
-      tibble()
 
     .parse_json_api_2_safe <-
       purrr::possibly(.parse_json_api_2, tibble())
 
-    success <- function(res) {
-      if (return_message) {
-        list("Parsing: ", res$url, "\n") %>% purrr::reduce(paste0) %>% cat(fill = T)
-      }
-
-      data <-
-        res$url %>%
-        .parse_json_api_2_safe() %>%
-        mutate(urlGDELTV2FTAPI = res$url)
-
-      df <<-
-        df %>%
-        bind_rows(data)
-    }
-    failure <- function(msg) {
-      tibble()
-    }
     urls %>%
-      walk(function(x) {
-        curl_fetch_multi(url = x, success, failure)
+      map_dfr(function(url){
+        .parse_json_api_2_safe(url = url) %>%
+          mutate(urlGDELTV2FTAPI = url)
       })
-    multi_run()
-    df
   }
 
 
@@ -5193,7 +5267,7 @@ dictionary_ft_codebook <-
           image_web_count = df_row$image_web_count,
           source_country = df_row$source_country,
           source_language = df_row$source_language,
-          quote_terms = quote_terms,
+          quote_terms = F,
           gkg_theme = df_row$gkg_theme,
           tone = tone,
           tone_absolute_value = tone_absolute_value,
@@ -5236,8 +5310,7 @@ dictionary_ft_codebook <-
 
     all_data <-
       all_url_df %>%
-      left_join(all_data) %>%
-      suppressMessages()
+      left_join(all_data, by = "urlGDELTV2FTAPI")
 
     all_data <-
       all_data %>%
@@ -5338,6 +5411,7 @@ dictionary_ft_codebook <-
 
 ft_v2_api <-
   function(terms = NA,
+           quote_terms = F,
            domains = NA,
            images_face_tone = NA,
            images_num_faces = NA,
@@ -5355,7 +5429,6 @@ ft_v2_api <-
            #ArtList, ImageCollage,  ImageCollageInfo, ImageCollageShare, TimelineVol, TimelineVolInfo, TimelineTone, TimelineLang, TimelineSourceCountry, ToneChart, WordCloudEnglish, WordCloudNative, WordCloudTheme, WordCloudImageTags, WordCloudImageWebTags
            timespans = c("24 hours"),
            dates = NA,
-           quote_terms = F,
            maximum_records = 250,
            translate = NULL,
            timeline_smooth = 5,
@@ -5376,6 +5449,10 @@ ft_v2_api <-
 
     if (domains %>% purrr::is_null()) {
       domains <- NA
+    }
+
+    if (length(terms) > 0 & quote_terms) {
+      terms <- glue('"{terms}"') %>% as.character()
     }
 
     search_options <- c(
@@ -5439,7 +5516,7 @@ ft_v2_api <-
       return(all_data)
     }
 
-    if (dates %>% purrr::is_null()) {
+    if (length(dates) == 0) {
       dates <- NA
     }
 
@@ -5449,8 +5526,7 @@ ft_v2_api <-
 
     all_data <-
       all_data %>%
-      dplyr::select(-one_of(c("isOR", "countMaximumRecords"))) %>%
-      suppressMessages()
+      dplyr::select(-one_of(c("isOR", "countMaximumRecords")))
 
     all_data %>%
       plot_trelliscopes(trelliscope_parameters = trelliscope_parameters)
@@ -5889,20 +5965,22 @@ v2_api_url_df <-
            timeline_smooth = 5,
            sort_by = 'DateDesc',
            return_message = TRUE) {
-    df_grid <- expand.grid(term = terms,
-                           domain = domains,
-                           image_face_tone = image_face_tone,
-                           image_num_faces = image_num_faces,
-                           image_ocr = image_ocr,
-                           image_tag = image_tag,
-                           image_web_tag = image_web_tag,
-                           tone = tone,
-                           tone_absolute_value = tone,
-                           source_language = source_language,
-                           gkg_theme = gkg_theme,
-                           image_web_count = image_web_count,
-                           source_country = source_country,
-                           stringsAsFactors = F) %>%
+    df_grid <- expand.grid(
+      term = terms,
+      domain = domains,
+      image_face_tone = image_face_tone,
+      image_num_faces = image_num_faces,
+      image_ocr = image_ocr,
+      image_tag = image_tag,
+      image_web_tag = image_web_tag,
+      tone = tone,
+      tone_absolute_value = tone,
+      source_language = source_language,
+      gkg_theme = gkg_theme,
+      image_web_count = image_web_count,
+      source_country = source_country,
+      stringsAsFactors = F
+    ) %>%
       as_tibble()
     all_data <-
       1:nrow(df_grid) %>%
