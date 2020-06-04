@@ -1,6 +1,6 @@
 library(tidyverse)
-
-gdeltr2::ft_v2_api(
+library(gdeltr2)
+ft_v2_api(
   terms = "United States",
   modes = c("WordCloudImageWebTags"),
   visualize_results = F,

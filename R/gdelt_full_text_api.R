@@ -4844,6 +4844,10 @@ dictionary_ft_codebook <-
 
     data_names <- names(data)
 
+    if (data_names == "articles") {
+      data <- data$articles %>% as_tibble()
+    }
+
 
     if (data_names %>% str_detect("timeline") %>% sum(na.rm = T) > 0)  {
       tbl_params <- data$query_details %>% flatten_df()
