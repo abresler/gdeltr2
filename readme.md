@@ -113,13 +113,12 @@ get described in further detail farther below.
 #### <strong>Primary Functions</strong>
 
   - <strong>Full Text API</strong>
-      - `get_data_ft_v2_api()` - retrieves descriptive data from V2 API
-        see
+      - `ft_v2_api()` - retrieves descriptive data from V2 API see
         [this](https://asbcllc.com/blog/2017/august/intro_to_programming_with_gdeltr2/index.html)
         blog post for more on how to use this
-      - `get_data_ft_trending_terms()` - retrieves trending terms over
-        the last 15 minutes. The term can be a GDELT tag, location,
-        person, place, or thing.
+      - `ft_trending_terms()` - retrieves trending terms over the last
+        15 minutes. The term can be a GDELT tag, location, person,
+        place, or thing.
   - <strong>[GDELT
     Events](http://gdeltproject.org/data.html#documentation)</strong>
       - `get_urls_gdelt_event_log()` - retrieves descriptive data and
@@ -147,7 +146,7 @@ get described in further detail farther below.
       - `get_urls_gkg_daily_summaries` - retrieves daily gkg capture
         logs; data begins in April of 2013.
           - Each day contains a count file and the full gkg output.
-      - `get_data_gkg_day_summary()` retrieves GKG daily summary data
+      - `get_data_gkg_days_summary()` retrieves GKG daily summary data
         for specified date(s), this captures *count files* by
         `is_count_file = T`
       - `get_data_gkg_days_detailed()` - retrieves GKG data from the
@@ -158,14 +157,15 @@ get described in further detail farther below.
   - <strong>[American Television Knowledge
     Graph](http://blog.gdeltproject.org/announcing-the-american-television-global-knowledge-graph-tv-gkg/)
       - `get_urls_gkg_tv_daily_summaries()` - retrieves available dates
-          - `get_data_gkg_tv_days()` - retrieves data for specified
-            dates. Note that the data is on a 2 day lag so the most
-            recent data is 2 days old.
+          - `gkg_tv_days()` - retrieves data for specified dates. Note
+            that the data is on a 2 day lag so the most recent data is 2
+            days old.
   - <strong>[Location Sentiment
     API](http://blog.gdeltproject.org/announcing-the-gdelt-stability-dashboard-api-stability-timeline/)</strong>
-      - `get_codes_stability_locations()` - retrieves possible locations
-      - `get_data_locations_instability_api()` - retrieves instability
-        data for a specified location and time period. Variables can be
+      - `dictionary_stability_locations()` - retrieves possible
+        locations
+      - `dictionary_stability_locations()` - retrieves instability data
+        for a specified location and time period. Variables can be
         `c('instability', 'conflict', 'protest', 'tone', 'relative
         mentions')` Time periods can be `c('daily', '15 minutes')`, for
         `daily` the data is the average per day of the specified
