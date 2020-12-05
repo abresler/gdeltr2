@@ -1188,7 +1188,7 @@ get_gdelt_url_data <-
           gdelt_data %>%
           dplyr::rename(dateTimeDocument = dateTimeDataAdded) %>%
           dplyr::mutate(
-            dateEvent = dateEvent %>% lubridate::ymd,
+            dateEvent = dateEvent %>% lubridate::ymd(),
             dateTimeDocument = dateTimeDocument %>% ymd_hms() %>% lubridate::with_tz(Sys.timezone()),
             nameSource = urlSource %>% urltools::domain() %>% str_replace_all("www.", '')
           )
@@ -1283,8 +1283,8 @@ get_gdelt_url_data <-
           gdelt_data %>%
           dplyr::rename(dateDocument = dateAdded) %>%
           dplyr::mutate(
-            dateEvent = dateEvent %>% lubridate::ymd,
-            dateDocument = dateDocument %>% lubridate::ymd
+            dateEvent = dateEvent %>% lubridate::ymd(),
+            dateDocument = dateDocument %>% lubridate::ymd()
           ) %>%
           suppressWarnings()
 
@@ -1562,7 +1562,7 @@ get_gdelt_url_data <-
           mutate(
             dateTimeEvent = dateEvent %>% ymd_hms %>% with_tz(Sys.timezone()),
             dateEvent = dateTimeEvent %>% as.Date(),
-            dateTimeMention = dateMention %>% ymd_hms %>% with_tz(Sys.timezone()),
+            dateTimeMention = dateMention %>% ymd_hms() %>% with_tz(Sys.timezone()),
             dateMention = dateTimeMention %>% as.Date()
           ) %>%
           dplyr::select(idGlobalEvent,
@@ -1631,7 +1631,7 @@ get_gdelt_url_data <-
           gdelt_data %>%
           dplyr::rename(dateTimeDocument = dateTimeDataAdded) %>%
           dplyr::mutate(
-            dateEvent = dateEvent %>% lubridate::ymd,
+            dateEvent = dateEvent %>% lubridate::ymd(),
             dateTimeDocument = dateTimeDocument %>% ymd_hms() %>% with_tz(Sys.timezone()),
             nameSource = urlSource %>% domain() %>% str_replace_all("www.", '')
           )
@@ -1727,8 +1727,8 @@ get_gdelt_url_data <-
           gdelt_data %>%
           dplyr::rename(dateDocument = dateAdded) %>%
           dplyr::mutate(
-            dateEvent = dateEvent %>% lubridate::ymd,
-            dateDocument = dateDocument %>% lubridate::ymd
+            dateEvent = dateEvent %>% lubridate::ymd(),
+            dateDocument = dateDocument %>% lubridate::ymd()
           ) %>%
           suppressWarnings()
 
@@ -1825,7 +1825,7 @@ get_gdelt_url_data <-
           gdelt_data %>%
           dplyr::rename(dateTimeDocument = dateAdded) %>%
           dplyr::mutate(
-            dateEvent = dateEvent %>% lubridate::ymd,
+            dateEvent = dateEvent %>% lubridate::ymd(),
             dateTimeDocument %>% lubridate::ymd_hms() %>% with_tz(Sys.timezone()),
             dateDocument = dateTimeDocument %>% as.Date(),
             nameSource = urlSource %>% domain() %>% str_replace_all("www.", '')
@@ -4651,8 +4651,8 @@ get_data_gdelt_period_event <- function(period = 1983,
   periods <-
     gdelt_event_urls$periodData
   if (!period %in% periods) {
-    gdelt_event_message <-
-      "Period can only be a 4 digit year between 1979 and 2005\nEXAMPLE: 1983\nA 6 digit year and month from 2006 to March 2013\nEXAMPLE: 201208\nOr an 8 digit year, month, day from March 1, 2013 until today\nEXAMPLE: 20140303"
+    gdelt_event_message <- # not "from March 1, 2013" but "from April 1, 2013"
+      "Period can only be a 4 digit year between 1979 and 2005\nEXAMPLE: 1983\nA 6 digit year and month from 2006 to March 2013\nEXAMPLE: 201208\nOr an 8 digit year, month, day from April 1, 2013 until today\nEXAMPLE: 20140303"
 
     stop(gdelt_event_message)
   }
@@ -4791,7 +4791,7 @@ get_urls_vgkg <- function() {
 
   all_dates <-
     seq(ymd_hms(cloud_vision_start_hms),
-        to = time_now %>% ymd_hms,
+        to = time_now %>% ymd_hms(),
         by = '15 min')
 
   url_df <-
