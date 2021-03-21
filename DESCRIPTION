@@ -34,7 +34,6 @@ Imports:
     wordcloud2,
     ggthemes,
     ggplot2,
-    purrrlyr,
     rlang,
     tibble,
     RColorBrewer,
