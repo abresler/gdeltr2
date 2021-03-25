@@ -2,10 +2,3 @@
 .Rhistory
 .RData
 .Ruserdata
-packrat/
-.Rprofile
-.httr-oauth
-test/
-tests/
-old/
-dev/

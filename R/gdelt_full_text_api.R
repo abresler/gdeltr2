@@ -5219,7 +5219,7 @@ dictionary_ft_codebook <-
     col_count <- ncol(df_terms)
 
     df_terms <-
-      df_terms %>% by_row(is.na) %>% mutate(pctNA = (.out %>% map_dbl(sum)) / col_count) %>%
+      df_terms %>% purrrlyr::by_row(is.na) %>% mutate(pctNA = (.out %>% map_dbl(sum)) / col_count) %>%
       filter(pctNA < 1) %>%
       dplyr::select(-c(.out, pctNA))
 
@@ -5404,7 +5404,7 @@ dictionary_ft_codebook <-
 #' @param nest_data if \code{TRUE} returns a nested \code{tibble()}
 #' @param return_message if \code{TRUE} returns a message
 #'
-#' @import tidyr dplyr rlang highcharter trelliscopejs anytime lubridate purrr tibble glue stringr jsonlite
+#' @import tidyr dplyr rlang highcharter trelliscopejs anytime lubridate purrr purrrlyr tibble glue stringr jsonlite
 #' @return a \code{tibble} or a form of visualization
 #' @export
 #'
@@ -5602,7 +5602,7 @@ ft_v2_api <-
 #'
 #' @return
 #' @export
-#' @import tidyr dplyr rlang highcharter trelliscopejs anytime lubridate purrr tibble glue stringr jsonlite
+#' @import tidyr dplyr rlang highcharter trelliscopejs anytime lubridate purrr purrrlyr tibble glue stringr jsonlite
 #' @examples
 generate_trelliscope_bundle <-
   function(include_image_panel = TRUE,
