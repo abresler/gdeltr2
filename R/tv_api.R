@@ -29,12 +29,12 @@ dictionary_gdelt_tv_stations <-
   function() {
     json_data <-
       "https://api.gdeltproject.org/api/v2/tv/tv?mode=stationdetails&format=json" %>%
-      jsonlite::fromJSON(simplifyVector = T)
+      fromJSON(simplifyVector = T)
 
     data <-
       json_data$station_details %>%
       as_tibble() %>%
-      purrr::set_names(
+      set_names(
         c(
           "idStation",
           "nameStation",
@@ -47,7 +47,7 @@ dictionary_gdelt_tv_stations <-
 
     data <-
       data %>%
-      tidyr::separate(
+      separate(
         col = "nameStation",
         into = c("nameStation", "slugAffiliate"),
         sep = "\\("
@@ -84,7 +84,7 @@ generate_tv_inventory_url <-  function(date = Sys.Date()) {
   base <- "http://data.gdeltproject.org/gdeltv3/iatv/inventory"
 
   url <-
-    glue::glue("{base}/{date_slug}.inventory.csv") %>% as.character()
+    glue("{base}/{date_slug}.inventory.csv") %>% as.character()
 
   tibble(dateData = date, urlGDELTInventory = url)
 
@@ -93,18 +93,18 @@ generate_tv_inventory_url <-  function(date = Sys.Date()) {
 generate_tv_inventory_urls <-
   function(date_start = c("2018-02-01"),
            date_end = NULL) {
-    if (date_start %>% purrr::is_null()) {
+    if (date_start %>% is_null()) {
       stop("Please enter a date")
     }
 
-    if (date_end %>% purrr::is_null()) {
+    if (date_end %>% is_null()) {
       data <- generate_tv_inventory_url(date = date_start)
       return(data)
     }
 
     dates <- seq(ymd(date_start), ymd(date_end), by = "days")
     generate_tv_inventory_url_safe <-
-      purrr::possibly(generate_tv_inventory_url, tibble())
+      possibly(generate_tv_inventory_url, tibble())
 
     data <-
       dates %>%
@@ -127,7 +127,7 @@ parse_summary_inventoy_data_url <-
 
     data <-
       data %>%
-      purrr::set_names(
+      set_names(
         c(
           "idShow",
           "urlArchive",
@@ -151,13 +151,13 @@ parse_summary_inventory_data_urls <-
       tibble()
 
     parse_summary_inventoy_data_url_safe <-
-      purrr::possibly(parse_summary_inventoy_data_url, tibble())
+      possibly(parse_summary_inventoy_data_url, tibble())
 
     success <- function(res) {
       url <-
         res$url
       if (return_message) {
-        glue::glue("Parsing {url}") %>% cat(fill = T)
+        glue("Parsing {url}") %>% cat(fill = T)
       }
 
       data <-

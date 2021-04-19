@@ -30,7 +30,7 @@ filter_sources <-
            )) {
     sources <-
       sources %>%
-      stringr::str_to_lower() %>%
+      str_to_lower() %>%
       paste0(collapse = '|')
     if (!'documentSource' %in% names(data)) {
       stop("Data must count the documentSource colum")
@@ -49,10 +49,10 @@ filter_sources <-
       mutate(
         numberItem = ifelse(
           item %>% str_detect("idADM"),
-          item %>% str_replace_all("idADM1", '') %>% as.character() %>% readr::parse_number(),
+          item %>% str_replace_all("idADM1", '') %>% as.character() %>% parse_number(),
           item %>%
             as.character() %>%
-            readr::parse_number()
+            parse_number()
         ),
         numberItem = ifelse(numberItem %>% is.na(), 0 , numberItem),
         item = item %>% str_replace_all("^\\d+|\\d+$", '')
@@ -62,7 +62,7 @@ filter_sources <-
 
     data <-
       data %>%
-      tidyr::spread(item, value) %>%
+      spread(item, value) %>%
       suppressWarnings()
 
     data <-
@@ -72,7 +72,7 @@ filter_sources <-
           "^score|^count|^amount|^value|^face|^angle|^latitude|^longitude|^day|^month|^year|^idTypeLocation"
         )
       ) %>% names,
-      funs(. %>% as.character() %>% readr::parse_number()))
+      funs(. %>% as.character() %>% parse_number()))
 
     return(data)
   }
@@ -120,8 +120,8 @@ get_urls_gkg_15_minute_log <- function() {
 
   log_df <-
     url %>%
-    readr::read_tsv(col_names = F) %>%
-    tidyr::separate(
+    read_tsv(col_names = F) %>%
+    separate(
       col = X1,
       into = c('idFile', 'idHash', 'urlData'),
       sep = '\\ '
@@ -132,7 +132,7 @@ get_urls_gkg_15_minute_log <- function() {
   log_df <-
     log_df %>%
     dplyr::mutate(dateTimeFile = urlData %>% str_replace_all('http://data.gdeltproject.org/gdeltv2/', '')) %>%
-    tidyr::separate(dateTimeFile,
+    separate(dateTimeFile,
                     into = c('timestamp', 'nameFile', 'typeFile', 'isZip'))
 
   log_df <-
@@ -173,8 +173,8 @@ get_urls_gdelt_event_log <- function(return_message = T) {
 
   urlData <-
     url %>%
-    readr::read_tsv(col_names = F) %>%
-    tidyr::separate(col = X1,
+    read_tsv(col_names = F) %>%
+    separate(col = X1,
                     into = c('idHash', 'stemData'),
                     sep = '\\  ') %>%
     dplyr::mutate(
@@ -254,8 +254,8 @@ get_urls_gdelt_event_log <- function(return_message = T) {
 get_urls_gkg_most_recent_log <- function() {
   log_df <-
     'http://data.gdeltproject.org/gdeltv2/lastupdate.txt' %>%
-    readr::read_tsv(col_names = F) %>%
-    tidyr::separate(
+    read_tsv(col_names = F) %>%
+    separate(
       col = X1,
       into = c('idFile', 'idHash', 'urlData'),
       sep = '\\ '
@@ -266,7 +266,7 @@ get_urls_gkg_most_recent_log <- function() {
   log_df <-
     log_df %>%
     dplyr::mutate(dateTimeFile = urlData %>% str_replace_all('http://data.gdeltproject.org/gdeltv2/', '')) %>%
-    tidyr::separate(dateTimeFile,
+    separate(dateTimeFile,
                     into = c('timestamp', 'nameFile', 'typeFile', 'isZip')) %>%
     dplyr::mutate(
       typeFile = typeFile %>% str_to_lower(),
@@ -303,8 +303,8 @@ get_urls_gkg_daily_summaries <-
 
     urlData <-
       url %>%
-      readr::read_tsv(col_names = F) %>%
-      tidyr::separate(col = X1,
+      read_tsv(col_names = F) %>%
+      separate(col = X1,
                       into = c('idHash', 'stemData'),
                       sep = '\\  ') %>%
       dplyr::mutate(urlData = 'http://data.gdeltproject.org/gkg/' %>% paste0(stemData),
@@ -405,7 +405,7 @@ get_codes_cameo_religion <- function() {
     'http://gdeltproject.org/data/lookups/CAMEO.religion.txt'
   code_df <-
     url %>%
-    readr::read_tsv() %>%
+    read_tsv() %>%
     suppressWarnings() %>%
     suppressMessages()
 
@@ -535,7 +535,7 @@ get_codes_cameo_ethnic <- function() {
     read_tsv() %>%
     suppressWarnings() %>%
     suppressMessages() %>%
-    purrr::set_names(c('codeCAMEOEthnicity', 'nameCAMEOEthnicity')) %>%
+    set_names(c('codeCAMEOEthnicity', 'nameCAMEOEthnicity')) %>%
     mutate(codeCAMEOEthnicity = codeCAMEOEthnicity %>% str_to_upper())
 
   return(code_df)
@@ -1084,14 +1084,14 @@ get_gdelt_url_data <-
 
     use_tmp_file <-
       file_directory %>%
-      purrr::is_null()
+      is_null()
 
     if (use_tmp_file) {
       tmp <-
         tempfile()
 
       url %>%
-        curl::curl_download(url = ., tmp)
+        curl_download(url = ., tmp)
 
       con <-
         unzip(tmp)
@@ -1177,7 +1177,7 @@ get_gdelt_url_data <-
       if (gdelt_cols == 61) {
         gdelt_data <-
           con %>%
-          readr::read_tsv(col_names = F) %>%
+          read_tsv(col_names = F) %>%
           suppressWarnings() %>%
           suppressMessages()
 
@@ -1214,7 +1214,7 @@ get_gdelt_url_data <-
       if (gdelt_cols == 57) {
         gdelt_data <-
           con %>%
-          readr::read_tsv(col_names = F) %>%
+          read_tsv(col_names = F) %>%
           suppressWarnings() %>%
           suppressMessages()
 
@@ -1310,7 +1310,7 @@ get_gdelt_url_data <-
       if (gdelt_cols == 58) {
         gdelt_data <-
           con %>%
-          readr::read_tsv(col_names = F) %>%
+          read_tsv(col_names = F) %>%
           suppressWarnings() %>%
           suppressMessages()
 
@@ -1408,7 +1408,7 @@ get_gdelt_url_data <-
       if (gdelt_cols == 11) {
         gdelt_data <-
           con %>%
-          readr::read_tsv(col_names = T) %>%
+          read_tsv(col_names = T) %>%
           suppressWarnings() %>%
           suppressMessages()
 
@@ -1436,7 +1436,7 @@ get_gdelt_url_data <-
       if (gdelt_cols == 27) {
         gdelt_data <-
           con %>%
-          readr::read_tsv(col_names = F) %>%
+          read_tsv(col_names = F) %>%
           suppressWarnings() %>%
           suppressMessages()
 
@@ -1483,8 +1483,8 @@ get_gdelt_url_data <-
         unlink()
     }  else {
       only_folder <-
-        !folder_name %>% purrr::is_null() &
-        file_directory %>% purrr::is_null()
+        !folder_name %>% is_null() &
+        file_directory %>% is_null()
       if (only_folder) {
         file_directory <-
           getwd()
@@ -1544,7 +1544,7 @@ get_gdelt_url_data <-
         read_tsv(col_names = F,
                  n_max = 1) %>% ncol %>% suppressWarnings() %>%
         as.character() %>%
-        readr::parse_number() %>%
+        parse_number() %>%
         suppressMessages()
 
       if (gdelt_cols == 16) {
@@ -1620,7 +1620,7 @@ get_gdelt_url_data <-
       if (gdelt_cols == 61) {
         gdelt_data <-
           csv_file_loc %>%
-          readr::read_tsv(col_names = F) %>%
+          read_tsv(col_names = F) %>%
           suppressWarnings() %>%
           suppressMessages()
 
@@ -1658,7 +1658,7 @@ get_gdelt_url_data <-
       if (gdelt_cols == 57) {
         gdelt_data <-
           csv_file_loc %>%
-          readr::read_tsv(col_names = F) %>%
+          read_tsv(col_names = F) %>%
           suppressWarnings() %>%
           suppressMessages()
 
@@ -1755,7 +1755,7 @@ get_gdelt_url_data <-
         load_needed_packages(c('urltools'))
         gdelt_data <-
           csv_file_loc %>%
-          readr::read_tsv(col_names = F) %>%
+          read_tsv(col_names = F) %>%
           suppressWarnings() %>%
           suppressMessages()
 
@@ -1855,7 +1855,7 @@ get_gdelt_url_data <-
       if (gdelt_cols == 11) {
         gdelt_data <-
           csv_file_loc %>%
-          readr::read_tsv(col_names = T) %>%
+          read_tsv(col_names = T) %>%
           suppressWarnings() %>%
           suppressMessages()
 
@@ -1883,7 +1883,7 @@ get_gdelt_url_data <-
       if (gdelt_cols == 27) {
         gdelt_data <-
           csv_file_loc %>%
-          readr::read_tsv(col_names = F) %>%
+          read_tsv(col_names = F) %>%
           suppressWarnings() %>%
           suppressMessages()
 
@@ -2254,7 +2254,7 @@ parse_gkg_mentioned_numerics <- function(gdelt_data,
             field_data %>%
             dplyr::mutate_at(
               field_data %>% dplyr::select(dplyr::matches('amountValue|charLoc')) %>% names(),
-              funs(. %>% as.character() %>% readr::parse_number())
+              funs(. %>% as.character() %>% parse_number())
             )
 
         } else {
@@ -2415,7 +2415,7 @@ parse_gkg_mentioned_people <- function(gdelt_data,
             field_data %>%
             mutate_at(
               field_data %>% dplyr::select(dplyr::matches('charLoc')) %>% names(),
-              funs(. %>% as.character() %>% readr::parse_number())
+              funs(. %>% as.character() %>% parse_number())
             )
 
         } else {
@@ -2583,7 +2583,7 @@ parse_gkg_mentioned_organizations <- function(gdelt_data,
             field_data %>%
             mutate_at(
               field_data %>% dplyr::select(dplyr::matches('charLoc')) %>% names(),
-              funs(. %>% as.character() %>% readr::parse_number())
+              funs(. %>% as.character() %>% parse_number())
             )
         } else {
           field_data <-
@@ -2725,7 +2725,7 @@ parse_gkg_mentioned_names <- function(gdelt_data,
             field_data %>%
             mutate_at(
               field_data %>% dplyr::select(dplyr::matches('charLoc')) %>% names(),
-              funs(. %>% as.character() %>% readr::parse_number())
+              funs(. %>% as.character() %>% parse_number())
             )
         } else {
           field_data <-
@@ -2887,7 +2887,7 @@ parse_gkg_mentioned_themes <- function(gdelt_data,
             field_data %>%
             mutate_at(
               field_data %>% dplyr::select(dplyr::matches('charLoc')) %>% names(),
-              funs(. %>% as.character() %>% readr::parse_number())
+              funs(. %>% as.character() %>% parse_number())
             )
         } else {
           field_data <-
@@ -4010,7 +4010,7 @@ parse_gkg_mentioned_gcams <- function(gdelt_data,
         articleWordCount <-
           fields[1] %>%
           as.character() %>%
-          readr::parse_number()
+          parse_number()
 
         fields_df <-
           tibble(articleWordCount,
@@ -4323,7 +4323,7 @@ parse_gkg_mentioned_source_data <-
     }
 
     get_gdelt_url_data_safe <-
-      purrr::possibly(get_gdelt_url_data, tibble())
+      possibly(get_gdelt_url_data, tibble())
 
     all_data <-
       urls %>%
@@ -4401,7 +4401,7 @@ get_data_gkg_days_detailed <-
            empty_trash = T,
            return_message = T) {
     .get_data_gkg_day_detailed_safe <-
-    purrr::possibly(.get_data_gkg_day_detailed, tibble())
+    possibly(.get_data_gkg_day_detailed, tibble())
 
   var_matrix <-
     expand.grid(date = dates,
@@ -4512,7 +4512,7 @@ get_data_gkg_day_summary <- function(date_data = "2016-06-01",
     .$urlData
 
   get_gdelt_url_data_safe <-
-    purrr::possibly(get_gdelt_url_data, tibble())
+    possibly(get_gdelt_url_data, tibble())
 
   all_data <-
     urls %>%
@@ -4581,7 +4581,7 @@ get_data_gkg_days_summary <- function(dates = c("2016-06-01"),
                                       nest_data = F,
                                       return_message = T) {
   get_data_gkg_day_summary_safe <-
-    purrr::possibly(get_data_gkg_day_summary, tibble())
+    possibly(get_data_gkg_day_summary, tibble())
 
   var_matrix <-
     expand.grid(
@@ -4640,7 +4640,7 @@ get_data_gdelt_period_event <- function(period = 1983,
   period <-
     period %>%
     as.character() %>%
-    stringr::str_replace_all("\\-", '')
+    str_replace_all("\\-", '')
 
   if (!'gdelt_event_urls' %>% exists()) {
     gdelt_event_urls <-
@@ -4663,7 +4663,7 @@ get_data_gdelt_period_event <- function(period = 1983,
     .$urlData
 
   get_gdelt_url_data_safe <-
-    purrr::possibly(get_gdelt_url_data, tibble())
+    possibly(get_gdelt_url_data, tibble())
 
   all_data <-
     urls %>%
@@ -4709,7 +4709,7 @@ get_data_gdelt_periods_event <- function(periods = c(1983, 1989),
                                          empty_trash = T,
                                          return_message = T) {
   get_data_gdelt_period_event_safe <-
-    purrr::possibly(get_data_gdelt_period_event, tibble())
+    possibly(get_data_gdelt_period_event, tibble())
   periods <-
     periods %>%
     str_replace_all('\\-', '')
@@ -4846,14 +4846,14 @@ get_urls_vgkg_most_recent  <- function() {
            remove_json_column = TRUE,
            return_message = TRUE) {
     ok_url <-
-      url %>% httr::url_ok() %>% suppressWarnings()
+      url %>% url_ok() %>% suppressWarnings()
     if (!ok_url) {
       stop("Invalid url")
     }
 
     cloud_vision_data <-
       url %>%
-      curl::curl() %>%
+      curl() %>%
       gzcon() %>%
       read_tsv(col_names = F) %>%
       suppressWarnings() %>%
@@ -4870,7 +4870,7 @@ get_urls_vgkg_most_recent  <- function() {
         idVGKG = dateTimeDocument %>% paste0('-', idDateTime),
         dateTimeDocument = dateTimeDocument %>% lubridate::ymd_hms() %>% lubridate::with_tz(Sys.timezone()),
         dateDocument = dateTimeDocument %>% as.Date(),
-        dimWidthHeight = dimWidthHeight %>% as.character() %>% readr::parse_number()
+        dimWidthHeight = dimWidthHeight %>% as.character() %>% parse_number()
       ) %>%
       dplyr::select(idVGKG, idDateTime, everything())
 
@@ -4940,7 +4940,7 @@ get_urls_vgkg_most_recent  <- function() {
     }
 
     .get_data_vgkg_url_safe <-
-      purrr::possibly(.get_data_vgkg_url, tibble())
+      possibly(.get_data_vgkg_url, tibble())
 
     all_data <-
       urls %>%
@@ -4998,7 +4998,7 @@ get_data_vgkg_dates <-
     }
 
     .get_data_vgkg_day_safe <-
-      purrr::possibly(.get_data_vgkg_day, tibble())
+      possibly(.get_data_vgkg_day, tibble())
 
     all_data <-
       dates %>%
@@ -5034,23 +5034,23 @@ get_data_vgkg_dates <-
 .parse_xml_extra <-
   function(x =  "<PAGE_LINKS>http://therealdeal.com/2015/05/07/hfz-secures-1b-in-financing-for-high-line-site/;http://therealdeal.com/2015/09/10/uk-hedge-fund-loaning-850m-for-relateds-hudson-yards-resi-tower/;http://therealdeal.com/2016/02/05/hfz-seeks-250m-from-eb-5-investors-for-high-line-condos/;http://therealdeal.com/2016/07/28/macklowe-seeking-1b-loan-for-1-wall-street-conversion/;http://therealdeal.com/2016/08/18/first-look-floor-plans-at-hfzs-high-line-development/;http://therealdeal.com/2016/10/05/inside-gary-barnetts-game-of-real-estate-tetris/;http://therealdeal.com/2016/10/06/six-senses-to-open-hotel-at-hfzs-high-line-project/;http://therealdeal.com/issues_articles/whos-bankrolling-the-boom/;http://therealdeal.com/issues_articles/ziel-feldman-it-was-worth-every-penny/</PAGE_LINKS><PAGE_PRECISEPUBTIMESTAMP>20161025180000</PAGE_PRECISEPUBTIMESTAMP>") {
     safe_xml <-
-      purrr::possibly(read_xml, otherwise = NULL)
+      possibly(read_xml, otherwise = NULL)
 
     gdelt_xml <-
       list("<item>", x, "</item>") %>%
-      purrr::invoke(paste0, .) %>%
+      invoke(paste0, .) %>%
       safe_xml()
 
     if (gdelt_xml %>% length > 0) {
       values <-
         gdelt_xml %>%
-        xml2::xml_children() %>%
-        rvest::html_text()
+        xml_children() %>%
+        html_text()
 
       items <-
         gdelt_xml %>%
-        xml2::xml_children() %>%
-        xml2::xml_name()
+        xml_children() %>%
+        xml_name()
 
       xml_df <-
         tibble(item = items, value = values)
@@ -5340,7 +5340,7 @@ parse_vgkg_labels <- function(gdelt_data,
                               filter_na = T,
                               return_wide = T) {
   parse_xml_labels_safe <-
-    purrr::possibly(parse_xml_labels, tibble())
+    possibly(parse_xml_labels, tibble())
 
   allxmlLabels <-
     gdelt_data$idVGKG %>%
@@ -5435,7 +5435,7 @@ parse_vgkg_landmarks <- function(gdelt_data,
                                  filter_na = T,
                                  return_wide = T) {
   parse_xml_landmarks_safe <-
-    purrr::possibly(parse_xml_landmarks, tibble())
+    possibly(parse_xml_landmarks, tibble())
 
   all_data <-
     gdelt_data$idVGKG %>%
@@ -5521,7 +5521,7 @@ parse_vgkg_logos <- function(gdelt_data,
                              filter_na = T,
                              return_wide = T) {
   parse_xml_logos_safe <-
-    purrr::possibly(parse_xml_logos,tibble())
+    possibly(parse_xml_logos,tibble())
 
   all_data <-
     gdelt_data$idVGKG %>%
@@ -5620,7 +5620,7 @@ parse_vgkg_safe_search <- function(gdelt_data,
                                    filter_na = T,
                                    return_wide = T) {
   parse_xml_safe_search_safe <-
-    purrr::possibly(parse_xml_safe_search, tibble())
+    possibly(parse_xml_safe_search, tibble())
 
   all_data <-
     gdelt_data$idVGKG %>%
@@ -5725,7 +5725,7 @@ parse_vgkg_faces <- function(gdelt_data,
                              filter_na = T,
                              return_wide = T) {
   parse_xml_faces_search_safe <-
-    purrr::possibly(parse_xml_faces, tibble())
+    possibly(parse_xml_faces, tibble())
 
   all_data <-
     gdelt_data$idVGKG %>%
@@ -5807,7 +5807,7 @@ parse_vgkg_ocr <- function(gdelt_data,
                            filter_na = T,
                            return_wide = T) {
   parse_xml_ocr_safe <-
-    purrr::possibly(parse_xml_ocr, tibble())
+    possibly(parse_xml_ocr, tibble())
 
   all_data <-
     gdelt_data$idVGKG %>%
@@ -5886,7 +5886,7 @@ parse_vgkg_languages <- function(gdelt_data,
                                  filter_na = T,
                                  return_wide = T) {
   parse_language_types_safe <-
-    purrr::possibly(parse_language_types, tibble())
+    possibly(parse_language_types, tibble())
 
   all_data <-
     gdelt_data$idVGKG %>%
@@ -5929,7 +5929,7 @@ parse_vgkg_languages <- function(gdelt_data,
 get_urls_gkgtv_most_recent_log <- function() {
   urlData <-
     'http://data.gdeltproject.org/gdeltv2_iatelevision/lastupdate.txt' %>%
-    readr::read_tsv(col_names = F) %>%
+    read_tsv(col_names = F) %>%
     dplyr::select(-1) %>%
     suppressMessages()
 
@@ -6043,7 +6043,7 @@ dictionary_gkg_tv_daily_summaries <-
 
     urlData <-
       url %>%
-      readr::read_tsv(col_names = F) %>%
+      read_tsv(col_names = F) %>%
       dplyr::select(-1) %>%
       suppressMessages()
 
@@ -6087,14 +6087,14 @@ dictionary_gkg_tv_daily_summaries <-
   function(url = 'http://data.gdeltproject.org/gdeltv2_iatelevision/20160609.gkg.csv.gz',
            return_message = T) {
     ok_url <-
-      url %>% httr::url_ok() %>% suppressWarnings()
+      url %>% url_ok() %>% suppressWarnings()
     if (ok_url == FALSE) {
       stop("Invalid url")
     }
 
     gkg_tv_data <-
       url %>%
-      curl::curl() %>%
+      curl() %>%
       gzcon() %>%
       read_tsv(col_names = F) %>%
       suppressWarnings() %>%
@@ -6191,7 +6191,7 @@ dictionary_gkg_tv_daily_summaries <-
   }
 
   get_data_gkg_tv_safe <-
-    purrr::possibly(.get_data_gkg_tv, tibble())
+    possibly(.get_data_gkg_tv, tibble())
 
   all_data <-
     urls %>%
@@ -6229,7 +6229,7 @@ gkg_tv_days <-
            only_most_recent = F,
            return_message = T) {
     get_data_gkg_tv_day_safe <-
-      purrr::possibly(.get_data_gkg_tv_day, tibble())
+      possibly(.get_data_gkg_tv_day, tibble())
 
     all_data <-
       dates %>%
@@ -6271,7 +6271,7 @@ date_columns_to_numeric <-
       map(class) %>%
       unlist() %>%
       data.frame(col_class = .) %>%
-      tibble::rownames_to_column()
+      rownames_to_column()
 
     exclude_cols <-
       name_df %>%
@@ -6338,14 +6338,14 @@ check_for_trelliscope_js <-
            only_pictures = TRUE) {
     search_domains <-
       c()
-    if (!random_domains %>% purrr::is_null()) {
+    if (!random_domains %>% is_null()) {
       randoms <-
         data$domainSource %>% unique() %>% sample(random_domains)
       search_domains <-
         c(search_domains, randoms) %>% unique()
     }
 
-    if (!domains %>% purrr::is_null()) {
+    if (!domains %>% is_null()) {
       search_domains <-
         c(search_domains, domains)
     }
@@ -6423,20 +6423,20 @@ visualize_vgkg_trelliscope <-
            extra_columns = NULL) {
     check_for_trelliscope_js()
 
-    if (!extra_columns %>% purrr::is_null()) {
+    if (!extra_columns %>% is_null()) {
       df_extra <-
         data %>%
         dplyr::select(idVGKG, one_of(extra_columns))
     }
     has_domains <-
-      !domains %>% purrr::is_null() |
-      !random_domains %>% purrr::is_null()
+      !domains %>% is_null() |
+      !random_domains %>% is_null()
     if (has_domains) {
       data <-
         data %>%
         .filter_domain_data(domains = domains, random_domains = random_domains)
     }
-    if (!vgkg_parse %>% purrr::is_null()) {
+    if (!vgkg_parse %>% is_null()) {
       vgkg_options <-
         c('faces',
           'labels',
@@ -6450,7 +6450,7 @@ visualize_vgkg_trelliscope <-
         stop(list(
           "Parse options can only be:\n",
           paste(vgkg_options, collapse = '\n')
-        ) %>% purrr::reduce(paste0))
+        ) %>% reduce(paste0))
       }
 
       is_faces <-
@@ -6546,7 +6546,7 @@ visualize_vgkg_trelliscope <-
         ''
     }
 
-    if (!vgkg_parse %>% purrr::is_null()) {
+    if (!vgkg_parse %>% is_null()) {
       parse_title <-
         vgkg_parse %>% str_to_title()
     } else {
@@ -6563,10 +6563,10 @@ visualize_vgkg_trelliscope <-
 
     title <-
       list('GDELT VGKG Explorer for ',  parse_title, ' ', dates) %>%
-      purrr::reduce(paste0)
+      reduce(paste0)
 
 
-    if (!extra_columns %>% purrr::is_null()) {
+    if (!extra_columns %>% is_null()) {
       data <-
         data %>%
         left_join(df_extra) %>%
@@ -6578,26 +6578,26 @@ visualize_vgkg_trelliscope <-
       mutate_if(is.logical,
                 funs(ifelse(. %>% is.na(), FALSE, .)))
 
-    if (!trelliscope_parameters$title %>% purrr::is_null()) {
+    if (!trelliscope_parameters$title %>% is_null()) {
       title <-
         trelliscope_parameters$title
     }
 
-    if (trelliscope_parameters$rows %>% purrr::is_null()) {
+    if (trelliscope_parameters$rows %>% is_null()) {
       rows <- 1
     } else {
       rows <-
         trelliscope_parameters$rows
     }
 
-    if (trelliscope_parameters$columns %>% purrr::is_null()) {
+    if (trelliscope_parameters$columns %>% is_null()) {
       columns <- 2
     } else {
       columns <-
         trelliscope_parameters$columns
     }
     no_path <-
-      trelliscope_parameters$path %>% purrr::is_null()
+      trelliscope_parameters$path %>% is_null()
 
     if (no_path) {
       viz <-
@@ -6714,15 +6714,15 @@ visualize_gkg_trelliscope <-
            gkg_parse = 'names') {
     check_for_trelliscope_js()
     has_domains <-
-      !domains %>% purrr::is_null() |
-      !random_domains %>% purrr::is_null()
+      !domains %>% is_null() |
+      !random_domains %>% is_null()
     if (has_domains) {
       data <-
         data %>%
         .filter_domain_data(domains = domains, random_domains = random_domains)
     }
 
-    if (!gkg_parse %>% purrr::is_null()) {
+    if (!gkg_parse %>% is_null()) {
       gkg_options <-
         c(
           'tone',
@@ -6745,7 +6745,7 @@ visualize_gkg_trelliscope <-
         stop(list(
           "Parse options can only be:\n",
           paste(gkg_options, collapse = '\n')
-        ) %>% purrr::reduce(paste0))
+        ) %>% reduce(paste0))
       }
 
       is_tone <-
@@ -6969,7 +6969,7 @@ visualize_gkg_trelliscope <-
         ''
     }
 
-    if (!gkg_parse %>% purrr::is_null()) {
+    if (!gkg_parse %>% is_null()) {
       parse_title <-
         gkg_parse %>% str_to_title()
     } else {
@@ -6983,9 +6983,9 @@ visualize_gkg_trelliscope <-
 
     title <-
       list('GDELT GKG Explorer for ',  parse_title, ' ', dates) %>%
-      purrr::reduce(paste0) %>% str_trim()
+      reduce(paste0) %>% str_trim()
 
-    if (!extra_columns %>% purrr::is_null()) {
+    if (!extra_columns %>% is_null()) {
       plot_data <-
         plot_data %>%
         left_join(
@@ -6999,26 +6999,26 @@ visualize_gkg_trelliscope <-
       mutate_if(is.logical,
                 funs(ifelse(. %>% is.na(), FALSE, .)))
 
-    if (!trelliscope_parameters$title %>% purrr::is_null()) {
+    if (!trelliscope_parameters$title %>% is_null()) {
       title <-
         trelliscope_parameters$title
     }
 
-    if (trelliscope_parameters$rows %>% purrr::is_null()) {
+    if (trelliscope_parameters$rows %>% is_null()) {
       rows <- 1
     } else {
       rows <-
         trelliscope_parameters$rows
     }
 
-    if (trelliscope_parameters$columns %>% purrr::is_null()) {
+    if (trelliscope_parameters$columns %>% is_null()) {
       columns <- 2
     } else {
       columns <-
         trelliscope_parameters$columns
     }
     no_path <-
-      trelliscope_parameters$path %>% purrr::is_null()
+      trelliscope_parameters$path %>% is_null()
 
     if (no_path) {
     viz <-
@@ -7107,7 +7107,7 @@ visualize_gkg_tv_trelliscope <-
     station_search <-
       c()
     has_random_stations <-
-      !random_stations %>% purrr::is_null()
+      !random_stations %>% is_null()
     if (has_random_stations) {
       random_tv <-
         data$nameSource %>%
@@ -7118,21 +7118,21 @@ visualize_gkg_tv_trelliscope <-
         c(station_search, random_tv)
     }
 
-    if (!stations %>% purrr::is_null()) {
+    if (!stations %>% is_null()) {
       station_search <-
         c(station_search, stations) %>%
-        stringr::str_to_upper()
+        str_to_upper()
     }
 
     station_search <-
-      station_search %>% stringr::str_to_upper() %>%
+      station_search %>% str_to_upper() %>%
       unique() %>% paste0(collapse = '|')
 
     data <-
       data %>%
       filter(nameSource %>% str_detect(station_search))
 
-    if (!gkg_parse %>% purrr::is_null()) {
+    if (!gkg_parse %>% is_null()) {
       gkg_options <-
         c(
           'tone',
@@ -7155,7 +7155,7 @@ visualize_gkg_tv_trelliscope <-
         stop(list(
           "Parse options can only be:\n",
           paste(gkg_options, collapse = '\n')
-        ) %>% purrr::reduce(paste0))
+        ) %>% reduce(paste0))
       }
 
       is_tone <-
@@ -7379,7 +7379,7 @@ visualize_gkg_tv_trelliscope <-
         ''
     }
 
-    if (!gkg_parse %>% purrr::is_null()) {
+    if (!gkg_parse %>% is_null()) {
       parse_title <-
         gkg_parse %>% str_to_title()
     } else {
@@ -7393,7 +7393,7 @@ visualize_gkg_tv_trelliscope <-
 
     title <-
       list('GDELT GKG TV Explorer for ',  parse_title, ' ', dates) %>%
-      purrr::reduce(paste0) %>% str_trim()
+      reduce(paste0) %>% str_trim()
 
     viz <-
       plot_data %>%

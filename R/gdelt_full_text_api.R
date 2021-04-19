@@ -34,10 +34,10 @@
   function(source = "netsdaily.com - writedate('06/02/2016 12:00 UTC'); (English / United States)") {
     source_df <-
       tibble(source) %>%
-      tidyr::separate(source,
+      separate(source,
                       sep = '\\ - ',
                       into = c('source', 'date.language')) %>%
-      tidyr::separate(date.language,
+      separate(date.language,
                       sep = '\\;',
                       into = c('date', 'language')) %>%
       mutate(
@@ -47,7 +47,7 @@
       ) %>%
       mutate(dateTime = date %>% lubridate::mdy_hm() %>% lubridate::with_tz(Sys.timezone())) %>%
       mutate(date = dateTime %>% as.Date()) %>%
-      tidyr::separate(language,
+      separate(language,
                       into = c('language', 'country'),
                       sep = '\\, ') %>%
       suppressWarnings() %>%
@@ -206,7 +206,7 @@
 
     page.has.content <-
       url %>%
-      httr::GET()
+      GET()
 
     page_size_df <-
       page.has.content$headers  %>%
@@ -228,32 +228,32 @@
 
     page <-
       url %>%
-      xml2::read_html()
+      read_html()
 
     if (page %>%
-        rvest::html_nodes(xpath = '//b') %>%
-        rvest::html_text() %>%
+        html_nodes(xpath = '//b') %>%
+        html_text() %>%
         str_trim() %>% length == 0) {
       stop("This search has no data")
     }
 
     titleArticle <-
       page %>%
-      rvest::html_nodes(xpath = '//b') %>%
-      rvest::html_text() %>%
+      html_nodes(xpath = '//b') %>%
+      html_text() %>%
       str_trim()
 
     if (return_image_url) {
       url.source <-
         page %>%
-        rvest::html_nodes(xpath = '//a') %>%
-        rvest::html_attr('href') %>%
+        html_nodes(xpath = '//a') %>%
+        html_attr('href') %>%
         .[c(T, F)]
     } else {
       url.source <-
         page %>%
-        rvest::html_nodes(xpath = '//a') %>%
-        rvest::html_attr('href')
+        html_nodes(xpath = '//a') %>%
+        html_attr('href')
     }
 
     url.source <-
@@ -278,8 +278,8 @@
 
     sources <-
       page %>%
-      rvest::html_nodes(xpath = '//*[contains(concat( " ", @class, " " ), concat( " ", "sourceinfo", " " ))]') %>%
-      rvest::html_text()
+      html_nodes(xpath = '//*[contains(concat( " ", @class, " " ), concat( " ", "sourceinfo", " " ))]') %>%
+      html_text()
     wrong_length <-
       url.source %>% length() > sources %>% length()
     if (wrong_length) {
@@ -287,7 +287,7 @@
         url.source[seq_along(sources)]
     }
     .parse_source_safe <-
-      purrr::possibly(.parse_source, tibble())
+      possibly(.parse_source, tibble())
     url_df <-
       tibble(
         term,
@@ -319,8 +319,8 @@
     if (return_image_url) {
       urlThumbnail <-
         page %>%
-        rvest::html_nodes(xpath = '//*[contains(concat( " ", @class, " " ), concat( " ", "thumbimg", " " ))]') %>%
-        rvest::html_attr('src')
+        html_nodes(xpath = '//*[contains(concat( " ", @class, " " ), concat( " ", "thumbimg", " " ))]') %>%
+        html_attr('src')
 
       urlThumbnail[urlThumbnail == ''] <-
         NA
@@ -422,7 +422,7 @@ get_data_ft_v1_api_terms <-
       as_tibble() %>%
       suppressWarnings()
     .get_data_ft_api_term_safe <-
-      purrr::possibly(.get_data_ft_api_term, tibble())
+      possibly(.get_data_ft_api_term, tibble())
     all_data <-
       1:nrow(var_matrix) %>%
       map_dfr(function(x) {
@@ -444,11 +444,11 @@ get_data_ft_v1_api_terms <-
       .check_for_trelliscope_js()
       title <-
         list("GDELT Term Search for ", Sys.Date()) %>%
-        purrr::reduce(paste0)
+        reduce(paste0)
 
       df_parameters <- trelliscope_parameters %>% flatten_df()
 
-      if (!df_parameters %>% tibble::has_name('id_columns')) {
+      if (!df_parameters %>% has_name('id_columns')) {
         id_columns <-
           c('dateTimeArticle',
             'domainArticle',
@@ -459,14 +459,14 @@ get_data_ft_v1_api_terms <-
         id_columns <- df_parameters$id_columns
       }
 
-      if (!df_parameters %>% tibble::has_name('rows')) {
+      if (!df_parameters %>% has_name('rows')) {
         rows <-
           1
       } else {
         rows <- df_parameters$rows
       }
 
-      if (!df_parameters %>% tibble::has_name('columns')) {
+      if (!df_parameters %>% has_name('columns')) {
         columns <-
           2
       } else {
@@ -474,7 +474,7 @@ get_data_ft_v1_api_terms <-
       }
 
       has_path <-
-        df_parameters %>% tibble::has_name('path')
+        df_parameters %>% has_name('path')
 
       all_data <-
         all_data %>%
@@ -548,7 +548,7 @@ get_data_ft_v1_api_domains <-
            nest_data = F,
            return_message = T) {
     .get_data_ft_api_term_safe <-
-      purrr::possibly(.get_data_ft_api_term, tibble())
+      possibly(.get_data_ft_api_term, tibble())
 
     var_matrix <-
       expand.grid(
@@ -605,11 +605,11 @@ get_data_ft_v1_api_domains <-
 
       title <-
         list("GDELT Domain Search at ", Sys.Date()) %>%
-        purrr::reduce(paste0)
+        reduce(paste0)
 
       df_parameters <- trelliscope_parameters %>% flatten_df()
 
-      if (!df_parameters %>% tibble::has_name('id_columns')) {
+      if (!df_parameters %>% has_name('id_columns')) {
         id_columns <-
           c('dateTimeArticle',
             "domainSearch",
@@ -619,7 +619,7 @@ get_data_ft_v1_api_domains <-
         id_columns <- df_parameters$id_columns
       }
 
-      if (!df_parameters %>% tibble::has_name('rows')) {
+      if (!df_parameters %>% has_name('rows')) {
         rows <-
           1
       } else {
@@ -823,7 +823,7 @@ get_data_ft_v1_api_domains <-
 
   page.has.content <-
     url %>%
-    httr::GET()
+    GET()
 
   page_size_df <-
     page.has.content$headers  %>%
@@ -836,7 +836,7 @@ get_data_ft_v1_api_domains <-
 
   sentiment_data <-
     url %>%
-    readr::read_csv() %>%
+    read_csv() %>%
     mutate(term, url, dateTimeData = Sys.time()) %>%
     dplyr::select(term, everything()) %>%
     suppressMessages()
@@ -931,7 +931,7 @@ ft_urls_sentiment <-
            nest_data = F,
            return_message = T) {
     get_data_sentiment_ft_api_safe <-
-      purrr::possibly(get_data_sentiment_ft_api, tibble())
+      possibly(get_data_sentiment_ft_api, tibble())
 
     var_matrix <-
       expand.grid(
@@ -966,7 +966,7 @@ ft_urls_sentiment <-
           suppressMessages
       )
     is_visalization <-
-      !purrr::is_null(visualization)
+      !is_null(visualization)
     if (is_visalization) {
       viz <-
         all_data %>%
@@ -980,7 +980,7 @@ ft_urls_sentiment <-
         labs(
           x = NULL,
           y = "Tone",
-          title = list("GDELT V1 API Domain Sentiment Analysis as of ", Sys.Date()) %>% purrr::reduce(paste0),
+          title = list("GDELT V1 API Domain Sentiment Analysis as of ", Sys.Date()) %>% reduce(paste0),
           caption = "Data from GDELT via gdeltr2"
         )
 
@@ -1054,7 +1054,7 @@ ft_terms_sentiment <-
            nest_data = F,
            return_message = T) {
     .get_data_sentiment_ft_api_safe <-
-      purrr::possibly(.get_data_sentiment_ft_api, tibble())
+      possibly(.get_data_sentiment_ft_api, tibble())
 
     var_matrix <-
       expand.grid(
@@ -1092,7 +1092,7 @@ ft_terms_sentiment <-
       suppressWarnings()
 
     is_visalization <-
-      !purrr::is_null(visualization)
+      !is_null(visualization)
     if (is_visalization) {
       viz <-
         all_data %>%
@@ -1106,7 +1106,7 @@ ft_terms_sentiment <-
         labs(
           x = NULL,
           y = "Tone",
-          title = list("GDELT V1 API Term Sentiment Analysis as of ", Sys.Date()) %>% purrr::reduce(paste0),
+          title = list("GDELT V1 API Term Sentiment Analysis as of ", Sys.Date()) %>% reduce(paste0),
           caption = "Data from GDELT via gdeltr2"
         )
 
@@ -1411,7 +1411,7 @@ dictionary_stability_locations <-
       max_data <-   data %>% pull(dateData) %>% max()
 
 
-      glue::glue("You got GDELT {variable_name} during {min_data}-{max_data} for {locations}") %>% cat(fill = T)
+      glue("You got GDELT {variable_name} during {min_data}-{max_data} for {locations}") %>% cat(fill = T)
     }
 
     return(data)
@@ -1461,14 +1461,14 @@ instability_api_locations <-
            nest_data = F,
            return_message = T) {
     .get_data_location_instability_api_safe <-
-      purrr::possibly(.get_data_location_instability_api, tibble())
+      possibly(.get_data_location_instability_api, tibble())
 
-    if (location_ids %>% purrr::is_null()) {
+    if (location_ids %>% is_null()) {
       location_ids <-
         c()
     }
 
-    if (!random_locations %>% purrr::is_null()) {
+    if (!random_locations %>% is_null()) {
       random_locs <-
         dictionary_stability_locations() %>%
         mutate(ncharLoc = nchar(idLocation)) %>%
@@ -1518,7 +1518,7 @@ instability_api_locations <-
         labs(
           x = NULL,
           y = "Tone",
-          title = list("GDELT Country Stability ", Sys.Date()) %>% purrr::reduce(paste0),
+          title = list("GDELT Country Stability ", Sys.Date()) %>% reduce(paste0),
           caption = "Data from GDELT via gdeltr2"
         )
       return(viz)
@@ -1589,7 +1589,7 @@ ft_trending_terms <-
     data <-
       url %>%
       read_tsv(col_names = FALSE) %>%
-      purrr::set_names(c(id_name, 'value')) %>%
+      set_names(c(id_name, 'value')) %>%
       suppressWarnings() %>%
       suppressMessages()
     data
@@ -1719,7 +1719,7 @@ dictionary_geo_codebook <-
           'Theme',
           "Tone",
           'ToneAbs'
-        ) %>% stringr::str_to_lower(),
+        ) %>% str_to_lower(),
         typeSep = c(
           '',
           ':',
@@ -1749,7 +1749,7 @@ dictionary_geo_codebook <-
         value <-
           query_parameters[x][[1]]
 
-        if (value %>% purrr::is_null()) {
+        if (value %>% is_null()) {
           return(tibble())
         }
 
@@ -1757,10 +1757,10 @@ dictionary_geo_codebook <-
           value <- NULL
         }
 
-        if (value %>% purrr::is_null()) {
+        if (value %>% is_null()) {
           return(tibble())
         }
-        value <- value %>% curl::curl_escape()
+        value <- value %>% curl_escape()
         has_or <-
           value %>% length() > 1
         is_quoted <-
@@ -1779,7 +1779,7 @@ dictionary_geo_codebook <-
         if (has_or) {
           value
 
-          values <- glue::glue("{param}{value}")
+          values <- glue("{param}{value}")
           values <- values %>% str_c(collapse = "%20OR%20")
 
 
@@ -1788,7 +1788,7 @@ dictionary_geo_codebook <-
           param <-
             str_c('(', param, sep = '')
           df_call <-
-            tibble(nameCall = glue::glue("({values})"))
+            tibble(nameCall = glue("({values})"))
           return(df_call)
         }
 
@@ -1899,7 +1899,7 @@ ft_geo_query <-
 
     if (query_slug %>% length() > 1) {
       qs <- query_slug %>% str_c(collapse  = "%20OR%20")
-      query_slug <- glue::glue("({qs})")
+      query_slug <- glue("({qs})")
     }
 
     mode_options <-
@@ -1996,7 +1996,7 @@ ft_geo_query <-
       str_to_lower()
 
     if (browse_url) {
-      url_api %>% httr::BROWSE()
+      url_api %>% BROWSE()
     }
     data <-
       tibble(urlAPI = url_api)
@@ -2005,7 +2005,7 @@ ft_geo_query <-
     if (is_geo) {
       df_geo <-
         url_api %>%
-        jsonlite::fromJSON(simplifyDataFrame = TRUE, flatten = TRUE) %>%
+        fromJSON(simplifyDataFrame = TRUE, flatten = TRUE) %>%
         .$features %>%
         as_tibble()
       df_geo <-
@@ -2026,7 +2026,7 @@ ft_geo_query <-
       df_geo <-
         df_geo %>%
         select(-c(geometry.coordinates)) %>%
-        purrr::set_names(
+        set_names(
           c(
             'typeMap',
             'nameProperty',
@@ -2205,7 +2205,7 @@ ft_geo_query <-
 }
 
 .check_column_name <- function(data, column = "regex") {
-  data %>% tibble::has_name(column)
+  data %>% has_name(column)
 }
 
 # wordcloud ---------------------------------------------------------------
@@ -2280,7 +2280,7 @@ ft_geo_query <-
       mutate_if(is.logical,
                 as.character)
 
-    if (!remove_columns %>% purrr::is_null()) {
+    if (!remove_columns %>% is_null()) {
       data <-
         data %>%
         dplyr::select(-one_of(remove_columns)) %>%
@@ -2288,7 +2288,7 @@ ft_geo_query <-
     }
 
     has_grouping <-
-      !group_columns %>% purrr::is_null()
+      !group_columns %>% is_null()
 
 
     if (has_grouping) {
@@ -2333,13 +2333,13 @@ ft_geo_query <-
 
       nest_names <-
         nest_names %>%
-        rlang::syms()
+        syms()
 
 
       data <-
         data %>%
         dplyr::group_by(!!!nest_names) %>%
-        tidyr::nest_legacy()
+        nest_legacy()
 
       data <-
         data %>%
@@ -2411,13 +2411,13 @@ plot_wc_trelliscope <-
       .get_trelliscope_id_columns(id_columns = id_columns)
 
     title <-
-      glue::glue("GDELT V2 Full Text API World Cloud Trelliscope")
+      glue("GDELT V2 Full Text API World Cloud Trelliscope")
 
     df_trelliscope_params <-
       trelliscope_parameters %>% flatten_df()
 
     has_path <-
-      df_trelliscope_params %>% tibble::has_name("path")
+      df_trelliscope_params %>% has_name("path")
     if (has_path) {
       path_loc <- df_trelliscope_params$path
 
@@ -2468,7 +2468,7 @@ plot_wc_trelliscope <-
       mutate(idRow = 1:n()) %>%
       left_join(df_keys) %>%
       dplyr::select(itemSearch, everything()) %>%
-      tidyr::separate(
+      separate(
         col = 'itemSearch',
         into = c('itemQuery', 'valueQuery'),
         sep = '\\: '
@@ -2501,19 +2501,19 @@ plot_wc_trelliscope <-
       mutate(modeSearch = modeSearch %>% str_to_lower()) %>%
       filter(modeSearch == chart_type)
 
-    if (data %>% tibble::has_name("periodtimeSearch")) {
+    if (data %>% has_name("periodtimeSearch")) {
       data <-
         data %>%
         dplyr::rename(periodChart = periodtimeSearch)
     }
 
-    if (data %>% tibble::has_name("datetimeStartSearch")) {
+    if (data %>% has_name("datetimeStartSearch")) {
       data <-
         data %>%
         dplyr::rename(datetimeStart = datetimeStartSearch)
     }
 
-    if (data %>% tibble::has_name("datetimeSearchEnd")) {
+    if (data %>% has_name("datetimeSearchEnd")) {
       data <-
         data %>%
         dplyr::rename(datetimeEnd = datetimeSearchEnd)
@@ -2532,7 +2532,7 @@ plot_wc_trelliscope <-
       unite(itemSearch, 'search', 'term', sep = ": ") %>%
       dplyr::select(itemSearch, everything())
 
-    if (data %>% tibble::has_name("urlArticle")) {
+    if (data %>% has_name("urlArticle")) {
       data <-
         data %>%
         mutate(domainArticle = urlArticle %>% urltools::domain())
@@ -2573,7 +2573,7 @@ plot_wc_trelliscope <-
       data <-
         data %>%
         mutate(
-          htmlArticle = glue::glue(
+          htmlArticle = glue(
             "<li><a href = '{urlArticle}' target = '_blank'> {titleArticle}</a></li>"
           )
         )
@@ -2606,7 +2606,7 @@ plot_wc_trelliscope <-
       data <-
         data %>%
         mutate(
-          htmlTooltip = glue::glue(
+          htmlTooltip = glue(
             "<div><p><strong>{item}:</strong> {value}</p><p><strong>{y_axis_name}:</strong> {yAxis}</p><p><strong>{x_axis_name}:</strong> {xAxisV}</p><span><ul>{htmlArticle}</ul></span></div>"
           ) %>% as.character()
         )
@@ -2618,17 +2618,17 @@ plot_wc_trelliscope <-
     type_x_axis <- df_chart_info$typeXAxis
     has_tool_tip <-  df_chart_info$hasTooltip
 
-    if (data %>% tibble::has_name("periodChart")) {
+    if (data %>% has_name("periodChart")) {
       period_time_slug <-
         data$periodChart %>% unique()
 
       period_slug <-
-        glue::glue("Over the Last {period_time_slug %>% str_to_title()}")
+        glue("Over the Last {period_time_slug %>% str_to_title()}")
     } else{
       period_slug <- ""
     }
 
-    if (data %>% tibble::has_name("datetimeStart")) {
+    if (data %>% has_name("datetimeStart")) {
       start <-
         data$datetimeStart %>% unique()
 
@@ -2636,7 +2636,7 @@ plot_wc_trelliscope <-
         data$datetimeEnd %>% unique()
 
       date_slug <-
-        glue::glue("from {start} to {end}")
+        glue("from {start} to {end}")
     } else{
       date_slug <- ""
     }
@@ -2675,7 +2675,7 @@ plot_wc_trelliscope <-
                 layout = "horizontal") %>%
       hc_credits(
         enabled = TRUE,
-        text = glue::glue("Data from GDELT Project via gdeltr2") %>% as.character(),
+        text = glue("Data from GDELT Project via gdeltr2") %>% as.character(),
         href = "http://gdeltproject.org"
       ) %>%
       hc_exporting(enabled = TRUE) %>%
@@ -2688,7 +2688,7 @@ plot_wc_trelliscope <-
 
       if (more_than_1) {
         title <-
-          glue::glue("<h4>GDELT FT API V2 {type} Visualization {period_slug} {date_slug}</h4>") %>%
+          glue("<h4>GDELT FT API V2 {type} Visualization {period_slug} {date_slug}</h4>") %>%
           as.character() %>%
           str_trim() %>%
           str_replace_all('\\ </h4>', '</h4>')
@@ -2696,7 +2696,7 @@ plot_wc_trelliscope <-
         item <- data$item %>% unique()
         value <- data$value %>% unique()
         title <-
-          glue::glue(
+          glue(
             "<h4>GDELT FT API V2 {type} Visualization for {item} of {value} {period_slug} {date_slug}</h4>"
           ) %>%
           as.character() %>%
@@ -2709,7 +2709,7 @@ plot_wc_trelliscope <-
         hc_title(text = title,
                  useHTML = TRUE) %>%
         hc_subtitle(
-          text = glue::glue("<em>Data as of {Sys.time()}</em>") %>% as.character(),
+          text = glue("<em>Data as of {Sys.time()}</em>") %>% as.character(),
           useHTML = TRUE
         )
 
@@ -2858,13 +2858,13 @@ plot_hc_trelliscope <-
       data$data[[1]]$modeSearch %>% unique()
 
     title <-
-      glue::glue("GDELT Full Text API {search_mode} Trelliscope")
+      glue("GDELT Full Text API {search_mode} Trelliscope")
 
     df_trelliscope_params <-
       trelliscope_parameters %>% flatten_df()
 
     has_path <-
-      df_trelliscope_params %>% tibble::has_name("path")
+      df_trelliscope_params %>% has_name("path")
 
     if (data %>% ncol() <= 4) {
       state_value <- NULL
@@ -2903,11 +2903,11 @@ plot_hc_trelliscope <-
 
 # utils -------------------------------------------------------------------
 .generate_ymd_hms <- function(date) {
-  if (date %>% stringr::str_detect(":")) {
+  if (date %>% str_detect(":")) {
     date <- date %>% lubridate::ymd_hms() %>% force_tz()
     return(date)
   }
-  glue::glue("{date} 12:00:00") %>% as.character() %>% lubridate::ymd_hms() %>% lubridate::force_tz()
+  glue("{date} 12:00:00") %>% as.character() %>% lubridate::ymd_hms() %>% lubridate::force_tz()
 }
 
 
@@ -2934,7 +2934,7 @@ generate_dates <-
   function(start_date = NULL,
            end_date = NULL,
            time_interval = "days") {
-    if (time_interval %>% purrr::is_null()) {
+    if (time_interval %>% is_null()) {
       time_interval <- 'hours'
     }
     time_interval <- time_interval %>% str_to_lower()
@@ -2942,7 +2942,7 @@ generate_dates <-
       c("months", "weeks", 'days', 'hours', 'minutes', "year")
     if (!time_interval %in% period_types) {
       stop(
-        glue::glue(
+        glue(
           "Sorry period types can on only be {str_c(period_types, collapse = ', ')}"
         ) %>% as.character()
       )
@@ -2950,12 +2950,12 @@ generate_dates <-
 
     now <- Sys.time()
     earliest <- now - lubridate::dweeks(12)
-    if (end_date %>% purrr::is_null()) {
+    if (end_date %>% is_null()) {
       end_date <- now
     } else {
       end_date <- end_date %>% .generate_ymd_hms()
     }
-    if (start_date %>% purrr::is_null()) {
+    if (start_date %>% is_null()) {
       start_date <- earliest
     } else {
       start_date <-
@@ -3137,7 +3137,7 @@ generate_dates <-
   }
 
 .check_column_name <- function(data, column = "regex") {
-  data %>% tibble::has_name(column)
+  data %>% has_name(column)
 }
 
 .odd_expand <-
@@ -3170,7 +3170,7 @@ generate_dates <-
     df <-
       df %>%
       mutate(data = list(data)) %>%
-      tidyr::unnest_legacy()
+      unnest_legacy()
 
     columns <-
       c(names(df)[names(df) %in% col_order],
@@ -3216,10 +3216,10 @@ generate_dates <-
       return(invisible())
     }
 
-    levels <- path %>% stringr::str_count("/")
+    levels <- path %>% str_count("/")
 
     level_parts <-
-      path %>% stringr::str_split('/') %>% purrr::flatten_chr()
+      path %>% str_split('/') %>% flatten_chr()
 
     level_parts <- level_parts[!level_parts == '']
 
@@ -3245,7 +3245,7 @@ generate_dates <-
            group_columns = list(regex = "Search",
                                 columns = NULL,
                                 exclude = NULL)) {
-    if (!remove_columns %>% purrr::is_null()) {
+    if (!remove_columns %>% is_null()) {
       data <-
         data %>%
         dplyr::select(-dplyr::one_of(remove_columns)) %>%
@@ -3253,7 +3253,7 @@ generate_dates <-
     }
 
     has_grouping <-
-      !group_columns %>% purrr::is_null()
+      !group_columns %>% is_null()
 
 
     if (has_grouping) {
@@ -3298,13 +3298,13 @@ generate_dates <-
 
       nest_names <-
         nest_names %>%
-        rlang::syms()
+        syms()
 
 
       data <-
         data %>%
         dplyr::group_by(!!!nest_names) %>%
-        tidyr::nest_legacy()
+        nest_legacy()
 
       data <-
         data %>%
@@ -3377,13 +3377,13 @@ plot_wc_trelliscope <-
     mode_names <-
       data$modeSearch %>% unique() %>% str_c(collapse = ', ')
     title <-
-      glue::glue("GDELT Full Text API {mode_names} Trelliscope")
+      glue("GDELT Full Text API {mode_names} Trelliscope")
 
     df_trelliscope_params <-
       trelliscope_parameters %>% flatten_df()
 
     has_path <-
-      df_trelliscope_params %>% tibble::has_name("path")
+      df_trelliscope_params %>% has_name("path")
 
     if (has_path) {
       path_loc <- df_trelliscope_params$path
@@ -3445,17 +3445,17 @@ plot_panel_trelliscope <-
       .munge_for_trelliscope(remove_columns = remove_columns,
                              group_columns = group_columns)
 
-    if (!data %>% tibble::has_name('urlImage')) {
+    if (!data %>% has_name('urlImage')) {
       names(data)[names(data) %>% str_detect(image_column)] <-
         'urlImage'
     }
 
-    if (!data %>% tibble::has_name('urlArticle')) {
+    if (!data %>% has_name('urlArticle')) {
       names(data)[names(data) %>% str_detect(link_column)] <-
         'urlArticle'
     }
 
-    if (data %>% tibble::has_name("datetimeArticle")) {
+    if (data %>% has_name("datetimeArticle")) {
       data <-
         data %>%
         arrange(desc(datetimeArticle))
@@ -3496,14 +3496,14 @@ plot_panel_trelliscope <-
       suppressWarnings()
 
     title <-
-      glue::glue("GDELT Full Text API Image Trelliscope") %>%
+      glue("GDELT Full Text API Image Trelliscope") %>%
       as.character()
 
     df_trelliscope_params <-
       trelliscope_parameters %>% flatten_df()
 
     has_path <-
-      df_trelliscope_params %>% tibble::has_name("path")
+      df_trelliscope_params %>% has_name("path")
 
     if (has_path) {
       path_loc <- df_trelliscope_params$path
@@ -3598,7 +3598,7 @@ plot_trelliscope <-
       trelliscope_type %>% str_to_lower() %>% str_detect('wordcloud')
 
     if (is_word_cloud) {
-      if (group_columns %>% purrr::is_null()) {
+      if (group_columns %>% is_null()) {
         group_columns <-
           list(regex = "Search",
                columns = NULL,
@@ -3644,7 +3644,7 @@ plot_trelliscope <-
       if (!'group_columns' %>% exists()) {
         group_columns <- NULL
       }
-      if (group_columns %>% purrr::is_null()) {
+      if (group_columns %>% is_null()) {
         group_columns = list(
           regex = NULL,
           columns = c('itemQuery', 'valueQuery', 'periodtimeSearch'),
@@ -3739,7 +3739,7 @@ plot_trelliscopes <-
       path <- NULL
     }
 
-    if (!group_columns %>% purrr::is_null()) {
+    if (!group_columns %>% is_null()) {
       group <- group_columns
     } else {
       group <- NULL
@@ -3754,7 +3754,7 @@ plot_trelliscopes <-
 
         data <-
           df_row %>% dplyr::select(-packageVisualization) %>%
-          tidyr::unnest_legacy()
+          unnest_legacy()
 
         viz <-
           plot_trelliscope(
@@ -3774,7 +3774,7 @@ plot_trelliscopes <-
                eval(viz),
                envir = .GlobalEnv)
 
-        glue::glue("Trelliscope assigned to {ts_name}
+        glue("Trelliscope assigned to {ts_name}
                    in your global environment") %>%
           cat(fill = T)
 
@@ -3808,19 +3808,19 @@ codebook_trelliscope <-
       data <-
         data %>%
         mutate(
-          urlNews1D = glue::glue(
+          urlNews1D = glue(
             'https://api.gdeltproject.org/api/v2/doc/doc?query={parameter}:{idGKGTheme}%20sourcelang:english&mode=artlist&timespan=24h&maxrecords=250&sort=datedesc'
           ),
-          urlNews1M = glue::glue(
+          urlNews1M = glue(
             'https://api.gdeltproject.org/api/v2/doc/doc?query={parameter}:{idGKGTheme}%20sourcelang:english&mode=artlist&timespan=1m&maxrecords=250&sort=datedesc'
           ),
-          urlNews3M = glue::glue(
+          urlNews3M = glue(
             'https://api.gdeltproject.org/api/v2/doc/doc?query={parameter}:{idGKGTheme}%20sourcelang:english&mode=artlist&timespan=12w&maxrecords=250&sort=datedesc'
           ),
-          urlTimelineVol = glue::glue(
+          urlTimelineVol = glue(
             'https://api.gdeltproject.org/api/v2/doc/doc?query={parameter}:{idGKGTheme}%20sourcelang:english&mode=timelinevolinfo&timespan=12w&maxrecords=250&sort=datedesc'
           ),
-          urlSentiment = glue::glue(
+          urlSentiment = glue(
             'https://api.gdeltproject.org/api/v2/doc/doc?query={parameter}:{idGKGTheme}%20sourcelang:english&mode=ToneChart&timespan=12w&maxrecords=250&sort=datedesc'
           )
         )
@@ -3831,19 +3831,19 @@ codebook_trelliscope <-
       data <-
         data %>%
         mutate(
-          urlNews1D = glue::glue(
+          urlNews1D = glue(
             'https://api.gdeltproject.org/api/v2/doc/doc?query={parameter}:"{idImageWeb}"%20sourcelang:english&mode=artlist&timespan=24h&maxrecords=250&sort=datedesc'
           ),
-          urlNews1M = glue::glue(
+          urlNews1M = glue(
             'https://api.gdeltproject.org/api/v2/doc/doc?query={parameter}:"{idImageWeb}"%20sourcelang:english&mode=artlist&timespan=1m&maxrecords=250&sort=datedesc'
           ),
-          urlNews3M = glue::glue(
+          urlNews3M = glue(
             'https://api.gdeltproject.org/api/v2/doc/doc?query={parameter}:"{idImageWeb}"%20sourcelang:english&mode=artlist&timespan=12w&maxrecords=250&sort=datedesc'
           ),
-          urlTimelineVol = glue::glue(
+          urlTimelineVol = glue(
             'https://api.gdeltproject.org/api/v2/doc/doc?query={parameter}:"{idImageWeb}"%20sourcelang:english&mode=timelinevolinfo&timespan=12w&maxrecords=250&sort=datedesc'
           ),
-          urlSentiment = glue::glue(
+          urlSentiment = glue(
             'https://api.gdeltproject.org/api/v2/doc/doc?query={parameter}:"{idImageWeb}"%20sourcelang:english&mode=ToneChart&timespan=12w&maxrecords=250&sort=datedesc'
           )
         )
@@ -3854,19 +3854,19 @@ codebook_trelliscope <-
       data <-
         data %>%
         mutate(
-          urlNews1D = glue::glue(
+          urlNews1D = glue(
             'https://api.gdeltproject.org/api/v2/doc/doc?query={parameter}:"{idImageTag}"%20sourcelang:english&mode=artlist&timespan=24h&maxrecords=250&sort=datedesc'
           ),
-          urlNews1M = glue::glue(
+          urlNews1M = glue(
             'https://api.gdeltproject.org/api/v2/doc/doc?query={parameter}:"{idImageTag}"%20sourcelang:english&mode=artlist&timespan=1m&maxrecords=250&sort=datedesc'
           ),
-          urlNews3M = glue::glue(
+          urlNews3M = glue(
             'httpss://api.gdeltproject.org/api/v2/doc/doc?query={parameter}:"{idImageTag}"%20sourcelang:english&mode=artlist&timespan=12w&maxrecords=250&sort=datedesc'
           ),
-          urlTimelineVol = glue::glue(
+          urlTimelineVol = glue(
             'https://api.gdeltproject.org/api/v2/doc/doc?query={parameter}:"{idImageTag}"%20sourcelang:english&mode=timelinevolinfo&timespan=12w&maxrecords=250&sort=datedesc'
           ),
-          urlSentiment = glue::glue(
+          urlSentiment = glue(
             'https://api.gdeltproject.org/api/v2/doc/doc?query={parameter}:"{idImageTag}"%20sourcelang:english&mode=ToneChart&timespan=12w&maxrecords=250&sort=datedesc'
           )
         )
@@ -3895,9 +3895,9 @@ codebook_trelliscope <-
     }
 
     title <-
-      glue::glue("GDELT V2 API {parameter %>% str_to_upper()} CODES")
+      glue("GDELT V2 API {parameter %>% str_to_upper()} CODES")
 
-    if (!path %>% purrr::is_null()) {
+    if (!path %>% is_null()) {
       viz <-
         data %>%
         trelliscopejs::trelliscope(
@@ -3948,7 +3948,7 @@ codebook_trelliscope <-
       mutate(idRow = 1:n()) %>%
       left_join(df_keys) %>%
       dplyr::select(itemSearch, everything()) %>%
-      tidyr::separate(
+      separate(
         col = 'itemSearch',
         into = c('itemQuery', 'valueQuery'),
         sep = '\\: '
@@ -3990,19 +3990,19 @@ codebook_trelliscope <-
       mutate(modeSearch = modeSearch %>% str_to_lower()) %>%
       filter(modeSearch == chart_type)
 
-    if (data %>% tibble::has_name("periodtimeSearch")) {
+    if (data %>% has_name("periodtimeSearch")) {
       data <-
         data %>%
         dplyr::rename(periodChart = periodtimeSearch)
     }
 
-    if (data %>% tibble::has_name("datetimeStartSearch")) {
+    if (data %>% has_name("datetimeStartSearch")) {
       data <-
         data %>%
         dplyr::rename(datetimeStart = datetimeStartSearch)
     }
 
-    if (data %>% tibble::has_name("datetimeSearchEnd")) {
+    if (data %>% has_name("datetimeSearchEnd")) {
       data <-
         data %>%
         dplyr::rename(datetimeEnd = datetimeSearchEnd)
@@ -4021,7 +4021,7 @@ codebook_trelliscope <-
       unite(itemSearch, 'search', 'term', sep = ": ") %>%
       dplyr::select(itemSearch, everything())
 
-    if (data %>% tibble::has_name("urlArticle")) {
+    if (data %>% has_name("urlArticle")) {
       data <-
         data %>%
         mutate(domainArticle = urlArticle %>% urltools::domain())
@@ -4062,7 +4062,7 @@ codebook_trelliscope <-
       data <-
         data %>%
         mutate(
-          htmlArticle = glue::glue(
+          htmlArticle = glue(
             "<li><a href = '{urlArticle}' target = '_blank'> {titleArticle}</a></li>"
           )
         )
@@ -4095,7 +4095,7 @@ codebook_trelliscope <-
       data <-
         data %>%
         mutate(
-          htmlTooltip = glue::glue(
+          htmlTooltip = glue(
             "<div><p><strong>{item}:</strong> {value}</p><p><strong>{y_axis_name}:</strong> {yAxis}</p><p><strong>{x_axis_name}:</strong> {xAxisV}</p><span><ul>{htmlArticles}</ul></span></div>"
           ) %>% as.character()
         )
@@ -4107,17 +4107,17 @@ codebook_trelliscope <-
     type_x_axis <- df_chart_info$typeXAxis
     has_tool_tip <-  df_chart_info$hasTooltip
 
-    if (data %>% tibble::has_name("periodChart")) {
+    if (data %>% has_name("periodChart")) {
       period_time_slug <-
         data$periodChart %>% unique()
 
       period_slug <-
-        glue::glue("Over the Last {period_time_slug %>% str_to_title()}")
+        glue("Over the Last {period_time_slug %>% str_to_title()}")
     } else{
       period_slug <- ""
     }
 
-    if (data %>% tibble::has_name("datetimeStart")) {
+    if (data %>% has_name("datetimeStart")) {
       start <-
         data$datetimeStart %>% unique()
 
@@ -4125,7 +4125,7 @@ codebook_trelliscope <-
         data$datetimeEnd %>% unique()
 
       date_slug <-
-        glue::glue("from {start} to {end}")
+        glue("from {start} to {end}")
     } else{
       date_slug <- ""
     }
@@ -4166,7 +4166,7 @@ codebook_trelliscope <-
                 layout = "horizontal") %>%
       hc_credits(
         enabled = TRUE,
-        text = glue::glue("Data from GDELT Project via gdeltr2") %>% as.character(),
+        text = glue("Data from GDELT Project via gdeltr2") %>% as.character(),
         href = "http://gdeltproject.org"
       ) %>%
       #hc_responsive(
@@ -4193,7 +4193,7 @@ codebook_trelliscope <-
 
       if (more_than_1) {
         title <-
-          glue::glue("<h4>GDELT FT API V2 {type} Visualization {period_slug} {date_slug}</h4>") %>%
+          glue("<h4>GDELT FT API V2 {type} Visualization {period_slug} {date_slug}</h4>") %>%
           as.character() %>%
           str_trim() %>%
           str_replace_all('\\ </h4>', '</h4>')
@@ -4201,7 +4201,7 @@ codebook_trelliscope <-
         item <- data$item %>% unique()
         value <- data$value %>% unique()
         title <-
-          glue::glue(
+          glue(
             "<h4>GDELT FT API V2 {type} Visualization for {item} of {value} {period_slug} {date_slug}</h4>"
           ) %>%
           as.character() %>%
@@ -4214,7 +4214,7 @@ codebook_trelliscope <-
         hc_title(text = title,
                  useHTML = TRUE) %>%
         hc_subtitle(
-          text = glue::glue("<em>Data as of {Sys.time()}</em>") %>% as.character(),
+          text = glue("<em>Data as of {Sys.time()}</em>") %>% as.character(),
           useHTML = TRUE
         )
 
@@ -4327,7 +4327,7 @@ plot_hc_trelliscope <-
       data %>%
       .add_hc_group()
 
-    if (data %>% tibble::has_name("periodtimeSearch")) {
+    if (data %>% has_name("periodtimeSearch")) {
       data <-
         data %>%
         dplyr::rename(periodChart = periodtimeSearch)
@@ -4360,13 +4360,13 @@ plot_hc_trelliscope <-
     search_mode <- data$data[[1]]$modeSearch %>% unique()
 
     title <-
-      glue::glue("GDELT Full Text API {search_mode} Trelliscope")
+      glue("GDELT Full Text API {search_mode} Trelliscope")
 
     df_trelliscope_params <-
       trelliscope_parameters %>% flatten_df()
 
     has_path <-
-      df_trelliscope_params %>% tibble::has_name("path")
+      df_trelliscope_params %>% has_name("path")
 
     if (data %>% ncol() <= 3) {
       state_value <- NULL
@@ -4406,7 +4406,7 @@ plot_hc_trelliscope <-
 
 # FreeText V2 -------------------------------------------------------------
 .parse_timespan <- function(timespan = "24 hours") {
-  if (timespan %>% purrr::is_null()) {
+  if (timespan %>% is_null()) {
     df <-
       tibble(period_time = NA,
              period_timeframe = NA)
@@ -4414,7 +4414,7 @@ plot_hc_trelliscope <-
   }
 
   period_time <-
-    timespan %>% readr::parse_number()
+    timespan %>% parse_number()
   period_timeframe <-
     timespan %>% str_split('\\ ') %>% flatten_chr() %>% str_to_lower() %>% {
       .[2]
@@ -4424,7 +4424,7 @@ plot_hc_trelliscope <-
 
 .parse_datetimes <-
   function(dates = NULL) {
-    if (dates %>% purrr::is_null()) {
+    if (dates %>% is_null()) {
       return(invisible())
     }
 
@@ -4446,7 +4446,7 @@ plot_hc_trelliscope <-
 
     dates <-
       dates %>% str_split('\\ - ') %>%
-      purrr::flatten_chr()
+      flatten_chr()
 
     tibble(datetime_start = dates[[1]],
            datetime_end = dates[[2]])
@@ -4644,7 +4644,7 @@ dictionary_ft_codebook <-
       if (use_or) {
         qs <-
           query_slug %>% str_c(collapse  = "%20OR%20")
-        query_slug <- glue::glue("({qs})")
+        query_slug <- glue("({qs})")
       } else {
         query_slug <-
           query_slug %>% str_c(collapse  = "%20") %>% URLencode()
@@ -4653,7 +4653,7 @@ dictionary_ft_codebook <-
 
     if (source_language %>% length() > 0) {
       source_language_slug <-
-        glue::glue("&sourcelang:{source_language}")
+        glue("&sourcelang:{source_language}")
     } else {
       source_language_slug <- ""
     }
@@ -4716,7 +4716,7 @@ dictionary_ft_codebook <-
         )
 
       timespan_slug <-
-        glue::glue("&timespan={period}{id_metric}")
+        glue("&timespan={period}{id_metric}")
 
     } else {
       timespan_slug <- ''
@@ -4735,7 +4735,7 @@ dictionary_ft_codebook <-
         as.character() %>% str_replace_all('\\ |\\:|\\-', '')
 
       datetime_slug <-
-        glue::glue('&startdatetime={start_time}&enddatetime={end_time}')
+        glue('&startdatetime={start_time}&enddatetime={end_time}')
     } else {
       datetime_slug <- ''
     }
@@ -4833,14 +4833,14 @@ dictionary_ft_codebook <-
 
 .parse_json_api_2 <-
   function(url = "http://api.gdeltproject.org/api/v2/doc/doc?query=domain:netsdaily.com&timespan=1m&maxrecords=250&format=json") {
-    httr::set_config(httr::config(ssl_verifypeer = 0L))
+    set_config(config(ssl_verifypeer = 0L))
     res <-
       GET(url) %>%
-      httr::content(as = "text")
+      content(as = "text")
 
     data <-
       res %>%
-      jsonlite::fromJSON(simplifyDataFrame = TRUE)
+      fromJSON(simplifyDataFrame = TRUE)
 
     data_names <- names(data)
 
@@ -4872,7 +4872,7 @@ dictionary_ft_codebook <-
 
       data <-
         data %>%
-        purrr::set_names(actual_names)
+        set_names(actual_names)
 
       data <-
         data %>%
@@ -4913,7 +4913,7 @@ dictionary_ft_codebook <-
 
       data <-
         data %>%
-        purrr::set_names(actual_names)
+        set_names(actual_names)
 
       data <-
         data %>%
@@ -4940,7 +4940,7 @@ dictionary_ft_codebook <-
     data <-
       as_tibble(data)
 
-    if (data %>% tibble::has_name("imageweburls")) {
+    if (data %>% has_name("imageweburls")) {
       df_urls <-
         seq_along(data$imageweburls) %>%
         map_dfr(function(x) {
@@ -4963,13 +4963,13 @@ dictionary_ft_codebook <-
         dplyr::select(-idRow)
     }
 
-    if (data %>% tibble::has_name("series")) {
+    if (data %>% has_name("series")) {
       data <-
         data %>%
-        tidyr::unnest_legacy()
+        unnest_legacy()
     }
 
-    if (data %>% tibble::has_name("toparts")) {
+    if (data %>% has_name("toparts")) {
       data <-
         data %>%
         unnest_legacy()
@@ -4992,7 +4992,7 @@ dictionary_ft_codebook <-
 
     data <-
       data %>%
-      purrr::set_names(actual_names)
+      set_names(actual_names)
 
     data <-
       data %>%
@@ -5043,20 +5043,20 @@ dictionary_ft_codebook <-
            sort_by = 'DateDesc',
            nest_data = FALSE,
            return_message = TRUE) {
-    if (!gkg_theme %>% purrr::is_null()) {
+    if (!gkg_theme %>% is_null()) {
       if (gkg_theme %>% is.na()) {
         gkg_theme <- NULL
       }
     }
 
 
-    if (!dates %>% purrr::is_null()) {
+    if (!dates %>% is_null()) {
       timespan <- NULL
     }
 
     if (length(term) > 0 && quote_terms) {
       term <-
-        glue::glue('"{term}"') %>% as.character()
+        glue('"{term}"') %>% as.character()
     }
 
     query_params <-
@@ -5091,7 +5091,7 @@ dictionary_ft_codebook <-
 
     df_search <-
       df_query_params %>%
-      tidyr::gather(item, value) %>%
+      gather(item, value) %>%
       mutate(
         item = item %>% str_replace_all('\\_', ''),
         item = str_c(item, "Search", sep = '')
@@ -5139,7 +5139,7 @@ dictionary_ft_codebook <-
         mutate(periodtimeSearch = timespan)
     }
 
-    if (!dates %>% purrr::is_null()) {
+    if (!dates %>% is_null()) {
       datetimes <- dates %>% str_split("\\ - ") %>% flatten_chr()
 
       df_search <-
@@ -5161,7 +5161,7 @@ dictionary_ft_codebook <-
   return_message = TRUE) {
 
     .parse_json_api_2_safe <-
-      purrr::possibly(.parse_json_api_2, tibble())
+      possibly(.parse_json_api_2, tibble())
 
     urls %>%
       map_dfr(function(url){
@@ -5209,7 +5209,7 @@ dictionary_ft_codebook <-
         tibble(gkg_theme = gkg_themes),
         tibble(image_web_count = images_web_count)
       ) %>%
-      purrr::reduce(bind_rows) %>%
+      reduce(bind_rows) %>%
       distinct()
 
     if (!dates %>% is.na()) {
@@ -5246,7 +5246,7 @@ dictionary_ft_codebook <-
       .odd_expand(column_name = "mode", column_values = modes)
 
     .generate_v2_url_df_safe <-
-      purrr::possibly(.generate_v2_url_df, tibble())
+      possibly(.generate_v2_url_df, tibble())
 
     all_url_df <-
       1:nrow(df_terms) %>%
@@ -5300,14 +5300,14 @@ dictionary_ft_codebook <-
       all_url_df %>%
       dplyr::select(one_of(search_params), everything())
     .parse_v2_urls_safe <-
-      purrr::possibly(.parse_v2_urls, tibble())
+      possibly(.parse_v2_urls, tibble())
 
     all_data <-
       all_url_df$urlGDELTV2FTAPI %>%
       .parse_v2_urls_safe(return_message = return_message)
 
     all_data <-
-      all_data %>% tidyr::nest_legacy(-urlGDELTV2FTAPI)
+      all_data %>% nest_legacy(-urlGDELTV2FTAPI)
 
     names(all_data)[[2]] <-
       'dataSearch'
@@ -5326,7 +5326,7 @@ dictionary_ft_codebook <-
     if (!nest_data) {
       all_data <-
         all_data %>%
-        tidyr::unnest_legacy()
+        unnest_legacy()
     }
 
     all_data
@@ -5447,11 +5447,11 @@ ft_v2_api <-
            ),
            nest_data = FALSE,
            return_message = TRUE) {
-    if (terms %>% purrr::is_null()) {
+    if (terms %>% is_null()) {
       terms <- NA
     }
 
-    if (domains %>% purrr::is_null()) {
+    if (domains %>% is_null()) {
       domains <- NA
     }
 
@@ -5480,7 +5480,7 @@ ft_v2_api <-
     }
 
     .query_gdelt_ft_v2_api_safe <-
-      purrr::possibly(.query_gdelt_ft_v2_api, tibble())
+      possibly(.query_gdelt_ft_v2_api, tibble())
 
     all_data <-
       .query_gdelt_ft_v2_api_safe(
@@ -5636,7 +5636,7 @@ generate_trelliscope_bundle <-
            id_columns = NULL,
            group_columns = NULL,
            return_message = TRUE) {
-    if (base_path %>% purrr::is_null()) {
+    if (base_path %>% is_null()) {
       stop("Please enter a path to save the trelliscopes")
     }
 
@@ -5650,7 +5650,7 @@ generate_trelliscope_bundle <-
 
     if (include_image_panel) {
       path <-
-        glue::glue("{base_path}/image_panel") %>% as.character() %>% str_replace_all('//', '/')
+        glue("{base_path}/image_panel") %>% as.character() %>% str_replace_all('//', '/')
 
       trelliscopeImage <-
         ft_v2_api(
@@ -5696,7 +5696,7 @@ generate_trelliscope_bundle <-
 
     if (include_sentiment_bin) {
       path <-
-        glue::glue("{base_path}/sentiment_bin") %>% as.character() %>% str_replace_all('//', '/')
+        glue("{base_path}/sentiment_bin") %>% as.character() %>% str_replace_all('//', '/')
       trelliscopeBIN <-
         ft_v2_api(
           terms = terms,
@@ -5736,14 +5736,14 @@ generate_trelliscope_bundle <-
           dataTrelliscope = list(trelliscopeBIN)
         ))
 
-      glue::glue("\n
+      glue("\n
                  Saved Sentiment Panel Trelliscope to {path}
                  \n") %>% cat(fill = T)
     }
 
     if (include_timeline_info) {
       path <-
-        glue::glue("{base_path}/timeline_info") %>% as.character() %>% str_replace_all('//', '/')
+        glue("{base_path}/timeline_info") %>% as.character() %>% str_replace_all('//', '/')
 
       trelliscopeTimeline <-
         gdeltr2::ft_v2_api(
@@ -5782,14 +5782,14 @@ generate_trelliscope_bundle <-
         ))
 
 
-      glue::glue("\n
+      glue("\n
                  Saved Timline Info Panel Trelliscope to {path}
                  \n") %>% cat(fill = T)
     }
 
     if (include_timeline_tone) {
       path <-
-        glue::glue("{base_path}/timeline_tone") %>% as.character() %>% str_replace_all('//', '/')
+        glue("{base_path}/timeline_tone") %>% as.character() %>% str_replace_all('//', '/')
       trelliscopeTimelinetone <-
         ft_v2_api(
           terms = terms,
@@ -5830,7 +5830,7 @@ generate_trelliscope_bundle <-
           dataTrelliscope = list(trelliscopeTimelinetone)
         ))
 
-      glue::glue("\n
+      glue("\n
                  Saved Timline Tone Panel Trelliscope to {path}
                  \n") %>% cat(fill = T)
     }
@@ -5841,7 +5841,7 @@ generate_trelliscope_bundle <-
 
     if (has_wordclouds) {
       path <-
-        glue::glue("{base_path}/wordclouds") %>% as.character() %>% str_replace_all('//', '/')
+        glue("{base_path}/wordclouds") %>% as.character() %>% str_replace_all('//', '/')
       trelliscopeWordcloud <-
         ft_v2_api(
           terms = terms,
@@ -5906,7 +5906,7 @@ dictionary_country_domains <- function() {
     read_tsv(col_names = F)
 
   data %>%
-    purrr::set_names(c("domainSite", "slugCountry", "nameCountry"))
+    set_names(c("domainSite", "slugCountry", "nameCountry"))
 }
 
 

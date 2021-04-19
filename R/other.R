@@ -19,14 +19,14 @@ dictionary_outlets <- function() {
 
   data <-
     data %>%
-    purrr::set_names(c(
+    set_names(c(
       "slugWebsite",
       "nameWebsite",
       "urlWebsite",
       'urlLogo',
       "urlIcon"
     )) %>%
-    mutate(urlWebsite  = ifelse(urlWebsite %>% is.na(), glue::glue("https://{slugWebsite}"), urlWebsite) %>% as.character()) %>%
+    mutate(urlWebsite  = ifelse(urlWebsite %>% is.na(), glue("https://{slugWebsite}"), urlWebsite) %>% as.character()) %>%
     select(slugWebsite, nameWebsite, urlWebsite, everything())
 
   data

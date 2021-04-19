@@ -38,7 +38,7 @@
         df_row <-
           dict %>% filter(nameGDELT == name)
         if (nrow(df_row) == 0) {
-          glue::glue("Missing {name}") %>% message()
+          glue("Missing {name}") %>% message()
           return(name)
         }
 
@@ -80,7 +80,7 @@
 #' dictionary_v3_entity_urls()
 dictionary_v3_entity_urls <-
   function(){
-    .tt <- memoise::memoise(.dictionary_v3_entities)
+    .tt <- memoise(.dictionary_v3_entities)
     data <- .tt()
     most_recent_dict <-
       data %>% select(datetimeData) %>% pull() %>% max()
@@ -137,7 +137,7 @@ dictionary_v3_entity_urls <-
     time <- .extract_time(url = url)
     if (return_message) {
 
-      glue::glue("Acquiring V3 Entity API data for {time}") %>% message()
+      glue("Acquiring V3 Entity API data for {time}") %>% message()
     }
 
     data <-
@@ -186,7 +186,7 @@ dictionary_v3_entity_urls <-
 .parse_entity_json_url_m <-
   function(url, return_message = T) {
     .parse_entity_json_url_safe <- possibly(.parse_entity_json_url, tibble())
-    .tt <- memoise::memoise(.parse_entity_json_url_safe)
+    .tt <- memoise(.parse_entity_json_url_safe)
     .tt(url = url, return_message = return_message)
   }
 
@@ -213,7 +213,7 @@ parse_v3_entity_api_urls <-
       tibble()
 
     .parse_entity_json_url_m_safe <-
-      purrr::possibly(.parse_entity_json_url_m, tibble())
+      possibly(.parse_entity_json_url_m, tibble())
 
     success <- function(res) {
       data <-

@@ -20,7 +20,7 @@ dictionary_social_links <-
   function(url = "http://data.gdeltproject.org/gdeltv3/gkg/sociallinks/20190910.sociallinks.txt.gz" ) {
     data <-
       url %>%
-      data.table::fread() %>%
+      fread() %>%
       setNames(c("datetimeArticle", "urlArticle", "urlSocialMedia")) %>%
       as_tibble()
 
@@ -37,7 +37,7 @@ dictionary_social_links <-
 
 .parse_social_link_m <-
   function(url = "http://data.gdeltproject.org/gdeltv3/gkg/sociallinks/20190910.sociallinks.txt.gz", return_message = T) {
-    .tt <- memoise::memoise(.parse_social_link)
+    .tt <- memoise(.parse_social_link)
     if (return_message) {
       glue("Parsing {url}") %>% message()
     }
@@ -66,7 +66,7 @@ parse_v3_social_urls <-
       tibble()
 
     .parse_social_link_m_safe <-
-      purrr::possibly(.parse_social_link_m, tibble())
+      possibly(.parse_social_link_m, tibble())
 
     success <- function(res) {
       data <-
