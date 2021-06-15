@@ -28,6 +28,7 @@ ft_v2_api(
   timeline_smooth = 5,
   sort_by = "DateDesc",
   visualize_results = TRUE,
+  sleep_time = 6,
   trelliscope_parameters = list(path = NULL, rows = 1, columns = 2, id_columns = NULL,
     group_columns = NULL),
   nest_data = FALSE,
@@ -111,6 +112,8 @@ default \code{NULL}}
 }}
 
 \item{visualize_results}{if \code{TRUE} returns a visualization}
+
+\item{sleep_time}{}
 
 \item{trelliscope_parameters}{list of parameters to pass along to trelliscope \itemize{
 \item path: if not \code{NULL} the path to save the trelliscope

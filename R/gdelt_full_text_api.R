@@ -5194,6 +5194,7 @@ dictionary_ft_codebook <-
            maximum_records = 250,
            translate = NULL,
            timeline_smooth = 5,
+           sleep_time = NULL,
            sort_by = 'DateDesc',
            nest_data = FALSE,
            return_message = TRUE) {
@@ -5329,6 +5330,11 @@ dictionary_ft_codebook <-
         unnest_legacy()
     }
 
+    if (length(sleep_time) > 0) {
+      str_c("Sleeping for ", sleep_time, " seconds", collapse = "") %>% message()
+      Sys.sleep(sleep_time)
+    }
+
     all_data
   }
 
@@ -5403,6 +5409,8 @@ dictionary_ft_codebook <-
 #' }
 #' @param nest_data if \code{TRUE} returns a nested \code{tibble()}
 #' @param return_message if \code{TRUE} returns a message
+#' @param quote_terms
+#' @param sleep_time
 #'
 #' @import tidyr dplyr rlang highcharter trelliscopejs anytime lubridate purrr purrrlyr tibble glue stringr jsonlite
 #' @return a \code{tibble} or a form of visualization
@@ -5438,6 +5446,7 @@ ft_v2_api <-
            timeline_smooth = 5,
            sort_by = 'DateDesc',
            visualize_results = TRUE,
+           sleep_time = 6,
            trelliscope_parameters = list(
              path = NULL,
              rows = 1,
@@ -5507,7 +5516,8 @@ ft_v2_api <-
         timeline_smooth = timeline_smooth,
         sort_by = sort_by,
         nest_data = nest_data,
-        return_message = return_message
+        return_message = return_message,
+        sleep_time = sleep_time
       )
 
     if (all_data %>% has_name("datetimeArticle")) {
