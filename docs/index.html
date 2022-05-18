@@ -6,20 +6,23 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>R's modern interface GDELT Project Interface • gdeltr2</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="bootstrap-toc.css">
+<script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="R's modern interface GDELT Project Interface">
 <meta property="og:description" content="A tool to efficently and interactively interface with GDELT data and
     and APIs.">
-<meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
-<body>
-    <div class="container template-article">
+<body data-spy="scroll" data-target="#toc">
+    
+
+    <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
@@ -31,26 +34,20 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">gdeltr2</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1173</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.1193</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="index.html">
-    <span class="fa fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="reference/index.html">Reference</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/abresler/gdeltr2">
-    <span class="fa fa-github fa-lg"></span>
+  <a href="https://github.com/abresler/gdeltr2/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -63,78 +60,80 @@
 <!--/.navbar -->
 
       
-      </header><div class="row">
-  <div class="col-md-9 contents">
-    
 
-    
-    
+      </header><div class="row">
+  <div class="contents col-md-9">
+<div class="section level1">
+<div class="page-header"><h1 id="gdeltr2">gdeltr2<a class="anchor" aria-label="anchor" href="#gdeltr2"></a>
+</h1></div>
 <p><code>gdeltr2</code> — <strong>R’s modern GDELT Project interface</strong></p>
-<div id="what-is-the-gdelt-project" class="section level4">
-<h4 class="hasAnchor">
-<a href="#what-is-the-gdelt-project" class="anchor"></a><strong>What is the GDELT Project?</strong>
+<div class="section level4">
+<h4 id="what-is-the-gdelt-project">
+<strong>What is the GDELT Project?</strong><a class="anchor" aria-label="anchor" href="#what-is-the-gdelt-project"></a>
 </h4>
-<a href="http://gdeltproject.org/">The Global Database of Events, Language, and Tone</a> <strong>[GDELT]</strong> is a non profit whose initiative is to:
+<p><a href="http://gdeltproject.org/" class="external-link">The Global Database of Events, Language, and Tone</a> <strong>[GDELT]</strong> is a non profit whose initiative is to:</p>
 <blockquote>
-construct a catalog of human societal-scale behavior and beliefs across all countries of the world, connecting every person, organization, location, count, theme, news source, and event across the planet into a single massive network that captures what’s happening around the world, what its context is and who’s involved, and how the world is feeling about it, every single day.
+<p>construct a catalog of human societal-scale behavior and beliefs across all countries of the world, connecting every person, organization, location, count, theme, news source, and event across the planet into a single massive network that captures what’s happening around the world, what its context is and who’s involved, and how the world is feeling about it, every single day.</p>
 </blockquote>
-<p>GDELT was founded in 1994 and it’s data commences in 1979. Over the last two years the GDELT’s functionality and abilities have grown exponentially, for example in May 2014 GDELT processed 3,928,926 where as in May 2016 it processed 6,198,461. GDELT continues to evolve and integrate advanced machine learning tools including <a href="https://cloud.google.com/vision/">Google Cloud Vision</a>, a data store that became available in February 2016.</p>
+<p>GDELT was founded in 1994 and it’s data commences in 1979. Over the last two years the GDELT’s functionality and abilities have grown exponentially, for example in May 2014 GDELT processed 3,928,926 where as in May 2016 it processed 6,198,461. GDELT continues to evolve and integrate advanced machine learning tools including <a href="https://cloud.google.com/vision/" class="external-link">Google Cloud Vision</a>, a data store that became available in February 2016.</p>
 </div>
-<div id="this-package-wraps-gdelts-four-primary-data-stores" class="section level4">
-<h4 class="hasAnchor">
-<a href="#this-package-wraps-gdelts-four-primary-data-stores" class="anchor"></a><strong>This package wraps GDELT’s four primary data stores</strong>
+<div class="section level4">
+<h4 id="this-package-wraps-gdelts-four-primary-data-stores">
+<strong>This package wraps GDELT’s four primary data stores</strong><a class="anchor" aria-label="anchor" href="#this-package-wraps-gdelts-four-primary-data-stores"></a>
 </h4>
 <ul>
 <li>
-<a href="http://gdeltproject.org/data.html#rawdatafiles">The GDELT Events Database</a> <strong>[EVENTS]</strong>: Global Events, 1979 to present.</li>
+<a href="http://gdeltproject.org/data.html#rawdatafiles" class="external-link">The GDELT Events Database</a> <strong>[EVENTS]</strong>: Global Events, 1979 to present.</li>
 <li>
-<a href="http://gdeltproject.org/data.html#rawdatafiles">The GDELT Global Knowledge Graph</a> <strong>[GKG]</strong> : GDELT’s Knowledge Graph, April 2013 to present.</li>
+<a href="http://gdeltproject.org/data.html#rawdatafiles" class="external-link">The GDELT Global Knowledge Graph</a> <strong>[GKG]</strong> : GDELT’s Knowledge Graph, April 2013 to present.</li>
 <li>
-<a href="http://blog.gdeltproject.org/announcing-the-gdelt-full-text-search-api/">The GDELT Full Text API</a> <strong>[Full Text API]</strong>: Full text search for all monitored sources within a 24 hour window. Output includes raw data, sentiment, and word counts.</li>
+<a href="http://blog.gdeltproject.org/announcing-the-gdelt-full-text-search-api/" class="external-link">The GDELT Full Text API</a> <strong>[Full Text API]</strong>: Full text search for all monitored sources within a 24 hour window. Output includes raw data, sentiment, and word counts.</li>
 <li>
-<a href="http://blog.gdeltproject.org/gdelt-visual-knowledge-graph-vgkg-v1-0-available/">The GDELT Visual Knowledge Graph</a> <strong>VGKG</strong>: Google Cloud Vision API output for every indexed piece of GKG media.</li>
+<a href="http://blog.gdeltproject.org/gdelt-visual-knowledge-graph-vgkg-v1-0-available/" class="external-link">The GDELT Visual Knowledge Graph</a> <strong>VGKG</strong>: Google Cloud Vision API output for every indexed piece of GKG media.</li>
 </ul>
 </div>
-<div id="why-gdeltr2" class="section level4">
-<h4 class="hasAnchor">
-<a href="#why-gdeltr2" class="anchor"></a><strong>Why gdeltr2?</strong>
+<div class="section level4">
+<h4 id="why-gdeltr2">
+<strong>Why gdeltr2?</strong><a class="anchor" aria-label="anchor" href="#why-gdeltr2"></a>
 </h4>
 <p>My main motivation for this building package is simple, <strong>GDELT IS INCREDIBLE!!</strong></p>
 <p>Accessing GDELT’s data gold is doable but either difficult or costly.</p>
-<p>Currently, anyone proficient in SQL can access the data via <a href="https://bigquery.cloud.google.com/dataset/gdelt-bq:gdeltv2?pli=1">Google Big Query</a>. The problem is that even if you want to use SQL, users have to pay above a certain API call threshold and then you still need another layer of connectivity to explore the data in R.</p>
+<p>Currently, anyone proficient in SQL can access the data via <a href="https://bigquery.cloud.google.com/dataset/gdelt-bq:gdeltv2?pli=1" class="external-link">Google Big Query</a>. The problem is that even if you want to use SQL, users have to pay above a certain API call threshold and then you still need another layer of connectivity to explore the data in R.</p>
 <p>Although R has two existing packages that allow users to interact with portions of GDELT’s data outside of Big Query:</p>
 <ul>
-<li><a href="https://github.com/ahalterman/gdeltr">gdeltr</a></li>
-<li><a href="https://cran.r-project.org/web/packages/GDELTtools/">GDELTtools</a></li>
+<li><a href="https://github.com/ahalterman/gdeltr" class="external-link">gdeltr</a></li>
+<li><a href="https://cran.r-project.org/web/packages/GDELTtools/" class="external-link">GDELTtools</a></li>
 </ul>
 <p>These packages are old, incomplete and difficult to use. It is my hope that <code>gdelt2r</code> allows the R user easy access to GDELT’s data allowing for faster, more exhilarating data visualizations and analysis!</p>
 </div>
-<div id="prior-to-install" class="section level4">
-<h4 class="hasAnchor">
-<a href="#prior-to-install" class="anchor"></a><strong>PRIOR TO INSTALL</strong>
+<div class="section level4">
+<h4 id="prior-to-install">
+<strong>PRIOR TO INSTALL</strong><a class="anchor" aria-label="anchor" href="#prior-to-install"></a>
 </h4>
 <p>This package may require the development versions of <code>devtools</code> and <code>dplyr</code> so, to be safe, before installation run the following code:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"hadley/devtools"</span>)</a>
-<a class="sourceLine" id="cb1-2" title="2">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"hadley/dplyr"</span>)</a>
-<a class="sourceLine" id="cb1-3" title="3">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"hafen/trelliscopejs"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"hadley/devtools"</span><span class="op">)</span>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"hadley/dplyr"</span><span class="op">)</span>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"hafen/trelliscopejs"</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="installation" class="section level4">
-<h4 class="hasAnchor">
-<a href="#installation" class="anchor"></a><strong>Installation</strong>
+<div class="section level4">
+<h4 id="installation">
+<strong>Installation</strong><a class="anchor" aria-label="anchor" href="#installation"></a>
 </h4>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"abresler/gdeltr2"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"abresler/gdeltr2"</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="function-ontology" class="section level4">
-<h4 class="hasAnchor">
-<a href="#function-ontology" class="anchor"></a><strong>Function Ontology</strong>
+<div class="section level4">
+<h4 id="function-ontology">
+<strong>Function Ontology</strong><a class="anchor" aria-label="anchor" href="#function-ontology"></a>
 </h4>
 <p>The package currently consists of two function families, <strong>data acquisition</strong> and <strong>data tidying</strong>.</p>
 <p>The package’s data acquisition functions begin with <code>get_urls_</code> for acquiring data store log information, <code>get_codes_</code> for acquiring code books and <code>get_data_</code> for downloading and reading data.</p>
 <p>The data tidying functions begin with <code>parse_</code> and they apply to a number of the features in the <strong>gkg</strong> and <strong>vgkg</strong> data stores that will get described in further detail farther below.</p>
 </div>
-<div id="caution" class="section level4">
-<h4 class="hasAnchor">
-<a href="#caution" class="anchor"></a><strong>CAUTION</strong>
+<div class="section level4">
+<h4 id="caution">
+<strong>CAUTION</strong><a class="anchor" aria-label="anchor" href="#caution"></a>
 </h4>
 <ul>
 <li>
@@ -143,22 +142,22 @@ construct a catalog of human societal-scale behavior and beliefs across all coun
 <li>The package is very memory intensive given the unzipped size of the <code>GDELT Event</code>, <code>Global Knowledge Graph</code> and <code>Visual Knowledge Graph</code> files.</li>
 </ul>
 </div>
-<div id="primary-functions" class="section level4">
-<h4 class="hasAnchor">
-<a href="#primary-functions" class="anchor"></a><strong>Primary Functions</strong>
+<div class="section level4">
+<h4 id="primary-functions">
+<strong>Primary Functions</strong><a class="anchor" aria-label="anchor" href="#primary-functions"></a>
 </h4>
 <ul>
 <li>
 <strong>Full Text API</strong>
 <ul>
 <li>
-<code><a href="reference/get_data_ft_v2_api.html">get_data_ft_v2_api()</a></code> - retrieves descriptive data from V2 API see <a href="https://asbcllc.com/blog/2017/august/intro_to_programming_with_gdeltr2/index.html">this</a> blog post for more on how to use this</li>
+<code><a href="reference/ft_v2_api.html">ft_v2_api()</a></code> - retrieves descriptive data from V2 API see <a href="https://asbcllc.com/blog/2017/august/intro_to_programming_with_gdeltr2/index.html" class="external-link">this</a> blog post for more on how to use this</li>
 <li>
-<code><a href="reference/get_data_ft_trending_terms.html">get_data_ft_trending_terms()</a></code> - retrieves trending terms over the last 15 minutes. The term can be a GDELT tag, location, person, place, or thing.</li>
+<code><a href="reference/ft_trending_terms.html">ft_trending_terms()</a></code> - retrieves trending terms over the last 15 minutes. The term can be a GDELT tag, location, person, place, or thing.</li>
 </ul>
 </li>
 <li>
-<strong><a href="http://gdeltproject.org/data.html#documentation">GDELT Events</a></strong>
+<strong><a href="http://gdeltproject.org/data.html#documentation" class="external-link">GDELT Events</a></strong>
 <ul>
 <li>
 <code><a href="reference/get_urls_gdelt_event_log.html">get_urls_gdelt_event_log()</a></code> - retrieves descriptive data and urls for all available GDELT event downloads.</li>
@@ -169,7 +168,7 @@ construct a catalog of human societal-scale behavior and beliefs across all coun
 </ul>
 </li>
 <li>
-<strong><a href="http://blog.gdeltproject.org/gdelt-2-0-our-global-world-in-realtime/">Global Knowledge Graph</a></strong>
+<strong><a href="http://blog.gdeltproject.org/gdelt-2-0-our-global-world-in-realtime/" class="external-link">Global Knowledge Graph</a></strong>
 <ul>
 <li>
 <code>get_urls_gkg_15_minute_log</code> - retrieves GKG 15 minute capture logs; data begins February 18th, 2015 for the three table types
@@ -189,33 +188,33 @@ construct a catalog of human societal-scale behavior and beliefs across all coun
 </ul>
 </li>
 <li>
-<code><a href="reference/get_data_gkg_day_summary.html">get_data_gkg_day_summary()</a></code> retrieves GKG daily summary data for specified date(s), this captures <em>count files</em> by <code>is_count_file = T</code>
+<code><a href="reference/get_data_gkg_days_summary.html">get_data_gkg_days_summary()</a></code> retrieves GKG daily summary data for specified date(s), this captures <em>count files</em> by <code>is_count_file = T</code>
 </li>
 <li>
-<code><a href="reference/get_data_gkg_days_detailed.html">get_data_gkg_days_detailed()</a></code> - retrieves GKG data from the data cached every 15 minutes for specified date(s) for a given table. The table can be one of <code><a href="https://www.rdocumentation.org/packages/base/topics/c">c('gkg', 'export', 'mentions')</a></code>. This function may require significant bandwidth and memory given the potential file sizes.</li>
+<code><a href="reference/get_data_gkg_days_detailed.html">get_data_gkg_days_detailed()</a></code> - retrieves GKG data from the data cached every 15 minutes for specified date(s) for a given table. The table can be one of <code>c('gkg', 'export', 'mentions')</code>. This function may require significant bandwidth and memory given the potential file sizes.</li>
 </ul>
 </li>
-<li><strong><a href="http://blog.gdeltproject.org/announcing-the-american-television-global-knowledge-graph-tv-gkg/">American Television Knowledge Graph</a>
+<li><strong><a href="http://blog.gdeltproject.org/announcing-the-american-television-global-knowledge-graph-tv-gkg/" class="external-link">American Television Knowledge Graph</a>
 <ul>
 <li>
-<code><a href="reference/get_urls_gkg_tv_daily_summaries.html">get_urls_gkg_tv_daily_summaries()</a></code> - retrieves available dates
+<code>get_urls_gkg_tv_daily_summaries()</code> - retrieves available dates
 <ul>
 <li>
-<code><a href="reference/get_data_gkg_tv_days.html">get_data_gkg_tv_days()</a></code> - retrieves data for specified dates. Note that the data is on a 2 day lag so the most recent data is 2 days old.</li>
+<code><a href="reference/gkg_tv_days.html">gkg_tv_days()</a></code> - retrieves data for specified dates. Note that the data is on a 2 day lag so the most recent data is 2 days old.</li>
 </ul>
 </li>
 </ul></strong></li>
 <li>
-<strong><a href="http://blog.gdeltproject.org/announcing-the-gdelt-stability-dashboard-api-stability-timeline/">Location Sentiment API</a></strong>
+<strong><a href="http://blog.gdeltproject.org/announcing-the-gdelt-stability-dashboard-api-stability-timeline/" class="external-link">Location Sentiment API</a></strong>
 <ul>
 <li>
-<code><a href="reference/get_codes_stability_locations.html">get_codes_stability_locations()</a></code> - retrieves possible locations</li>
+<code><a href="reference/dictionary_stability_locations.html">dictionary_stability_locations()</a></code> - retrieves possible locations</li>
 <li>
-<code><a href="reference/get_data_locations_instability_api.html">get_data_locations_instability_api()</a></code> - retrieves instability data for a specified location and time period. Variables can be <code><a href="https://www.rdocumentation.org/packages/base/topics/c">c('instability', 'conflict', 'protest', 'tone', 'relative mentions')</a></code> Time periods can be <code><a href="https://www.rdocumentation.org/packages/base/topics/c">c('daily', '15 minutes')</a></code>, for <code>daily</code> the data is the average per day of the specified variable for the last 180 days and for <code>15 minutes</code> the data is the variable reading every 15 minutes for the last week.</li>
+<code><a href="reference/dictionary_stability_locations.html">dictionary_stability_locations()</a></code> - retrieves instability data for a specified location and time period. Variables can be <code>c('instability', 'conflict', 'protest', 'tone', 'relative     mentions')</code> Time periods can be <code>c('daily', '15 minutes')</code>, for <code>daily</code> the data is the average per day of the specified variable for the last 180 days and for <code>15 minutes</code> the data is the variable reading every 15 minutes for the last week.</li>
 </ul>
 </li>
 <li>
-<strong><a href="http://blog.gdeltproject.org/gdelt-visual-knowledge-graph-vgkg-v1-0-available/">Visual Global Knowledge Graph</a></strong>
+<strong><a href="http://blog.gdeltproject.org/gdelt-visual-knowledge-graph-vgkg-v1-0-available/" class="external-link">Visual Global Knowledge Graph</a></strong>
 <ul>
 <li>
 <code><a href="reference/get_urls_vgkg.html">get_urls_vgkg()</a></code> - retrieves VGKG log urls</li>
@@ -225,19 +224,19 @@ construct a catalog of human societal-scale behavior and beliefs across all coun
 </li>
 </ul>
 </div>
-<div id="tidying-functions" class="section level4">
-<h4 class="hasAnchor">
-<a href="#tidying-functions" class="anchor"></a><strong>Tidying Functions</strong>
+<div class="section level4">
+<h4 id="tidying-functions">
+<strong>Tidying Functions</strong><a class="anchor" aria-label="anchor" href="#tidying-functions"></a>
 </h4>
 <p>Many of the columns in the GKG output are concatenated and require further parsing for proper analysis. These function tidy those concatenated columns, note given file sizes the functions may be time consuming.</p>
 </div>
-<div id="v2-full-text-api" class="section level3">
-<h3 class="hasAnchor">
-<a href="#v2-full-text-api" class="anchor"></a>V2 Full Text API</h3>
-<p>You can refer to <a href="https://asbcllc.com/blog/2017/august/intro_to_programming_with_gdeltr2/index.html">this</a> blog post that discusses how to use this functionality.</p>
-<div id="global-knowledge-graph" class="section level4">
-<h4 class="hasAnchor">
-<a href="#global-knowledge-graph" class="anchor"></a>Global Knowledge Graph</h4>
+<div class="section level3">
+<h3 id="v2-full-text-api">V2 Full Text API<a class="anchor" aria-label="anchor" href="#v2-full-text-api"></a>
+</h3>
+<p>You can refer to <a href="https://asbcllc.com/blog/2017/august/intro_to_programming_with_gdeltr2/index.html" class="external-link">this</a> blog post that discusses how to use this functionality.</p>
+<div class="section level4">
+<h4 id="global-knowledge-graph">Global Knowledge Graph<a class="anchor" aria-label="anchor" href="#global-knowledge-graph"></a>
+</h4>
 <ul>
 <li>
 <code><a href="reference/parse_gkg_mentioned_names.html">parse_gkg_mentioned_names()</a></code> - parses mentioned names</li>
@@ -256,9 +255,9 @@ construct a catalog of human societal-scale behavior and beliefs across all coun
 <li>
 <code><a href="reference/parse_xml_extras.html">parse_xml_extras()</a></code> - parses XML metadata from GKG table</li>
 </ul>
-<div id="visual-global-knowledge-graph" class="section level5">
-<h5 class="hasAnchor">
-<a href="#visual-global-knowledge-graph" class="anchor"></a>Visual Global Knowledge Graph</h5>
+<div class="section level5">
+<h5 id="visual-global-knowledge-graph">Visual Global Knowledge Graph<a class="anchor" aria-label="anchor" href="#visual-global-knowledge-graph"></a>
+</h5>
 <ul>
 <li>
 <code><a href="reference/parse_vgkg_labels.html">parse_vgkg_labels()</a></code> - parses and labels learned items</li>
@@ -277,9 +276,9 @@ construct a catalog of human societal-scale behavior and beliefs across all coun
 </ul>
 </div>
 </div>
-<div id="code-books" class="section level4">
-<h4 class="hasAnchor">
-<a href="#code-books" class="anchor"></a><strong>Code Books</strong>
+<div class="section level4">
+<h4 id="code-books">
+<strong>Code Books</strong><a class="anchor" aria-label="anchor" href="#code-books"></a>
 </h4>
 <p>All these the GDELT and GKG datasets contain a whole host of codes that need resolution to be human readable. The package contains easy access to these code books to allow for that resolution. These functions provide access to the code books:</p>
 <ul>
@@ -301,224 +300,266 @@ construct a catalog of human societal-scale behavior and beliefs across all coun
 <code><a href="reference/get_codes_cameo_known_groups.html">get_codes_cameo_known_groups()</a></code> - retrieves cameo known group codes</li>
 </ul>
 </div>
-<div id="coming-soon" class="section level4">
-<h4 class="hasAnchor">
-<a href="#coming-soon" class="anchor"></a>Coming Soon</h4>
+<div class="section level4">
+<h4 id="coming-soon">Coming Soon<a class="anchor" aria-label="anchor" href="#coming-soon"></a>
+</h4>
 <ul>
 <li>Vignettes</li>
 <li>Generic data visualization functions</li>
 <li>Generic machine learning and data analysis functions</li>
 <li>
-<a href="https://github.com/rstats-db/bigrquery"><code>bigrquery</code></a> integration</li>
+<a href="https://github.com/rstats-db/bigrquery" class="external-link"><code>bigrquery</code></a> integration</li>
 <li>Third party database mirror</li>
 </ul>
 </div>
 </div>
-<div id="examples" class="section level2">
-<h2 class="hasAnchor">
-<a href="#examples" class="anchor"></a><strong>EXAMPLES</strong>
+<div class="section level2">
+<h2 id="examples">
+<strong>EXAMPLES</strong><a class="anchor" aria-label="anchor" href="#examples"></a>
 </h2>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(gdeltr2)</a>
-<a class="sourceLine" id="cb3-2" title="2"><span class="kw"><a href="reference/load_needed_packages.html">load_needed_packages</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">'dplyr'</span>, <span class="st">'magrittr'</span>))</a></code></pre></div>
-<div id="gdelt-event-data" class="section level3">
-<h3 class="hasAnchor">
-<a href="#gdelt-event-data" class="anchor"></a>GDELT Event Data</h3>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">events_<span class="dv">1989</span> &lt;-</a>
-<a class="sourceLine" id="cb4-2" title="2"><span class="st">  </span><span class="kw"><a href="reference/get_data_gdelt_periods_event.html">get_data_gdelt_periods_event</a></span>(</a>
-<a class="sourceLine" id="cb4-3" title="3">    <span class="dt">periods =</span> <span class="dv">1989</span>,</a>
-<a class="sourceLine" id="cb4-4" title="4">    <span class="dt">return_message =</span> T</a>
-<a class="sourceLine" id="cb4-5" title="5">  )</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/abresler/gdeltr2" class="external-link">gdeltr2</a></span><span class="op">)</span>
+<span class="fu"><a href="reference/load_needed_packages.html">load_needed_packages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'dplyr'</span>, <span class="st">'magrittr'</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<div class="section level3">
+<h3 id="gdelt-event-data">GDELT Event Data<a class="anchor" aria-label="anchor" href="#gdelt-event-data"></a>
+</h3>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">events_1989</span> <span class="op">&lt;-</span>
+  <span class="fu"><a href="reference/get_data_gdelt_periods_event.html">get_data_gdelt_periods_event</a></span><span class="op">(</span>
+    periods <span class="op">=</span> <span class="fl">1989</span>,
+    return_message <span class="op">=</span> <span class="cn">T</span>
+  <span class="op">)</span></code></pre></div>
 </div>
-<div id="gkg-data" class="section level3">
-<h3 class="hasAnchor">
-<a href="#gkg-data" class="anchor"></a>GKG Data</h3>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">gkg_summary_count_may_<span class="dv">15</span>_<span class="dv">16</span>_<span class="dv">2014</span> &lt;-</a>
-<a class="sourceLine" id="cb5-2" title="2"><span class="st">  </span><span class="kw"><a href="reference/get_data_gkg_days_summary.html">get_data_gkg_days_summary</a></span>(</a>
-<a class="sourceLine" id="cb5-3" title="3">    <span class="dt">dates =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">'2014-05-15'</span>, <span class="st">'2014-05-16'</span>),</a>
-<a class="sourceLine" id="cb5-4" title="4">    <span class="dt">is_count_file =</span> T,</a>
-<a class="sourceLine" id="cb5-5" title="5">    <span class="dt">return_message =</span> T</a>
-<a class="sourceLine" id="cb5-6" title="6">  )</a>
-<a class="sourceLine" id="cb5-7" title="7"></a>
-<a class="sourceLine" id="cb5-8" title="8">gkg_full_june_<span class="dv">2</span>_<span class="dv">2016</span> &lt;-</a>
-<a class="sourceLine" id="cb5-9" title="9"><span class="st">  </span><span class="kw"><a href="reference/get_data_gkg_days_detailed.html">get_data_gkg_days_detailed</a></span>(</a>
-<a class="sourceLine" id="cb5-10" title="10">    <span class="dt">dates =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"2016-06-02"</span>),</a>
-<a class="sourceLine" id="cb5-11" title="11">    <span class="dt">table_name =</span> <span class="st">'gkg'</span>,</a>
-<a class="sourceLine" id="cb5-12" title="12">    <span class="dt">return_message =</span> T</a>
-<a class="sourceLine" id="cb5-13" title="13">  )</a>
-<a class="sourceLine" id="cb5-14" title="14"></a>
-<a class="sourceLine" id="cb5-15" title="15">gkg_mentions_may_<span class="dv">12</span>_<span class="dv">2016</span> &lt;-</a>
-<a class="sourceLine" id="cb5-16" title="16"><span class="st">  </span><span class="kw"><a href="reference/get_data_gkg_days_detailed.html">get_data_gkg_days_detailed</a></span>(</a>
-<a class="sourceLine" id="cb5-17" title="17">    <span class="dt">dates =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"2016-05-12"</span>),</a>
-<a class="sourceLine" id="cb5-18" title="18">    <span class="dt">table_name =</span> <span class="st">'mentions'</span>,</a>
-<a class="sourceLine" id="cb5-19" title="19">    <span class="dt">return_message =</span> T</a>
-<a class="sourceLine" id="cb5-20" title="20">  )</a></code></pre></div>
-<div id="gkg-television-data" class="section level4">
-<h4 class="hasAnchor">
-<a href="#gkg-television-data" class="anchor"></a>GKG Television Data</h4>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">gkg_tv_test &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb6-2" title="2"><span class="st">  </span><span class="kw"><a href="reference/get_data_gkg_tv_days.html">get_data_gkg_tv_days</a></span>(<span class="dt">dates =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"2016-06-17"</span>, <span class="st">"2016-06-16"</span>))</a></code></pre></div>
+<div class="section level3">
+<h3 id="gkg-data">GKG Data<a class="anchor" aria-label="anchor" href="#gkg-data"></a>
+</h3>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">gkg_summary_count_may_15_16_2014</span> <span class="op">&lt;-</span>
+  <span class="fu"><a href="reference/get_data_gkg_days_summary.html">get_data_gkg_days_summary</a></span><span class="op">(</span>
+    dates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'2014-05-15'</span>, <span class="st">'2014-05-16'</span><span class="op">)</span>,
+    is_count_file <span class="op">=</span> <span class="cn">T</span>,
+    return_message <span class="op">=</span> <span class="cn">T</span>
+  <span class="op">)</span>
+
+<span class="va">gkg_full_june_2_2016</span> <span class="op">&lt;-</span>
+  <span class="fu"><a href="reference/get_data_gkg_days_detailed.html">get_data_gkg_days_detailed</a></span><span class="op">(</span>
+    dates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2016-06-02"</span><span class="op">)</span>,
+    table_name <span class="op">=</span> <span class="st">'gkg'</span>,
+    return_message <span class="op">=</span> <span class="cn">T</span>
+  <span class="op">)</span>
+
+<span class="va">gkg_mentions_may_12_2016</span> <span class="op">&lt;-</span>
+  <span class="fu"><a href="reference/get_data_gkg_days_detailed.html">get_data_gkg_days_detailed</a></span><span class="op">(</span>
+    dates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2016-05-12"</span><span class="op">)</span>,
+    table_name <span class="op">=</span> <span class="st">'mentions'</span>,
+    return_message <span class="op">=</span> <span class="cn">T</span>
+  <span class="op">)</span></code></pre></div>
+<div class="section level4">
+<h4 id="gkg-television-data">GKG Television Data<a class="anchor" aria-label="anchor" href="#gkg-television-data"></a>
+</h4>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">gkg_tv_test</span> <span class="op">&lt;-</span> 
+  <span class="fu">get_data_gkg_tv_days</span><span class="op">(</span>dates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2016-06-17"</span>, <span class="st">"2016-06-16"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="gkg-tidying" class="section level4">
-<h4 class="hasAnchor">
-<a href="#gkg-tidying" class="anchor"></a>GKG Tidying</h4>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="kw"><a href="reference/load_needed_packages.html">load_needed_packages</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">'magrittr'</span>))</a>
-<a class="sourceLine" id="cb7-2" title="2"></a>
-<a class="sourceLine" id="cb7-3" title="3">gkg_test &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb7-4" title="4"><span class="st">  </span><span class="kw"><a href="reference/get_data_gkg_days_detailed.html">get_data_gkg_days_detailed</a></span>(<span class="dt">only_most_recent =</span> T, <span class="dt">table_name =</span> <span class="st">'gkg'</span>)</a>
-<a class="sourceLine" id="cb7-5" title="5"></a>
-<a class="sourceLine" id="cb7-6" title="6">gkg_sample_df &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb7-7" title="7"><span class="st">  </span>gkg_test <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb7-8" title="8"><span class="st">  </span><span class="kw">sample_n</span>(<span class="dv">1000</span>)</a>
-<a class="sourceLine" id="cb7-9" title="9"></a>
-<a class="sourceLine" id="cb7-10" title="10">xml_extra_df &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb7-11" title="11"><span class="st">  </span>gkg_sample_df <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb7-12" title="12"><span class="st">  </span><span class="kw">parse_gkg_xml_extras</span>(<span class="dt">filter_na =</span> T, <span class="dt">return_wide =</span> F)</a>
-<a class="sourceLine" id="cb7-13" title="13"></a>
-<a class="sourceLine" id="cb7-14" title="14">article_tone &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb7-15" title="15"><span class="st">  </span>gkg_sample_df <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb7-16" title="16"><span class="st">  </span><span class="kw"><a href="reference/parse_gkg_mentioned_article_tone.html">parse_gkg_mentioned_article_tone</a></span>(<span class="dt">filter_na =</span> T, <span class="dt">return_wide =</span> T)</a>
-<a class="sourceLine" id="cb7-17" title="17"></a>
-<a class="sourceLine" id="cb7-18" title="18">gkg_dates &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb7-19" title="19"><span class="st">  </span>gkg_sample_df <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb7-20" title="20"><span class="st">  </span><span class="kw"><a href="reference/parse_gkg_mentioned_dates.html">parse_gkg_mentioned_dates</a></span>(<span class="dt">filter_na =</span> T, <span class="dt">return_wide =</span> T)</a>
-<a class="sourceLine" id="cb7-21" title="21"></a>
-<a class="sourceLine" id="cb7-22" title="22">gkg_gcams &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb7-23" title="23"><span class="st">  </span>gkg_sample_df <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb7-24" title="24"><span class="st">  </span><span class="kw"><a href="reference/parse_gkg_mentioned_gcams.html">parse_gkg_mentioned_gcams</a></span>(<span class="dt">filter_na =</span> T, <span class="dt">return_wide =</span> T)</a>
-<a class="sourceLine" id="cb7-25" title="25"></a>
-<a class="sourceLine" id="cb7-26" title="26">gkg_event_counts &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb7-27" title="27"><span class="st">  </span>gkg_sample_df <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb7-28" title="28"><span class="st">  </span><span class="kw"><a href="reference/parse_gkg_mentioned_event_counts.html">parse_gkg_mentioned_event_counts</a></span>(<span class="dt">filter_na =</span> T, <span class="dt">return_wide =</span> T)</a>
-<a class="sourceLine" id="cb7-29" title="29"></a>
-<a class="sourceLine" id="cb7-30" title="30">gkg_locations &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb7-31" title="31"><span class="st">  </span>gkg_sample_df <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb7-32" title="32"><span class="st">  </span><span class="kw"><a href="reference/parse_gkg_mentioned_locations.html">parse_gkg_mentioned_locations</a></span>(<span class="dt">filter_na =</span> T, <span class="dt">return_wide =</span> T)</a>
-<a class="sourceLine" id="cb7-33" title="33"></a>
-<a class="sourceLine" id="cb7-34" title="34">gkg_names &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb7-35" title="35"><span class="st">  </span>gkg_sample_df <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb7-36" title="36"><span class="st">  </span><span class="kw"><a href="reference/parse_gkg_mentioned_names.html">parse_gkg_mentioned_names</a></span>(<span class="dt">filter_na =</span> T, <span class="dt">return_wide =</span> T)</a>
-<a class="sourceLine" id="cb7-37" title="37"></a>
-<a class="sourceLine" id="cb7-38" title="38">gkg_themes &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb7-39" title="39"><span class="st">  </span>gkg_sample_df <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb7-40" title="40"><span class="st">  </span><span class="kw"><a href="reference/parse_gkg_mentioned_themes.html">parse_gkg_mentioned_themes</a></span>(<span class="dt">theme_column =</span> <span class="st">'charLoc'</span>,</a>
-<a class="sourceLine" id="cb7-41" title="41">                                      <span class="dt">filter_na =</span> T, <span class="dt">return_wide =</span> T)</a>
-<a class="sourceLine" id="cb7-42" title="42"></a>
-<a class="sourceLine" id="cb7-43" title="43">gkg_numerics &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb7-44" title="44"><span class="st">  </span>gkg_sample_df <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb7-45" title="45"><span class="st">  </span><span class="kw"><a href="reference/parse_gkg_mentioned_numerics.html">parse_gkg_mentioned_numerics</a></span>(<span class="dt">filter_na =</span> T, <span class="dt">return_wide =</span> T)</a>
-<a class="sourceLine" id="cb7-46" title="46"></a>
-<a class="sourceLine" id="cb7-47" title="47">gkg_orgs &lt;-</a>
-<a class="sourceLine" id="cb7-48" title="48"><span class="st">  </span>gkg_sample_df <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb7-49" title="49"><span class="st">  </span><span class="kw"><a href="reference/parse_gkg_mentioned_organizations.html">parse_gkg_mentioned_organizations</a></span>(<span class="dt">organization_column =</span> <span class="st">'charLoc'</span>, </a>
-<a class="sourceLine" id="cb7-50" title="50">                                             <span class="dt">filter_na =</span> T, <span class="dt">return_wide =</span> T)</a>
-<a class="sourceLine" id="cb7-51" title="51"></a>
-<a class="sourceLine" id="cb7-52" title="52">gkg_quotes &lt;-</a>
-<a class="sourceLine" id="cb7-53" title="53"><span class="st">  </span>gkg_sample_df <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb7-54" title="54"><span class="st">  </span><span class="kw"><a href="reference/parse_gkg_mentioned_quotes.html">parse_gkg_mentioned_quotes</a></span>(<span class="dt">filter_na =</span> T, <span class="dt">return_wide =</span> T)</a>
-<a class="sourceLine" id="cb7-55" title="55"></a>
-<a class="sourceLine" id="cb7-56" title="56">gkg_people &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb7-57" title="57"><span class="st">  </span>gkg_sample_df <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb7-58" title="58"><span class="st">  </span><span class="kw"><a href="reference/parse_gkg_mentioned_people.html">parse_gkg_mentioned_people</a></span>(<span class="dt">people_column =</span> <span class="st">'charLoc'</span>, <span class="dt">filter_na =</span> T, <span class="dt">return_wide =</span> T)</a></code></pre></div>
+<div class="section level4">
+<h4 id="gkg-tidying">GKG Tidying<a class="anchor" aria-label="anchor" href="#gkg-tidying"></a>
+</h4>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="reference/load_needed_packages.html">load_needed_packages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'magrittr'</span><span class="op">)</span><span class="op">)</span>
+
+<span class="va">gkg_test</span> <span class="op">&lt;-</span> 
+  <span class="fu"><a href="reference/get_data_gkg_days_detailed.html">get_data_gkg_days_detailed</a></span><span class="op">(</span>only_most_recent <span class="op">=</span> <span class="cn">T</span>, table_name <span class="op">=</span> <span class="st">'gkg'</span><span class="op">)</span>
+
+<span class="va">gkg_sample_df</span> <span class="op">&lt;-</span> 
+  <span class="va">gkg_test</span> <span class="op">%&gt;%</span> 
+  <span class="fu">sample_n</span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span>
+
+<span class="va">xml_extra_df</span> <span class="op">&lt;-</span> 
+  <span class="va">gkg_sample_df</span> <span class="op">%&gt;%</span> 
+  <span class="fu">parse_gkg_xml_extras</span><span class="op">(</span>filter_na <span class="op">=</span> <span class="cn">T</span>, return_wide <span class="op">=</span> <span class="cn">F</span><span class="op">)</span>
+
+<span class="va">article_tone</span> <span class="op">&lt;-</span> 
+  <span class="va">gkg_sample_df</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="reference/parse_gkg_mentioned_article_tone.html">parse_gkg_mentioned_article_tone</a></span><span class="op">(</span>filter_na <span class="op">=</span> <span class="cn">T</span>, return_wide <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
+
+<span class="va">gkg_dates</span> <span class="op">&lt;-</span> 
+  <span class="va">gkg_sample_df</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="reference/parse_gkg_mentioned_dates.html">parse_gkg_mentioned_dates</a></span><span class="op">(</span>filter_na <span class="op">=</span> <span class="cn">T</span>, return_wide <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
+
+<span class="va">gkg_gcams</span> <span class="op">&lt;-</span> 
+  <span class="va">gkg_sample_df</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="reference/parse_gkg_mentioned_gcams.html">parse_gkg_mentioned_gcams</a></span><span class="op">(</span>filter_na <span class="op">=</span> <span class="cn">T</span>, return_wide <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
+
+<span class="va">gkg_event_counts</span> <span class="op">&lt;-</span> 
+  <span class="va">gkg_sample_df</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="reference/parse_gkg_mentioned_event_counts.html">parse_gkg_mentioned_event_counts</a></span><span class="op">(</span>filter_na <span class="op">=</span> <span class="cn">T</span>, return_wide <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
+
+<span class="va">gkg_locations</span> <span class="op">&lt;-</span> 
+  <span class="va">gkg_sample_df</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="reference/parse_gkg_mentioned_locations.html">parse_gkg_mentioned_locations</a></span><span class="op">(</span>filter_na <span class="op">=</span> <span class="cn">T</span>, return_wide <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
+
+<span class="va">gkg_names</span> <span class="op">&lt;-</span> 
+  <span class="va">gkg_sample_df</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="reference/parse_gkg_mentioned_names.html">parse_gkg_mentioned_names</a></span><span class="op">(</span>filter_na <span class="op">=</span> <span class="cn">T</span>, return_wide <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
+
+<span class="va">gkg_themes</span> <span class="op">&lt;-</span> 
+  <span class="va">gkg_sample_df</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="reference/parse_gkg_mentioned_themes.html">parse_gkg_mentioned_themes</a></span><span class="op">(</span>theme_column <span class="op">=</span> <span class="st">'charLoc'</span>,
+                                      filter_na <span class="op">=</span> <span class="cn">T</span>, return_wide <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
+
+<span class="va">gkg_numerics</span> <span class="op">&lt;-</span> 
+  <span class="va">gkg_sample_df</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="reference/parse_gkg_mentioned_numerics.html">parse_gkg_mentioned_numerics</a></span><span class="op">(</span>filter_na <span class="op">=</span> <span class="cn">T</span>, return_wide <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
+
+<span class="va">gkg_orgs</span> <span class="op">&lt;-</span>
+  <span class="va">gkg_sample_df</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="reference/parse_gkg_mentioned_organizations.html">parse_gkg_mentioned_organizations</a></span><span class="op">(</span>organization_column <span class="op">=</span> <span class="st">'charLoc'</span>, 
+                                             filter_na <span class="op">=</span> <span class="cn">T</span>, return_wide <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
+
+<span class="va">gkg_quotes</span> <span class="op">&lt;-</span>
+  <span class="va">gkg_sample_df</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="reference/parse_gkg_mentioned_quotes.html">parse_gkg_mentioned_quotes</a></span><span class="op">(</span>filter_na <span class="op">=</span> <span class="cn">T</span>, return_wide <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
+
+<span class="va">gkg_people</span> <span class="op">&lt;-</span> 
+  <span class="va">gkg_sample_df</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="reference/parse_gkg_mentioned_people.html">parse_gkg_mentioned_people</a></span><span class="op">(</span>people_column <span class="op">=</span> <span class="st">'charLoc'</span>, filter_na <span class="op">=</span> <span class="cn">T</span>, return_wide <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="vgkg-tidying" class="section level4">
-<h4 class="hasAnchor">
-<a href="#vgkg-tidying" class="anchor"></a>VGKG Tidying</h4>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">vgkg_test &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb8-2" title="2"><span class="st">  </span><span class="kw"><a href="reference/get_data_vgkg_dates.html">get_data_vgkg_dates</a></span>(<span class="dt">only_most_recent =</span> T)</a>
-<a class="sourceLine" id="cb8-3" title="3"></a>
-<a class="sourceLine" id="cb8-4" title="4">vgkg_sample &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb8-5" title="5"><span class="st">  </span>vgkg_test <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb8-6" title="6"><span class="st">  </span><span class="kw">sample_n</span>(<span class="dv">1000</span>)</a>
-<a class="sourceLine" id="cb8-7" title="7"></a>
-<a class="sourceLine" id="cb8-8" title="8">vgkg_labels &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb8-9" title="9"><span class="st">  </span>vgkg_sample <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb8-10" title="10"><span class="st">  </span><span class="kw"><a href="reference/parse_vgkg_labels.html">parse_vgkg_labels</a></span>(<span class="dt">return_wide =</span> T)</a>
-<a class="sourceLine" id="cb8-11" title="11"></a>
-<a class="sourceLine" id="cb8-12" title="12">faces_test &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb8-13" title="13"><span class="st">  </span>vgkg_sample <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb8-14" title="14"><span class="st">  </span><span class="kw"><a href="reference/parse_vgkg_faces.html">parse_vgkg_faces</a></span>(<span class="dt">return_wide =</span> T)</a>
-<a class="sourceLine" id="cb8-15" title="15"></a>
-<a class="sourceLine" id="cb8-16" title="16">landmarks_test &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb8-17" title="17"><span class="st">  </span>vgkg_sample <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb8-18" title="18"><span class="st">  </span><span class="kw"><a href="reference/parse_vgkg_landmarks.html">parse_vgkg_landmarks</a></span>(<span class="dt">return_wide =</span> F)</a>
-<a class="sourceLine" id="cb8-19" title="19"></a>
-<a class="sourceLine" id="cb8-20" title="20">logos_test &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb8-21" title="21"><span class="st">  </span>vgkg_sample <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb8-22" title="22"><span class="st">  </span><span class="kw"><a href="reference/parse_vgkg_logos.html">parse_vgkg_logos</a></span>(<span class="dt">return_wide =</span> T)</a>
-<a class="sourceLine" id="cb8-23" title="23"></a>
-<a class="sourceLine" id="cb8-24" title="24">ocr_test &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb8-25" title="25"><span class="st">  </span>vgkg_sample <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb8-26" title="26"><span class="st">  </span><span class="kw"><a href="reference/parse_vgkg_ocr.html">parse_vgkg_ocr</a></span>(<span class="dt">return_wide =</span> F)</a>
-<a class="sourceLine" id="cb8-27" title="27"></a>
-<a class="sourceLine" id="cb8-28" title="28">search_test &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb8-29" title="29"><span class="st">  </span>vgkg_sample <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb8-30" title="30"><span class="st">  </span><span class="kw"><a href="reference/parse_vgkg_safe_search.html">parse_vgkg_safe_search</a></span>(<span class="dt">return_wide =</span> F)</a></code></pre></div>
+<div class="section level4">
+<h4 id="vgkg-tidying">VGKG Tidying<a class="anchor" aria-label="anchor" href="#vgkg-tidying"></a>
+</h4>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">vgkg_test</span> <span class="op">&lt;-</span> 
+  <span class="fu"><a href="reference/get_data_vgkg_dates.html">get_data_vgkg_dates</a></span><span class="op">(</span>only_most_recent <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
+
+<span class="va">vgkg_sample</span> <span class="op">&lt;-</span> 
+  <span class="va">vgkg_test</span> <span class="op">%&gt;%</span> 
+  <span class="fu">sample_n</span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span>
+
+<span class="va">vgkg_labels</span> <span class="op">&lt;-</span> 
+  <span class="va">vgkg_sample</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="reference/parse_vgkg_labels.html">parse_vgkg_labels</a></span><span class="op">(</span>return_wide <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
+
+<span class="va">faces_test</span> <span class="op">&lt;-</span> 
+  <span class="va">vgkg_sample</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="reference/parse_vgkg_faces.html">parse_vgkg_faces</a></span><span class="op">(</span>return_wide <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
+
+<span class="va">landmarks_test</span> <span class="op">&lt;-</span> 
+  <span class="va">vgkg_sample</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="reference/parse_vgkg_landmarks.html">parse_vgkg_landmarks</a></span><span class="op">(</span>return_wide <span class="op">=</span> <span class="cn">F</span><span class="op">)</span>
+
+<span class="va">logos_test</span> <span class="op">&lt;-</span> 
+  <span class="va">vgkg_sample</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="reference/parse_vgkg_logos.html">parse_vgkg_logos</a></span><span class="op">(</span>return_wide <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
+
+<span class="va">ocr_test</span> <span class="op">&lt;-</span> 
+  <span class="va">vgkg_sample</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="reference/parse_vgkg_ocr.html">parse_vgkg_ocr</a></span><span class="op">(</span>return_wide <span class="op">=</span> <span class="cn">F</span><span class="op">)</span>
+
+<span class="va">search_test</span> <span class="op">&lt;-</span> 
+  <span class="va">vgkg_sample</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="reference/parse_vgkg_safe_search.html">parse_vgkg_safe_search</a></span><span class="op">(</span>return_wide <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="sentiment-api" class="section level4">
-<h4 class="hasAnchor">
-<a href="#sentiment-api" class="anchor"></a>Sentiment API</h4>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">location_codes &lt;-</a>
-<a class="sourceLine" id="cb9-2" title="2"><span class="st">  </span><span class="kw"><a href="reference/get_codes_stability_locations.html">get_codes_stability_locations</a></span>()</a>
-<a class="sourceLine" id="cb9-3" title="3">location_test &lt;-</a>
-<a class="sourceLine" id="cb9-4" title="4"><span class="st">  </span><span class="kw"><a href="reference/get_data_locations_instability_api.html">get_data_locations_instability_api</a></span>(</a>
-<a class="sourceLine" id="cb9-5" title="5">    <span class="dt">location_ids =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"US"</span>, <span class="st">"IS"</span>, <span class="st">"CA"</span>, <span class="st">"TU"</span>, <span class="st">"CH"</span>, <span class="st">"UK"</span>, <span class="st">"IR"</span>),</a>
-<a class="sourceLine" id="cb9-6" title="6">    <span class="dt">use_multi_locations =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(T, F),</a>
-<a class="sourceLine" id="cb9-7" title="7">    <span class="dt">variable_names =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">'instability'</span>, <span class="st">'tone'</span>, <span class="st">'protest'</span>, <span class="st">'conflict'</span>),</a>
-<a class="sourceLine" id="cb9-8" title="8">    <span class="dt">time_periods =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">'daily'</span>),</a>
-<a class="sourceLine" id="cb9-9" title="9">    <span class="dt">nest_data =</span> F,</a>
-<a class="sourceLine" id="cb9-10" title="10">    <span class="dt">days_moving_average =</span> <span class="ot">NA</span>,</a>
-<a class="sourceLine" id="cb9-11" title="11">    <span class="dt">return_wide =</span> T,</a>
-<a class="sourceLine" id="cb9-12" title="12">    <span class="dt">return_message =</span> T</a>
-<a class="sourceLine" id="cb9-13" title="13">  )</a>
-<a class="sourceLine" id="cb9-14" title="14"></a>
-<a class="sourceLine" id="cb9-15" title="15">location_test <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb9-16" title="16"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(codeLocation <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/NA">is.na</a></span>()) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb9-17" title="17"><span class="st">  </span><span class="kw">group_by</span>(nameLocation) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb9-18" title="18"><span class="st">  </span><span class="kw">summarise_at</span>(<span class="dt">.vars =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">'instability'</span>, <span class="st">'tone'</span>, <span class="st">'protest'</span>, <span class="st">'conflict'</span>),</a>
-<a class="sourceLine" id="cb9-19" title="19">               <span class="kw">funs</span>(mean)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb9-20" title="20"><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(instability))</a></code></pre></div>
+<div class="section level4">
+<h4 id="sentiment-api">Sentiment API<a class="anchor" aria-label="anchor" href="#sentiment-api"></a>
+</h4>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>location_codes <span class="ot">&lt;-</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dictionary_stability_locations</span>()</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>location_test <span class="ot">&lt;-</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">instability_api_locations</span>(</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">location_ids =</span> <span class="fu">c</span>(<span class="st">"US"</span>, <span class="st">"IS"</span>, <span class="st">"CA"</span>, <span class="st">"TU"</span>, <span class="st">"CH"</span>, <span class="st">"UK"</span>, <span class="st">"IR"</span>),</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">use_multi_locations =</span> <span class="fu">c</span>(T, F),</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">variable_names =</span> <span class="fu">c</span>(<span class="st">'instability'</span>, <span class="st">'tone'</span>, <span class="st">'protest'</span>, <span class="st">'conflict'</span>),</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">time_periods =</span> <span class="fu">c</span>(<span class="st">'daily'</span>),</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">nest_data =</span> F,</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">days_moving_average =</span> <span class="cn">NA</span>,</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">return_wide =</span> T,</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">return_message =</span> T</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>location_test <span class="sc">%&gt;%</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(codeLocation <span class="sc">%&gt;%</span> <span class="fu">is.na</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(nameLocation) <span class="sc">%&gt;%</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise_at</span>(<span class="at">.vars =</span> <span class="fu">c</span>(<span class="st">'instability'</span>, <span class="st">'tone'</span>, <span class="st">'protest'</span>, <span class="st">'conflict'</span>),</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>               <span class="fu">funs</span>(mean)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(instability))location_codes <span class="ot">&lt;-</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dictionary_stability_locations</span>()</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>location_test <span class="ot">&lt;-</span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">instability_api_locations</span>(</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">location_ids =</span> <span class="fu">c</span>(<span class="st">"US"</span>, <span class="st">"IS"</span>, <span class="st">"CA"</span>, <span class="st">"TU"</span>, <span class="st">"CH"</span>, <span class="st">"UK"</span>, <span class="st">"IR"</span>),</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">use_multi_locations =</span> <span class="fu">c</span>(T, F),</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">variable_names =</span> <span class="fu">c</span>(<span class="st">'instability'</span>, <span class="st">'tone'</span>, <span class="st">'protest'</span>, <span class="st">'conflict'</span>),</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">time_periods =</span> <span class="fu">c</span>(<span class="st">'daily'</span>),</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">nest_data =</span> F,</span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">days_moving_average =</span> <span class="cn">NA</span>,</span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">return_wide =</span> T,</span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">return_message =</span> T</span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>location_test <span class="sc">%&gt;%</span></span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(codeLocation <span class="sc">%&gt;%</span> <span class="fu">is.na</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(nameLocation) <span class="sc">%&gt;%</span></span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise_at</span>(<span class="at">.vars =</span> <span class="fu">c</span>(<span class="st">'instability'</span>, <span class="st">'tone'</span>, <span class="st">'protest'</span>, <span class="st">'conflict'</span>),</span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>               <span class="fu">funs</span>(mean)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(instability))</span></code></pre></div>
+</div>
 </div>
 </div>
 </div>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Browse source code at <br><a href="https://github.com/abresler/gdeltr2">https://​github.com/​abresler/​gdeltr2</a>
-</li>
+<li><a href="https://github.com/abresler/gdeltr2/" class="external-link">Browse source code</a></li>
 </ul>
 </div>
+
 <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li>
-<a href="https://opensource.org/licenses/mit-license.php">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
+<a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
 </li>
 </ul>
 </div>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
+<ul class="list-unstyled">
+<li><a href="authors.html#citation">Citing gdeltr2</a></li>
+</ul>
+</div>
+
 <div class="developers">
-<h2>Developers</h2>
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>Alex Bresler <br><small class="roles"> Author, maintainer </small>  </li>
 </ul>
 </div>
 
-      </div>
 
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Alex Bresler.</p>
+  <p></p>
+<p>Developed by Alex Bresler.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
+
       </footer>
 </div>
+
+  
+
 
   
 
