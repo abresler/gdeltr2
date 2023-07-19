@@ -6,9 +6,6 @@
 \usage{
 get_codes_gkg_themes()
 }
-\value{
-
-}
 \description{
 Retrieves GKG theme code book
 }

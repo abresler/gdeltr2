@@ -16,9 +16,6 @@ filter_sources(
 
 \item{sources}{vector of sources}
 }
-\value{
-
-}
 \description{
 Filters a gdelt data frame to specified sources
 }

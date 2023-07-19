@@ -6,9 +6,6 @@
 \usage{
 get_tv_schema()
 }
-\value{
-
-}
 \description{
 Retrieves GKG TV Schema
 }

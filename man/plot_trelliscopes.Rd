@@ -22,9 +22,6 @@ plot_trelliscopes(
 \item id_columns: initial columns
 }}
 }
-\value{
-
-}
 \description{
 Plot list of trelliscope
 }

@@ -6,9 +6,6 @@
 \usage{
 get_codes_cameo_events()
 }
-\value{
-
-}
 \description{
 Retrieves CAMEO CAMEO event code book
 }

@@ -18,9 +18,6 @@ can be \code{c(TRUE, FALSE)}}
 
 \item{return_message}{returns message}
 }
-\value{
-
-}
 \description{
 Retrieves GDELT event summary by period
 }

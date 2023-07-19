@@ -29,9 +29,6 @@ get_data_gkg_day_summary(
 
 \item{return_message}{\code{c(TRUE, FALSE)}}
 }
-\value{
-
-}
 \description{
 Retrieves gkg summary file for a given day
 }

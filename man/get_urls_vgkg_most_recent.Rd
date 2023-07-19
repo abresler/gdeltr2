@@ -6,9 +6,6 @@
 \usage{
 get_urls_vgkg_most_recent()
 }
-\value{
-
-}
 \description{
 Gets most recent CV log URLs
 }

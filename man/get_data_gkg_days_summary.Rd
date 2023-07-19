@@ -18,9 +18,6 @@ get_data_gkg_days_summary(
 \arguments{
 \item{return_message}{}
 }
-\value{
-
-}
 \description{
 Gets days summary GDELT GKG data by table
 }

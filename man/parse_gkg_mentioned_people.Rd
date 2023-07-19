@@ -16,9 +16,6 @@ parse_gkg_mentioned_people(
 
 \item{return_wide}{}
 }
-\value{
-
-}
 \description{
 Returns long or wide mentioned people from a GKG data frame
 }

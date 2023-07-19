@@ -14,9 +14,6 @@ get_clean_count_data(
 \arguments{
 \item{return_wide}{}
 }
-\value{
-
-}
 \description{
 Gets clean count data
 }

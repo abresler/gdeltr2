@@ -14,9 +14,6 @@ get_clean_count_vkg_data(
 \arguments{
 \item{id_dateTime}{}
 }
-\value{
-
-}
 \description{
 Parse XML Labels
 }

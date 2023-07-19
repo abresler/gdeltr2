@@ -17,9 +17,6 @@ parse_gkg_mentioned_locations(
 
 \item{return_wide}{}
 }
-\value{
-
-}
 \description{
 Returns mentioned locations from a gkg data frame
 }

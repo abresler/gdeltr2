@@ -13,9 +13,6 @@
 \arguments{
 \item{include_title}{}
 }
-\value{
-
-}
 \description{
 Title
 }

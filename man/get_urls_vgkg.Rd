@@ -6,9 +6,6 @@
 \usage{
 get_urls_vgkg()
 }
-\value{
-
-}
 \description{
 get_urls_vgkg
 }

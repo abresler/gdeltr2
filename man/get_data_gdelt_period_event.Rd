@@ -16,9 +16,6 @@ get_data_gdelt_period_event(
 \arguments{
 \item{period}{the GDELT period}
 }
-\value{
-
-}
 \description{
 Retreive GDELT data for a given period
 }

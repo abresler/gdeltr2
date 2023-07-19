@@ -112,9 +112,6 @@ default \code{NULL}}
 
 \item{return_message}{}
 }
-\value{
-
-}
 \description{
 Generates a bundle of trelliscopes for publishing to the web
 }

@@ -14,9 +14,6 @@ parse_gkg_mentioned_source_data(
 \arguments{
 \item{source_column}{options \code{c('sources', 'source', 'sources.url', 'source.url'))}}
 }
-\value{
-
-}
 \description{
 Returns source name or source url from a gkg data frame
 }

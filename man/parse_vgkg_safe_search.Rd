@@ -9,9 +9,6 @@ parse_vgkg_safe_search(gdelt_data, filter_na = T, return_wide = T)
 \arguments{
 \item{return_wide}{}
 }
-\value{
-
-}
 \description{
 Parses Safe Search
 }

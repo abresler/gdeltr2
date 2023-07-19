@@ -5,8 +5,8 @@
 \title{Parse V3 Entity API URLs}
 \usage{
 parse_v3_entity_api_urls(
- 
-    urls = c("http://data.gdeltproject.org/gdeltv3/geg_gcnlapi/20190214011500.geg-gcnlapi.json.gz",
+  urls =
+    c("http://data.gdeltproject.org/gdeltv3/geg_gcnlapi/20190214011500.geg-gcnlapi.json.gz",
     "http://data.gdeltproject.org/gdeltv3/geg_gcnlapi/20190130204500.geg-gcnlapi.json.gz",
     "http://data.gdeltproject.org/gdeltv3/geg_gcnlapi/20190912134500.geg-gcnlapi.json.gz"),
   return_message = TRUE

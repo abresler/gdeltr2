@@ -31,11 +31,6 @@ plot_hc_trelliscope(
 \arguments{
 \item{trelliscope_parameters}{}
 }
-\value{
-
-
-
-}
 \description{
 Plot a highchart trelliscope
 

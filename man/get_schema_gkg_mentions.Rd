@@ -6,9 +6,6 @@
 \usage{
 get_schema_gkg_mentions()
 }
-\value{
-
-}
 \description{
 Gets gkg mention schema
 }

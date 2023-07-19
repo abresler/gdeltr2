@@ -9,9 +9,6 @@ parse_gkg_mentioned_names(gdelt_data, filter_na = T, return_wide = T)
 \arguments{
 \item{return_wide}{}
 }
-\value{
-
-}
 \description{
 Returns mentioned names from a GKG data frame.
 }

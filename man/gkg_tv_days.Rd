@@ -18,9 +18,6 @@ gkg_tv_days(
 
 \item{return_message}{}
 }
-\value{
-
-}
 \description{
 Gets GKG TV data for specified days
 }

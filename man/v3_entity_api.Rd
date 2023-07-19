@@ -17,9 +17,6 @@ v3_entity_api(
 
 \item{return_message}{if \code{TRUE} return message}
 }
-\value{
-
-}
 \description{
 Acquires data from the GDELT
 entity mention API for period of specified dates

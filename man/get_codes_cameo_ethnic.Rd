@@ -6,9 +6,6 @@
 \usage{
 get_codes_cameo_ethnic()
 }
-\value{
-
-}
 \description{
 Retrieves GDELT CAMEO ethnic code book
 }

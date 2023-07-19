@@ -9,9 +9,6 @@ parse_gkg_mentioned_quotes(gdelt_data, filter_na = T, return_wide = T)
 \arguments{
 \item{return_wide}{}
 }
-\value{
-
-}
 \description{
 Returns mentioned quotes from a gkg data frame
 }

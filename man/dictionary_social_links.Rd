@@ -6,9 +6,6 @@
 \usage{
 dictionary_social_links()
 }
-\value{
-
-}
 \description{
 Social Media Link Dictionary
 }

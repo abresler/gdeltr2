@@ -6,9 +6,6 @@
 \usage{
 get_schema_gkg_counts()
 }
-\value{
-
-}
 \description{
 Gets gkg count schema
 }

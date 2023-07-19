@@ -20,9 +20,6 @@ date_columns_to_numeric(
 
 \item{return_message}{return a message}
 }
-\value{
-
-}
 \description{
 Convert date columns to numeric
 }

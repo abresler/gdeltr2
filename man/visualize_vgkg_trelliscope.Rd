@@ -35,9 +35,6 @@ visualize_vgkg_trelliscope(
 
 \item{only_pictures}{}
 }
-\value{
-
-}
 \description{
 Visualize Cloudvision trelliscope
 }

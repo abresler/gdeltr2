@@ -16,9 +16,6 @@ parse_gkg_mentioned_social_embeds(
 
 \item{return_wide}{}
 }
-\value{
-
-}
 \description{
 Returns social embed information from a gkg data frame
 }

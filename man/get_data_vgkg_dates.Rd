@@ -12,9 +12,6 @@ get_data_vgkg_dates(
   return_message = TRUE
 )
 }
-\value{
-
-}
 \description{
 Gets CV Data for stated periods
 }

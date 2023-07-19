@@ -6,9 +6,6 @@
 \usage{
 vgkg_entity_count()
 }
-\value{
-
-}
 \description{
 Counts classified entities from 2017
 to 2019

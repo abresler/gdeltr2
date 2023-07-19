@@ -41,9 +41,6 @@ visualize_gkg_trelliscope(
 \item 'xml
 }}
 }
-\value{
-
-}
 \description{
 Trelliscope gkg data
 }

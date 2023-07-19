@@ -14,9 +14,6 @@ parse_gkg_mentioned_gcams(
 \arguments{
 \item{return_wide}{}
 }
-\value{
-
-}
 \description{
 Returns GCAM codes from a gkg data frame
 }

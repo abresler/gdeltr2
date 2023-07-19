@@ -16,9 +16,6 @@ parse_gkg_mentioned_organizations(
 
 \item{return_wide}{}
 }
-\value{
-
-}
 \description{
 Returns long or wide mentioned organizations from a GKG data frame
 }

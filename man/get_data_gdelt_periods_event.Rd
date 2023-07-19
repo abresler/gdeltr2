@@ -13,9 +13,6 @@ get_data_gdelt_periods_event(
   return_message = T
 )
 }
-\value{
-
-}
 \description{
 Returns GDELT event data for a given periods
 }

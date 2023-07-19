@@ -9,9 +9,6 @@ parse_vgkg_labels(gdelt_data, filter_na = T, return_wide = T)
 \arguments{
 \item{return_wide}{}
 }
-\value{
-
-}
 \description{
 Parses Cloud Vision Lables
 }

@@ -32,9 +32,6 @@ options \code{c('gkg', 'export', 'mentions'))}}
 
 \item{date_data}{must be a date in Year - Month - Day format}
 }
-\value{
-
-}
 \description{
 Get dates detailed data from a specified table
 }

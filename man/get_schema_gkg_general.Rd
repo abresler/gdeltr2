@@ -6,9 +6,6 @@
 \usage{
 get_schema_gkg_general()
 }
-\value{
-
-}
 \description{
 Gets gkg general schema
 }

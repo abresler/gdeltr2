@@ -16,9 +16,6 @@ parse_gkg_mentioned_event_counts(
 
 \item{return_wide}{}
 }
-\value{
-
-}
 \description{
 Returns mentioned CAMEO event count from a gkg data frame
 }

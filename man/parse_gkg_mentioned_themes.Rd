@@ -14,9 +14,6 @@ parse_gkg_mentioned_themes(
 \arguments{
 \item{organization_column}{options \code{c('theme', 'themes', 'countThemes', 'themesCharLoc', 'charLoc'))}}
 }
-\value{
-
-}
 \description{
 Returns mentioned themes from a gkg data frame
 }

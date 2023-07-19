@@ -6,9 +6,6 @@
 \usage{
 get_vgkg_schema()
 }
-\value{
-
-}
 \description{
 get_vgkg_schema
 }

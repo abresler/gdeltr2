@@ -29,9 +29,6 @@ visualize_gkg_tv_trelliscope(
 \item 'xml
 }}
 }
-\value{
-
-}
 \description{
 Trelliscope gkg data
 }

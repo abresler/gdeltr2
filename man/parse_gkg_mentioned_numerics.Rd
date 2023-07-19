@@ -11,9 +11,6 @@ parse_gkg_mentioned_numerics(
   return_wide = T
 )
 }
-\value{
-
-}
 \description{
 Returns long or wide mentioned numerics from a GKG data frame
 }

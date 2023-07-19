@@ -6,9 +6,6 @@
 \usage{
 get_schema_gdelt_events()
 }
-\value{
-
-}
 \description{
 Retrieves GDELT event database schema
 }

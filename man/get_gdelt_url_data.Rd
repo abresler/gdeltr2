@@ -17,9 +17,6 @@ get_gdelt_url_data(
 \arguments{
 \item{return_message}{}
 }
-\value{
-
-}
 \description{
 Get GDELT url data
 }

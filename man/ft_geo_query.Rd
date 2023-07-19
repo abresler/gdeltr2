@@ -5,8 +5,8 @@
 \title{Generate a GDELT GEO V2 API query}
 \usage{
 ft_geo_query(
-  query_parameters = list(term = NULL, domain = NULL, gkg_theme = NULL, image_face_tone
-    = NULL, image_num_faces = NULL, image_ocr = NULL, image_tag = NULL, image_web_tag =
+  query_parameters = list(term = NULL, domain = NULL, gkg_theme = NULL, image_face_tone =
+    NULL, image_num_faces = NULL, image_ocr = NULL, image_tag = NULL, image_web_tag =
     NULL, image_web_count = NULL, location_name = NULL, location_adm1 = NULL,
     location_country = NULL, near = NULL, source_country = NULL, source_language = NULL,
     tone = NULL, tone_absolute_value = NULL),
@@ -80,9 +80,6 @@ ft_geo_query(
 }}
 
 \item{browse_url}{if \code{TRUE} open url in browser}
-}
-\value{
-
 }
 \description{
 This function will generate a V2 GEO api query and either open

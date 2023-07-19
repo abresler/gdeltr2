@@ -6,9 +6,6 @@
 \usage{
 dictionary_v3_entity_urls()
 }
-\value{
-
-}
 \description{
 Dictionary of URLs from the V3 API
 updated on 15 minute intervals

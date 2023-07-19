@@ -34,9 +34,6 @@ v2_api_url_df(
 \arguments{
 \item{quote_terms}{}
 }
-\value{
-
-}
 \description{
 Creates data frame of gdeltv2 API queries.
 }

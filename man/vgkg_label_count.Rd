@@ -6,9 +6,6 @@
 \usage{
 vgkg_label_count()
 }
-\value{
-
-}
 \description{
 Counts classified CloudVision labels
 }

@@ -9,9 +9,6 @@ parse_language_types(data, id_vgkg = 1)
 \arguments{
 \item{id_vgkg}{}
 }
-\value{
-
-}
 \description{
 Parses XML Language Type
 }

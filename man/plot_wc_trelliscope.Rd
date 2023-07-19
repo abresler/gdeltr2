@@ -31,11 +31,6 @@ plot_wc_trelliscope(
 \arguments{
 \item{trelliscope_parameters}{}
 }
-\value{
-
-
-
-}
 \description{
 Plot wordcloud trelliscope
 

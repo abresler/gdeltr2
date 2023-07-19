@@ -9,9 +9,6 @@ parse_xml_logos(data, id_vgkg = 1)
 \arguments{
 \item{id_vgkg}{}
 }
-\value{
-
-}
 \description{
 Parses XML Logo
 }
