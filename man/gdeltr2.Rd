@@ -2,10 +2,18 @@
 % Please edit documentation in R/gdeltr2-package.R
 \docType{package}
 \name{gdeltr2}
+\alias{gdeltr2-package}
 \alias{gdeltr2}
 \title{gdeltr2}
 \description{
 Tools for interacting with GDELT
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/abresler/gdeltr2}
+}
+
 }
 \author{
 Alex Bresler (abresler@asbcllc.com)

@@ -41,5 +41,7 @@ Imports:
     devtools,
     hrbrthemes,
     memoise,
-    data.table
-RoxygenNote: 7.2.3
+    data.table,
+    crayon,
+    cli
+RoxygenNote: 7.3.1
