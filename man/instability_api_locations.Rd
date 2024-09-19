@@ -55,5 +55,5 @@ if \code{visualize} a ggplot visualization else a \code{tibble}
 Returns instability data for given locations
 }
 \examples{
-instability_api_locations(location_ids = c('US', 'IS', "TU"), random_locations = NULL, variable_names = c('instability', 'conflict', 'tone', 'protest', 'artvolnorm'), visualization = T, days_moving_average = NA, time_periods = 'daily', use_multi_locations = F, return_wide = T, nest_data = F, return_message = T)
+instability_api_locations(location_ids = c('US', 'IS', "TU"), random_locations = NULL, variable_names = c('instability', 'conflict', 'tone', 'protest', 'artvolnorm'), visualize = T, days_moving_average = NA, time_periods = 'daily', use_multi_locations = F, return_wide = T, nest_data = F, return_message = T)
 }

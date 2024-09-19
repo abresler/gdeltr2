@@ -4,7 +4,10 @@
 \alias{dictionary_stability_locations}
 \title{Code book for instability locations}
 \usage{
-dictionary_stability_locations()
+dictionary_stability_locations(snake_names = F)
+}
+\arguments{
+\item{snake_names}{}
 }
 \value{
 a \code{tibble}

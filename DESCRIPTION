@@ -43,5 +43,7 @@ Imports:
     memoise,
     data.table,
     crayon,
-    cli
-RoxygenNote: 7.3.1
+    cli,
+    tidyr,
+    tibble
+RoxygenNote: 7.3.2

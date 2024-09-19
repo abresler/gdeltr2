@@ -4,7 +4,7 @@
 \alias{dictionary_gdelt_tv_stations}
 \title{GDELT TV Station Dictionary}
 \usage{
-dictionary_gdelt_tv_stations()
+dictionary_gdelt_tv_stations(snake_names = FALSE)
 }
 \value{
 a \code{tibble}

@@ -5,8 +5,9 @@
 \title{GDELT TV Show Summary}
 \usage{
 tv_summaries(
-  date_start = "2018-02-02",
+  date_start = Sys.Date() - 1,
   date_end = Sys.Date(),
+  snake_names = FALSE,
   return_message = T
 )
 }
@@ -25,5 +26,5 @@ Acquires daily summary data for the television shows
 that GDELT monitors
 }
 \examples{
-tv_summaries(date_start = "2018-02-02", date_end = Sys.Date(), return_message = T)
+tv_summaries(date_start = Sys.Date(), date_end = Sys.Date(), return_message = T)
 }

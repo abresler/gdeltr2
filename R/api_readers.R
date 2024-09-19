@@ -1,4 +1,41 @@
+
 # https://blog.gdeltproject.org/gdelt-2-0-television-api-debuts/
+
+
+# utils -------------------------------------------------------------------
+
+#' Widen API URLs
+#'
+#' @param data A `tibbile`
+#' @param url_gdelt Name of GDELT API url variables
+#' @param widen_variables Vector of variables to unite and widen
+#'
+#' @return
+#' @export
+#'
+#' @examples
+widen_gdelt_url_api_parameters <-
+  function(data, url_gdelt = NULL, widen_variables = NULL) {
+    if (is.null(url_gdelt)) {
+      message("Enter GDELT API URL")
+      return(data)
+    }
+    if (is.null(widen_variables)) {
+      message("Enter Widen Variables")
+      return(data)
+    }
+    key_cols <- data |> select(-one_of(url_gdelt)) |> names()
+    unite_columns <- c("url_type", widen_variables)
+    data <-
+      data |> pivot_longer(cols = url_gdelt,
+                           names_to = "url_type",
+                           values_to  = "url") |>
+      unite(url_type, !!!syms(unite_columns)) |>
+      spread(url_type, url) |>
+      janitor::clean_names()
+
+    data
+  }
 
 # dictionary --------------------------------------------------------------
 
@@ -27,7 +64,43 @@ dictionary_gdelt_api_names <-
         "est_perc",
         "preview_url",
         "show_date",
-        "preview_thumb"
+        "preview_thumb",
+
+        "url_mobile",
+        "title",
+        "seendate",
+        "socialimage",
+        "domain",
+        "language",
+        "sourcecountry",
+        "mobile_url",
+        "imageurl",
+        "sourcearticleurl",
+        "image_url",
+        "source_article_url",
+        "norm",
+        "toparts",
+        "top_art_url1",
+        "top_art_title1",
+        "top_art_url2",
+        "top_art_title2",
+        "top_art_url3",
+        "top_art_title3",
+        "top_art_url4",
+        "top_art_title4",
+        "top_art_url5",
+        "top_art_title5",
+        "top_art_url6",
+        "top_art_title6",
+        "top_art_url7",
+        "top_art_title7",
+        "top_art_url8",
+        "top_art_title8",
+        "top_art_url9",
+        "top_art_title9",
+        "top_art_url10",
+        "top_art_title10",
+        "bin"
       ),
       name_actual = c(
         "idStation",
@@ -51,7 +124,43 @@ dictionary_gdelt_api_names <-
         "pct_estimated_coverage",
         "url_video_internet_archive",
         "datetime_show",
-        "url_image_video_thumbnail_internet_archive"
+        "url_image_video_thumbnail_internet_archive",
+        "url_mobile_link",
+        "title_article",
+        "datetime_article",
+        "url_image",
+        "domain_article",
+        "language_article",
+        "source_country_article",
+       "url_mobile_link",
+       "url_image",
+       "url_source_article",
+       "url_image",
+       "url_source_article",
+       "count_articles_monitored",
+       "data_top_articles",
+
+       "url_top_article_001",
+       "title_top_article_001",
+       "url_top_article_002",
+       "title_top_article_002",
+       "url_top_article_003",
+       "title_top_article_003",
+       "url_top_article_004",
+       "title_top_article_004",
+       "url_top_article_005",
+       "title_top_article_005",
+       "url_top_article_006",
+       "title_top_article_006",
+       "url_top_article_007",
+       "title_top_article_007",
+       "url_top_article_008",
+       "title_top_article_008",
+       "url_top_article_009",
+       "title_top_article_009",
+       "url_top_article_010",
+       "title_top_article_010",
+       "number_bin"
       )
     )
   }
@@ -114,6 +223,9 @@ dictionary_gdelt_api_names <-
   data <-
     data.table::fread(url, verbose = FALSE) |> as_tibble()
 
+  is_doc <- url |> str_detect("doc?")
+  is_timeline_vol <-
+    url |> str_detect("mode=timeline")
   gdelt_names <- names(data) |>
     map_chr(list(function(x){
       x |> .remove_parentheses() |> str_squish()
@@ -126,6 +238,15 @@ dictionary_gdelt_api_names <-
 
   not_timeline_vol <- !url |> str_to_lower() |> str_detect("mode=timelinevolheatmap")
   is_clip <- url |> str_detect("mode=clipgallery")
+
+
+  if (is_doc & is_timeline_vol) {
+    data <- data |>
+      rename(datetime_data = date)
+
+    data <- data |> mutate(UQ(url_type) := url)
+    return(data)
+  }
 
   if (data |> hasName("date") & not_timeline_vol) {
     data <-
