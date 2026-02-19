@@ -1400,8 +1400,11 @@ v2_doc_api <-
 
       all_data <-
         all_data |>
-        mutate(url_gdelt_v2_doc_api = str_to_lower(url_gdelt_v2_doc_api)) |>
-        left_join(out, by = "url_gdelt_v2_doc_api")
+        mutate(url_gdelt_v2_doc_api = str_to_lower(url_gdelt_v2_doc_api))
+
+      if (nrow(out) > 0 && "url_gdelt_v2_doc_api" %in% names(out)) {
+        all_data <- all_data |> left_join(out, by = "url_gdelt_v2_doc_api")
+      }
 
       if (!nest_data) {
         all_data <- all_data |> unnest(cols = everything())

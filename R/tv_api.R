@@ -658,8 +658,11 @@ v2_tv_api <-
 
        all_data <-
          all_data |>
-         mutate(url_gdelt_tv_api = str_to_lower(url_gdelt_tv_api)) |>
-         left_join(dat_gdelt, by = "url_gdelt_tv_api")
+         mutate(url_gdelt_tv_api = str_to_lower(url_gdelt_tv_api))
+
+       if (nrow(dat_gdelt) > 0 && "url_gdelt_tv_api" %in% names(dat_gdelt)) {
+         all_data <- all_data |> left_join(dat_gdelt, by = "url_gdelt_tv_api")
+       }
 
       all_data
     }, error = function(e) {
@@ -732,9 +735,13 @@ v2_tv_trends <-
     tryCatch({
       dat <- "https://api.gdeltproject.org/api/v2/tv/tv?mode=TrendingTopics&format=json" |> fromJSON(simplifyDataFrame = TRUE)
       time_generated <- dat$`DateGenerated:` |> ymd_hms() |> lubridate::with_tz(Sys.timezone())
-      tbl_trending <- dat$StationTrendingTopics |> as_tibble() |> unnest(cols = everything()) |> mutate(type = "trending")
+      tbl_trending <- dat$StationTrendingTopics |> as_tibble() |>
+        mutate(across(where(is.list), ~map(., as.character))) |>
+        unnest(cols = everything()) |> mutate(type = "trending")
       tbl_top <-
-        dat$StationTopTopics |> as_tibble() |> unnest(cols = everything()) |> mutate(type = "top")
+        dat$StationTopTopics |> as_tibble() |>
+        mutate(across(where(is.list), ~map(., as.character))) |>
+        unnest(cols = everything()) |> mutate(type = "top")
       trending_phrases <- dat$OverallTrendingPhrases |> str_to_title()
       trending_topics <- dat$OverallTrendingTopics |> str_to_title()
 

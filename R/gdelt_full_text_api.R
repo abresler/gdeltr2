@@ -8,7 +8,7 @@
   function(data) {
     data <-
       data |>
-      dplyr::select(which(colMeans(is.na(.)) < 1))
+      dplyr::select(which(colMeans(is.na(.data)) < 1))
     return(data)
   }
 
@@ -2543,6 +2543,16 @@ plot_trelliscopes <-
            trelliscope_parameters = list(path = NULL,
                                          rows = 1,
                                          columns = 2)) {
+    # Ensure modeSearch column exists
+    if (!has_name(data, "modeSearch")) {
+      if (has_name(data, "mode")) {
+        data <- data |> mutate(modeSearch = mode)
+      } else {
+        cli::cli_alert_danger("Data must have 'modeSearch' or 'mode' column")
+        return(data)
+      }
+    }
+
     df_mode_type <-
       .get_mode_types() |>
       dplyr::select(modeSearch, packageVisualization)
@@ -2550,7 +2560,7 @@ plot_trelliscopes <-
     all_data <-
       data |>
       mutate(modeSearch = modeSearch |> str_to_upper()) |>
-      left_join(df_mode_type |> mutate(modeSearch = modeSearch |> str_to_upper(), by = "modeSearch")) |>
+      left_join(df_mode_type |> mutate(modeSearch = modeSearch |> str_to_upper()), by = "modeSearch") |>
       dplyr::select(packageVisualization, modeSearch, everything())
 
     all_data <-
@@ -3924,7 +3934,7 @@ dictionary_ft_codebook <-
     df_query_params <-
       query_params |>
       flatten_df() |>
-      dplyr::select(which(colMeans(is.na(.)) < 1))
+      dplyr::select(which(colMeans(is.na(.data)) < 1))
 
     df_search <-
       df_query_params |>
@@ -4137,7 +4147,7 @@ dictionary_ft_codebook <-
         )
 
       }) |>
-      dplyr::select(which(colMeans(is.na(.)) < 1)) |>
+      dplyr::select(which(colMeans(is.na(.data)) < 1)) |>
       distinct()
 
     search_params <-
@@ -4169,7 +4179,6 @@ dictionary_ft_codebook <-
       mutate(countRows = dataSearch |> map_dbl(length)) |>
       filter(countRows > 0) |>
       dplyr::select(-countRows)
-
 
     if (!nest_data) {
       all_data <-
