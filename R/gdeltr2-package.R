@@ -1,20 +1,20 @@
 #' @keywords internal
 #'
 #' @import dplyr purrr stringr tibble tidyr glue readr utils
-#' @importFrom rlang sym syms is_null set_names UQ UQS `:=` `!!` .data inform warn abort
+#' @importFrom rlang sym syms is_null set_names `:=` `!!` `!!!` .data inform warn abort
 #'
 #' @importFrom cli cli_alert_info cli_alert_danger cli_alert_success cli_alert_warning cli_text cli_inform col_red col_green col_blue
 #' @importFrom curl curl curl_download
 #' @importFrom data.table fread rbindlist
 #' @importFrom glue glue
 #' @importFrom grDevices colors
-#' @importFrom httr GET content url_ok handle_reset
-#' @importFrom jsonlite fromJSON
-#' @importFrom lubridate ymd ymd_hms with_tz my mdy year month wday
+#' @importFrom httr GET content url_ok handle_reset timeout status_code
+#' @importFrom jsonlite fromJSON stream_in
+#' @importFrom lubridate ymd ymd_hms with_tz my mdy mdy_hm mdy_hms year month wday floor_date hours
 #' @importFrom memoise memoise
 #' @importFrom rvest html_nodes html_text html_attr read_html
 #' @importFrom xml2 read_xml xml_children xml_name xml_text
-#' @importFrom urltools domain
+#' @importFrom urltools domain url_decode
 #' @importFrom anytime anytime anydate
 #' @importFrom highcharter hchart hcaes hc_add_theme hc_theme_gridlight hc_theme_elementary hc_xAxis hc_yAxis hc_legend hc_credits hc_exporting hc_chart highchart
 #' @importFrom ggplot2 ggplot aes geom_line scale_y_continuous facet_wrap scale_x_date labs
@@ -22,9 +22,9 @@
 #' @importFrom trelliscopejs trelliscope img_panel cog_href
 #' @importFrom wordcloud2 wordcloud2
 #' @importFrom janitor clean_names make_clean_names
-#' @importFrom readr parse_number read_csv read_tsv
+#' @importFrom readr parse_number read_csv read_tsv read_lines parse_date
 #' @importFrom tibble rownames_to_column as_tibble tibble
-#' @importFrom tidyr separate pivot_longer pivot_wider unite unnest
+#' @importFrom tidyr separate separate_longer_delim pivot_longer pivot_wider unite unnest
 "_PACKAGE"
 
 # --- Package-level cache environment ---
@@ -179,4 +179,46 @@
 #' @keywords internal
 .is_valid_url <- function(url) {
   is.character(url) && length(url) == 1 && grepl("^https?://", url)
+}
+
+# --- Connection Pooling ---
+
+# Shared curl handle pool for GDELT API endpoints
+# Reuses connections to the same GDELT hosts across multiple requests,
+# eliminating TLS handshake overhead for sequential API calls.
+.gdelt_curl_pool <- NULL
+
+.get_curl_handle <- function(base_url = "https://api.gdeltproject.org") {
+  if (is.null(.gdelt_curl_pool)) {
+    .gdelt_curl_pool <<- curl::new_pool(total_con = 10, host_con = 6)
+  }
+  curl::new_handle(url = base_url)
+}
+
+# --- .onLoad Cache Warming ---
+
+.onLoad <- function(libname, pkgname) {
+  # Pre-warm the memoise cache for frequently-used codebooks in background
+  # This eliminates cold-start latency on first API call
+  if (requireNamespace("callr", quietly = TRUE) && interactive()) {
+    tryCatch({
+      callr::r_bg(
+        function() {
+          # Trigger memoise cache population for CAMEO codes
+          tryCatch({
+            suppressMessages({
+              gdeltr2::get_codes_cameo_country()
+              gdeltr2::get_codes_cameo_events()
+              gdeltr2::get_codes_gkg_themes()
+            })
+          }, error = function(e) invisible(NULL))
+        },
+        package = TRUE,
+        supervise = TRUE
+      )
+    }, error = function(e) {
+      # Silently fail -- cache warming is best-effort
+      invisible(NULL)
+    })
+  }
 }

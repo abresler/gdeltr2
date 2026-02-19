@@ -34,7 +34,7 @@
 collapse_terms <-
   function(terms = NULL, encode = FALSE) {
     if (length(terms) == 0) {
-      stop("Please enter terms")
+      rlang::abort("Please enter terms", class = "gdeltr2_input_error")
     }
     out <- terms |> str_c(collapse = " OR ")
 
@@ -61,7 +61,7 @@ generate_gdelt_api_parameters_values <-
            values = NULL,
            use_exact_quote = FALSE) {
     if (length(values) == 0) {
-      stop("Enter parameters")
+      rlang::abort("Enter parameter values", class = "gdeltr2_input_error")
     }
 
     if (use_exact_quote) {

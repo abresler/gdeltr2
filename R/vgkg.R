@@ -11,7 +11,7 @@
 #' vgkg_label_count()
 #' }
 vgkg_label_count <-
-  function() {
+  memoise::memoise(function() {
     tryCatch({
       data <-
         "http://data.gdeltproject.org/blog/2019-vgkg-entitieslists/20191018-vgkg-labelslist.csv.gz" |>
@@ -28,7 +28,7 @@ vgkg_label_count <-
       cli::cli_alert_danger("Failed: {e$message}")
       return(tibble())
     })
-  }
+  })
 
 
 #' VGKG Classified Entity Count
@@ -44,7 +44,7 @@ vgkg_label_count <-
 #' vgkg_entity_count()
 #' }
 vgkg_entity_count <-
-  function(){
+  memoise::memoise(function(){
     tryCatch({
       data <-
         fread("http://data.gdeltproject.org/blog/2019-vgkg-entitieslists/20191018-vgkg-webentitieslist.csv.gz") |>
@@ -60,4 +60,4 @@ vgkg_entity_count <-
       cli::cli_alert_danger("Failed: {e$message}")
       return(tibble())
     })
-  }
+  })

@@ -122,8 +122,7 @@ dictionary_v2_context_api_modes <-
       url_decode() |>
       str_remove_all("\\%") |>
       str_squish() |>
-      str_split("\\&") |>
-      flatten_chr()
+      str_split_1("\\&")
 
     query_params <- query_params[[1]] |> str_replace_all("\\ ", "\\ - ")
 

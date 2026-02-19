@@ -201,7 +201,12 @@ dictionary_gdelt_api_names <-
 
 
 .read_gdelt_api_json <- function(url = "https://api.gdeltproject.org/api/v2/tv/tv?query=%20%Walz%20%market:%22National%22&mode=ClipGallery&format=json&datacomb=sep&datanorm=percent&maxrecords=3000", url_type = "url_gdelt_tv_api") {
-  out <- jsonlite::fromJSON(url, simplifyDataFrame = TRUE, flatten = FALSE)
+  resp <- .safe_http_get(url)
+  if (is.null(resp)) {
+    rlang::abort(glue::glue("Failed to fetch JSON from {url}"))
+  }
+  raw_text <- httr::content(resp, as = "text", encoding = "UTF-8")
+  out <- jsonlite::fromJSON(raw_text, simplifyDataFrame = TRUE, flatten = FALSE)
   actual_tables <- names(out)[names(out) %in% "query_details"]
   actual_tables <- names(out)[!names(out) %in% actual_tables]
 
@@ -223,8 +228,13 @@ dictionary_gdelt_api_names <-
 }
 
 .read_gdelt_api_csv <- function(url = "https://api.gdeltproject.org/api/v2/tv/tv?query=%20%25Walz%20%25market:%22National%22&mode=TimelineVol&format=csv&datacomb=sep&datanorm=percent&maxrecords=3000", url_type = "url_gdelt_tv_api") {
+  resp <- .safe_http_get(url)
+  if (is.null(resp)) {
+    rlang::abort(glue::glue("Failed to fetch CSV from {url}"))
+  }
+  raw_text <- httr::content(resp, as = "text", encoding = "UTF-8")
   data <-
-    data.table::fread(url, verbose = FALSE) |> as_tibble()
+    data.table::fread(text = raw_text, verbose = FALSE) |> as_tibble()
 
   is_doc <- url |> str_detect("doc?")
   is_timeline_vol <-

@@ -8,7 +8,7 @@
 #' dictionary_social_links()
 #' }
 dictionary_social_links <-
-  function() {
+  memoise::memoise(function() {
     tryCatch({
       data <- read_tsv("http://data.gdeltproject.org/gdeltv3/gkg/sociallinks/FILELIST.TXT", col_names = FALSE) |>
         set_names("urlGDELT")
@@ -22,7 +22,7 @@ dictionary_social_links <-
       cli::cli_alert_danger("Failed: {e$message}")
       return(tibble())
     })
-  }
+  })
 
 .parse_social_link <-
   function(url = "http://data.gdeltproject.org/gdeltv3/gkg/sociallinks/20190910.sociallinks.txt.gz" ) {

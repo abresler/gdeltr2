@@ -40,5 +40,9 @@ Imports:
     memoise,
     data.table,
     cli,
-    janitor
+    janitor,
+    parallel
+Suggests:
+    bigrquery,
+    callr
 RoxygenNote: 7.3.3

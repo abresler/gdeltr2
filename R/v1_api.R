@@ -1,6 +1,6 @@
 .parse_v1_url_parameters <-
   function(url = "https://api.gdeltproject.org/api/v1/search_ftxtsearch/search_ftxtsearch?query='donald%20trump'%20sourcelang:english&output=artimglist&sort=date&maxrows=1000&dropdup=true&trans=googtrans") {
-    url_parts <- url |> str_split("\\?") |> flatten_chr()
+    url_parts <- url |> str_split_1("\\?")
     query_params <- url_parts[[2]]
     tibble(query_params) |>
       separate_longer_delim(query_params, delim = ":")
@@ -552,7 +552,7 @@ ft_v1_api_urls <-
    if (has_sources) {
      all_text <- page |> as.character()
      json_char <-
-       all_text |> str_split("\\writedate") |> flatten_chr()
+       all_text |> str_split_1("\\writedate")
      dates <-
        json_char[json_char |> str_detect("^\\('source")]
 
@@ -626,7 +626,7 @@ ft_v1_api_urls <-
     if (return_message) {
       count_matches <- nrow(data)
       term <-
-        url |> str_split("\\?") |> flatten_chr() |> str_split("query=") |> flatten_chr() |> last() |> str_split("sourcelang") |> flatten_chr() |> first() |> str_replace_all("%20", " ") |> str_to_upper() |> str_trim()
+        url |> str_split_1("\\?") |> str_c(collapse = "?") |> str_split_1("query=") |> last() |> str_split_1("sourcelang") |> first() |> str_replace_all("%20", " ") |> str_to_upper() |> str_trim()
       cli::cli_alert_info("Found {cli::col_red(count_matches)} results for {cli::col_blue(term)} using {cli::col_green('GDELT V1 Freetext API')}")
     }
 
@@ -648,6 +648,9 @@ ft_v1_api_urls <-
 #' }
 parse_v1_ft_urls <-
   function(urls, return_message = TRUE, use_parallel = FALSE, workers = NULL) {
+    if (!is.character(urls) || length(urls) == 0) {
+      rlang::abort("Enter character vector of V1 API urls", class = "gdeltr2_input_error")
+    }
     tryCatch({
       .parse_v1_ft_safe <-
         possibly(.parse_v1_ft, tibble())

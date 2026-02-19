@@ -36,7 +36,7 @@ filter_sources <-
       str_to_lower() |>
       paste0(collapse = '|')
     if (!'documentSource' %in% names(data)) {
-      stop("Data must contain the documentSource column")
+      rlang::abort("Data must contain the `documentSource` column", class = "gdeltr2_input_error")
     }
     data <-
       data |>
@@ -120,27 +120,28 @@ load_needed_packages <- function(required_packages = c('dplyr')) {
 #'
 #' @examples
 #' get_urls_gkg_15_minute_log()
-get_urls_gkg_15_minute_log <- function() {
+get_urls_gkg_15_minute_log <- memoise::memoise(function() {
   tryCatch({
     url <-
       'http://data.gdeltproject.org/gdeltv2/masterfilelist.txt'
 
     log_df <-
       url |>
-      read_tsv(col_names = FALSE) |>
+      read_tsv(col_names = FALSE, show_col_types = FALSE) |>
       separate(
         col = X1,
         into = c('idFile', 'idHash', 'urlData'),
-        sep = '\\ '
-      ) |>
-      suppressWarnings() |>
-      suppressMessages()
+        sep = '\\ ',
+        extra = "merge",
+        fill = "right"
+      )
 
     log_df <-
       log_df |>
       dplyr::mutate(dateTimeFile = urlData |> str_replace_all('http://data.gdeltproject.org/gdeltv2/', '')) |>
       separate(dateTimeFile,
-                      into = c('timestamp', 'nameFile', 'typeFile', 'isZip'))
+                      into = c('timestamp', 'nameFile', 'typeFile', 'isZip'),
+                      extra = "merge", fill = "right")
 
     log_df <-
       log_df |>
@@ -150,15 +151,14 @@ get_urls_gkg_15_minute_log <- function() {
         typeFile = typeFile |> str_to_lower(),
         idFile = idFile |> as.integer()
       ) |>
-      dplyr::mutate(dplyr::across(c('idHash', 'nameFile', 'urlData'), str_trim)) |>
-      suppressWarnings()
+      dplyr::mutate(dplyr::across(c('idHash', 'nameFile', 'urlData'), str_trim))
 
     return(log_df)
   }, error = function(e) {
     cli::cli_alert_danger("Failed: {e$message}")
     return(tibble())
   })
-}
+})
 
 #' Gets GDELT Event data, by year from 1979-2005, by year month 2006 - 2013, then by dat
 #'
@@ -171,39 +171,38 @@ get_urls_gkg_15_minute_log <- function() {
 #' @examples
 #' get_urls_gdelt_event_log()
 
-get_urls_gdelt_event_log <- function(return_message = TRUE) {
+get_urls_gdelt_event_log <- memoise::memoise(function(return_message = TRUE) {
   tryCatch({
   url <-
     'http://data.gdeltproject.org/events/md5sums'
 
   urlData <-
     url |>
-    read_tsv(col_names = FALSE) |>
+    read_tsv(col_names = FALSE, show_col_types = FALSE) |>
     separate(col = X1,
                     into = c('idHash', 'stemData'),
-                    sep = '\\  ') |>
+                    sep = '\\  ',
+                    extra = "merge", fill = "right") |>
     dplyr::mutate(
       urlData = 'http://data.gdeltproject.org/events/' |> paste0(stemData),
       slugDatabaseGDELT = 'EVENTS',
       isZipFile = ifelse(stemData |> str_detect(".zip"), TRUE, FALSE)
-    ) |>
-    suppressWarnings() |>
-    suppressMessages()
+    )
 
   urlData <-
     urlData |>
     separate(
       col = stemData,
       into = c('periodData', 'nameFile', 'typeFile', 'zip_file'),
-      sep = '\\.'
+      sep = '\\.',
+      extra = "merge", fill = "right"
     ) |>
     dplyr::select(-zip_file) |>
     dplyr::mutate(
       periodData = ifelse(periodData == 'GDELT', typeFile, periodData),
       isDaysData = ifelse(nchar(periodData) == 8, TRUE, FALSE)
     ) |>
-    dplyr::select(-c(nameFile, typeFile)) |>
-    suppressWarnings()
+    dplyr::select(-c(nameFile, typeFile))
 
   urlData <-
     urlData |>
@@ -239,7 +238,7 @@ get_urls_gdelt_event_log <- function(return_message = TRUE) {
     cli::cli_alert_danger("Failed: {e$message}")
     return(tibble())
   })
-}
+})
 
 #' Gets most recent GKG log URLs
 #'
@@ -253,20 +252,20 @@ get_urls_gkg_most_recent_log <- function() {
   tryCatch({
     log_df <-
       'http://data.gdeltproject.org/gdeltv2/lastupdate.txt' |>
-      read_tsv(col_names = FALSE) |>
+      read_tsv(col_names = FALSE, show_col_types = FALSE) |>
       separate(
         col = X1,
         into = c('idFile', 'idHash', 'urlData'),
-        sep = '\\ '
-      ) |>
-      suppressWarnings() |>
-      suppressMessages()
+        sep = '\\ ',
+        extra = "merge", fill = "right"
+      )
 
     log_df <-
       log_df |>
       dplyr::mutate(dateTimeFile = urlData |> str_replace_all('http://data.gdeltproject.org/gdeltv2/', '')) |>
       separate(dateTimeFile,
-                      into = c('timestamp', 'nameFile', 'typeFile', 'isZip')) |>
+                      into = c('timestamp', 'nameFile', 'typeFile', 'isZip'),
+                      extra = "merge", fill = "right") |>
       dplyr::mutate(
         typeFile = typeFile |> str_to_lower(),
         isZip = ifelse(isZip |> str_detect("ZIP|zip"), TRUE, FALSE),
@@ -301,16 +300,18 @@ get_urls_gkg_daily_summaries <-
 
     urlData <-
       url |>
-      read_tsv(col_names = FALSE) |>
+      read_tsv(col_names = FALSE, show_col_types = FALSE) |>
       separate(col = X1,
                       into = c('idHash', 'stemData'),
-                      sep = '\\  ') |>
+                      sep = '\\  ',
+                      extra = "merge", fill = "right") |>
       dplyr::mutate(urlData = 'http://data.gdeltproject.org/gkg/' |> paste0(stemData),
                     slugDatabaseGDELT = 'gkg') |>
       separate(
         col = stemData,
         into = c('dateData', 'nameFile', 'typeFile', 'isZipFile'),
-        sep = '\\.'
+        sep = '\\.',
+        extra = "merge", fill = "right"
       ) |>
       dplyr::mutate(
         isZipFile = ifelse(isZipFile == "zip", TRUE, FALSE),
@@ -323,9 +324,7 @@ get_urls_gkg_daily_summaries <-
                     isZipFile,
                     isCountFile,
                     urlData,
-                    everything()) |>
-      suppressWarnings() |>
-      suppressMessages()
+                    everything())
 
     if (remove_count_files) {
       urlData <-
@@ -1521,7 +1520,7 @@ get_gdelt_url_data <-
         file_directory
 
       file_path <-
-        temp.dir |> str_split('/') |> flatten_chr() |> paste0(collapse = '/')
+        temp.dir |> str_split('/') |> list_c() |> paste0(collapse = '/')
       if (remove_existing_folder) {
         if (dir.exists(paths = file_path)) {
           "rm -R " |>
@@ -2230,7 +2229,7 @@ parse_gkg_mentioned_numerics <- function(gdelt_data,
         fields <-
           field |>
           str_split('\\;') |>
-          flatten_chr() |>
+          list_c() |>
           (\(x) x[x != ''])()
 
         fields_df <-
@@ -2393,7 +2392,7 @@ parse_gkg_mentioned_people <- function(gdelt_data,
         fields <-
           field |>
           str_split('\\;') |>
-          flatten_chr() |>
+          list_c() |>
           (\(x) x[x != ''])()
 
         fields_df <-
@@ -2562,7 +2561,7 @@ parse_gkg_mentioned_organizations <- function(gdelt_data,
         fields <-
           field |>
           str_split('\\;') |>
-          flatten_chr() |>
+          list_c() |>
           (\(x) x[x != ''])()
 
         fields_df <-
@@ -2702,7 +2701,7 @@ parse_gkg_mentioned_names <- function(gdelt_data,
         fields <-
           field |>
           str_split('\\;') |>
-          flatten_chr() |>
+          list_c() |>
           (\(x) x[x != ''])()
 
         fields_df <-
@@ -2865,7 +2864,7 @@ parse_gkg_mentioned_themes <- function(gdelt_data,
         fields <-
           field |>
           str_split('\\;') |>
-          flatten_chr() |>
+          list_c() |>
           (\(x) x[x != ''])()
 
         fields_df <-
@@ -3026,7 +3025,7 @@ parse_gkg_mentioned_social_embeds <-
           fields <-
             field |>
             str_split('\\;') |>
-            flatten_chr() |>
+            list_c() |>
             (\(x) x[x != ''])()
 
           fields_df <-
@@ -3176,7 +3175,7 @@ parse_gkg_mentioned_article_tone <-
           fields <-
             field |>
             str_split('\\,') |>
-            flatten_chr() |>
+            list_c() |>
             (\(x) x[x != ''])() |>
             as.numeric()
 
@@ -3316,7 +3315,7 @@ parse_gkg_mentioned_event_counts <- function(gdelt_data,
         fields <-
           field |>
           str_split('\\;') |>
-          flatten_chr() |>
+          list_c() |>
           (\(x) x[x != ''])()
 
         fields_df <-
@@ -3523,7 +3522,7 @@ parse_gkg_mentioned_locations <-
           fields <-
             field |>
             str_split('\\;') |>
-            flatten_chr() |>
+            list_c() |>
             (\(x) x[x != ''])()
 
           fields_df <-
@@ -3726,7 +3725,7 @@ parse_gkg_mentioned_dates <- function(gdelt_data,
         fields <-
           field |>
           str_split('\\;') |>
-          flatten_chr() |>
+          list_c() |>
           (\(x) x[x != ''])()
 
         fields_df <-
@@ -3866,7 +3865,7 @@ parse_gkg_mentioned_quotes <-
           fields <-
             field |>
             str_split('\\#') |>
-            flatten_chr() |>
+            list_c() |>
             (\(x) x[x != ''])()
 
           fields_df <-
@@ -4008,7 +4007,7 @@ parse_gkg_mentioned_gcams <- function(gdelt_data,
         fields <-
           field |>
           str_split('\\,') |>
-          flatten_chr() |>
+          list_c() |>
           (\(x) x[x != ''])()
 
         articleWordCount <-
@@ -4175,7 +4174,7 @@ parse_gkg_mentioned_source_data <-
           fields <-
             field |>
             str_split('\\;') |>
-            flatten_chr() |>
+            list_c() |>
             (\(x) x[x != ''])() |>
             unique()
 
@@ -4832,7 +4831,7 @@ get_urls_vgkg_most_recent  <- function() {
 
   values <-
     log_df$value |> str_split("\\ ") |>
-    flatten_chr()
+    list_c()
 
 
   items <-
@@ -5066,7 +5065,7 @@ get_data_vgkg_dates <-
             filter(item == x) |>
             dplyr::pull(value) |>
             str_split('\\;') |>
-            flatten_chr()
+            list_c()
 
           tibble(item = x, value = item_value) |>
             group_by(item) |>
@@ -5305,7 +5304,7 @@ parse_xml_labels <-
         xmlData <-
           xmlData |>
           str_split('<RECORD>') |>
-          flatten_chr()
+          list_c()
       }
 
 
@@ -5394,7 +5393,7 @@ parse_xml_landmarks <-
         xmlData <-
           xmlData |>
           str_split('<RECORD>') |>
-          flatten_chr()
+          list_c()
       }
 
 
@@ -5499,7 +5498,7 @@ parse_xml_logos <-
       xmlData <-
         xmlData |>
         str_split('<RECORD>') |>
-        flatten_chr()
+        list_c()
 
       xml_df <-
         tibble(xmlData) |>
@@ -5596,7 +5595,7 @@ parse_xml_safe_search <-
       xmlData <-
         xmlData |>
         str_split('<RECORD>') |>
-        flatten_chr()
+        list_c()
 
       xml_df <-
         tibble(xmlData) |>
@@ -5691,7 +5690,7 @@ parse_xml_faces <-
       xmlData <-
         xmlData |>
         str_split('<RECORD>') |>
-        flatten_chr()
+        list_c()
 
       xml_df <-
         tibble(xmlData) |>
@@ -5804,7 +5803,7 @@ parse_xml_ocr <-
       xmlData <-
         xmlData |>
         str_split('<RECORD>') |>
-        flatten_chr() |>
+        list_c() |>
         (\(x) gsub('\\n', '', x))()
 
       xml_df <-
@@ -5893,7 +5892,7 @@ parse_language_types <-
       xmlData <-
         xmlData |>
         str_split('\\,') |>
-        flatten_chr()
+        list_c()
 
       xml_df <-
         tibble(idLanguage = xmlData) |>

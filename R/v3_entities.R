@@ -7,7 +7,7 @@
 
 .extract_time <-
   function(url) {
-    parts <- url |> str_split("/") |> flatten_chr()
+    parts <- url |> str_split_1("/")
     time <- parts[length(parts)] |> str_remove_all("\\.geg-g1.json.gz") |> lubridate::ymd_hms() |> lubridate::with_tz(Sys.timezone())
     time
   }

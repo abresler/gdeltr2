@@ -8,7 +8,7 @@
 # utils -------------------------------------------------------------------
 
 .extract_gqg_time <- function(url) {
-  parts <- url |> stringr::str_split("/") |> purrr::flatten_chr()
+  parts <- url |> stringr::str_split_1("/")
   time <- parts[length(parts)] |>
     stringr::str_remove_all("\\.gqg.json.gz") |>
     lubridate::ymd_hms() |>

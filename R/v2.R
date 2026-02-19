@@ -228,7 +228,7 @@ dictionary_v2_doc_api_modes <-
 
 
     query_params <-
-      query_url |>   str_remove("^https://api.gdeltproject.org/api/v2/doc/doc\\?query=") |> url_decode() |> str_remove_all("\\%") |> str_squish() |> str_split("\\&") |> flatten_chr()
+      query_url |>   str_remove("^https://api.gdeltproject.org/api/v2/doc/doc\\?query=") |> url_decode() |> str_remove_all("\\%") |> str_squish() |> str_split_1("\\&")
 
     query_params <- query_params[[1]] |> str_replace_all("\\ ", "\\ - ")
 

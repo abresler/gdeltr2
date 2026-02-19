@@ -2,7 +2,7 @@
 
 .extract_ngram_inventory_date <-
   function(url) {
-    parts <- url |> stringr::str_split("/") |> purrr::flatten_chr()
+    parts <- url |> stringr::str_split_1("/")
     datestring <- parts[length(parts)] |> stringr::str_remove_all("\\.txt")
     lubridate::ymd(datestring)
   }

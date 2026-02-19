@@ -16,7 +16,7 @@
   # Remove everything before the first parenthesis
   x <- substr(x, regexpr("\\(", x) + 1, nchar(x))
   x <-
-    x |> str_split("\\,") |> flatten_chr() |> str_squish()
+    x |> str_split_1("\\,") |> str_squish()
   x <- x[length(x)] |> str_remove_all("\\)|\\'")
   x <- x |> lubridate::mdy_hm(tz = 'UTC') |> lubridate::with_tz(Sys.timezone())
 
@@ -461,7 +461,7 @@ instability_api_locations <-
 #' @examples
 #' dictionary_geo_codebook(code_book = 'imagetags')
 dictionary_geo_codebook <-
-  function(code_book = 'adm') {
+  memoise::memoise(function(code_book = 'adm') {
     df_codebooks <-
       tibble(
         nameCodeBook = c(
@@ -505,7 +505,7 @@ dictionary_geo_codebook <-
       mutate(nameCodebook = code_book |> str_to_upper()) |>
       select(nameCodebook, everything())
     data
-  }
+  })
 
 
 .generate_slug <-
@@ -907,7 +907,7 @@ ft_geo_query <-
         column_id_names |> append(name_columns)
     }
     has_regex <-
-      id_columns[id_columns |> names() |> str_detect("regex")] |> flatten_dbl() |> length() > 0
+      id_columns[id_columns |> names() |> str_detect("regex")] |> list_c() |> length() > 0
     if (has_regex) {
       regex <- id_columns$regex
       regex_columns <-
@@ -1075,7 +1075,7 @@ ft_geo_query <-
       return(invisible())
     }
 
-    parts <- path |> str_split("/") |> flatten_chr()
+    parts <- path |> str_split_1("/")
 
     seq_along(parts) |>
       map(function(x) {
@@ -2052,7 +2052,7 @@ generate_dates <-
     levels <- path |> str_count("/")
 
     level_parts <-
-      path |> str_split('/') |> flatten_chr()
+      path |> str_split_1('/')
 
     level_parts <- level_parts[!level_parts == '']
 
@@ -2810,12 +2810,8 @@ codebook_trelliscope <-
 #' @param include_title Logical. If \code{TRUE}, includes article titles.
 #'
 #' @return A Highcharts visualization of Full Text API timeline data
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' # Example usage
-#' }
+#' @keywords internal
+#' @noRd
 .plot_ft_v2_highchart <-
   function(data,
            search_mode = 'TimelineVolInfo',
@@ -3265,7 +3261,7 @@ plot_hc_trelliscope <-
   period_time <-
     timespan |> parse_number()
   period_timeframe <-
-    timespan |> str_split('\\ ') |> flatten_chr() |> str_to_lower() |> {
+    timespan |> str_split_1('\\ ') |> str_to_lower() |> {
       .[2]
     }()
   tibble(period_time, period_timeframe)
@@ -3294,8 +3290,7 @@ plot_hc_trelliscope <-
     }
 
     dates <-
-      dates |> str_split('\\ - ') |>
-      flatten_chr()
+      dates |> str_split_1('\\ - ')
 
     tibble(datetime_start = dates[[1]],
            datetime_end = dates[[2]])
@@ -3388,7 +3383,7 @@ plot_hc_trelliscope <-
 #' dictionary_ft_codebook(code_book = "imageweb")
 #' dictionary_ft_codebook(code_book = "languages")
 dictionary_ft_codebook <-
-  function(code_book = 'gkg',
+  memoise::memoise(function(code_book = 'gkg',
            visualize_trelliscope = FALSE,
            path = NULL) {
     df_codebooks <-
@@ -3449,7 +3444,7 @@ dictionary_ft_codebook <-
     } else {
       return(data)
     }
-  }
+  })
 
 
 
@@ -3987,7 +3982,7 @@ dictionary_ft_codebook <-
     }
 
     if (!dates |> is_null()) {
-      datetimes <- dates |> str_split("\\ - ") |> flatten_chr()
+      datetimes <- dates |> str_split_1("\\ - ")
 
       df_search <-
         df_search |>
