@@ -3439,7 +3439,7 @@ parse_gkg_mentioned_event_counts <- function(gdelt_data,
         dplyr::mutate(idGKG = counts_data$idGKG[x])
     }) |>
     dplyr::select(idGKG, everything()) |>
-    select(which(colMeans(is.na(.)) < 1))
+    dplyr::select(where(~!all(is.na(.x))))
 
   all_counts <-
     all_counts |>
@@ -6622,7 +6622,7 @@ visualize_vgkg_trelliscope <-
     if (no_path) {
       viz <-
         data |>
-        dplyr::select(which(colMeans(is.na(.)) < .5)) |>
+        dplyr::select(where(~mean(is.na(.x)) < 0.5)) |>
         mutate(
           panel = trelliscopejs::img_panel(urlImage),
           urlArticle = trelliscopejs::cog_href(documentSource),
@@ -6643,7 +6643,7 @@ visualize_vgkg_trelliscope <-
         trelliscope_parameters$path
       viz <-
         data |>
-        dplyr::select(which(colMeans(is.na(.)) < .5)) |>
+        dplyr::select(where(~mean(is.na(.x)) < 0.5)) |>
         mutate(
           panel = trelliscopejs::img_panel(urlImage),
           urlArticle = trelliscopejs::cog_href(documentSource),

@@ -6,10 +6,8 @@
 
 .remove_full_na_column <-
   function(data) {
-    data <-
-      data |>
-      dplyr::select(which(colMeans(is.na(.data)) < 1))
-    return(data)
+    data |>
+      dplyr::select(where(~!all(is.na(.x))))
   }
 
 .extract_date_json <- function(x) {
@@ -609,7 +607,7 @@ dictionary_geo_codebook <-
         if (value |> is_null()) {
           return(tibble())
         }
-        value <- value |> curl_escape()
+        value <- value |> curl::curl_escape()
         has_or <-
           value |> length() > 1
         is_quoted <-
@@ -1246,7 +1244,7 @@ plot_wc_trelliscope <-
       glue("GDELT V2 Full Text API World Cloud Trelliscope")
 
     df_trelliscope_params <-
-      trelliscope_parameters |> flatten_df()
+      trelliscope_parameters |> tibble::as_tibble()
 
     has_path <-
       df_trelliscope_params |> has_name("path")
@@ -1695,7 +1693,7 @@ plot_hc_trelliscope <-
       glue("GDELT Full Text API {search_mode} Trelliscope")
 
     df_trelliscope_params <-
-      trelliscope_parameters |> flatten_df()
+      trelliscope_parameters |> tibble::as_tibble()
 
     has_path <-
       df_trelliscope_params |> has_name("path")
@@ -2214,7 +2212,7 @@ plot_wc_trelliscope <-
       glue("GDELT Full Text API {mode_names} Trelliscope")
 
     df_trelliscope_params <-
-      trelliscope_parameters |> flatten_df()
+      trelliscope_parameters |> tibble::as_tibble()
 
     has_path <-
       df_trelliscope_params |> has_name("path")
@@ -2334,7 +2332,7 @@ plot_panel_trelliscope <-
       as.character()
 
     df_trelliscope_params <-
-      trelliscope_parameters |> flatten_df()
+      trelliscope_parameters |> tibble::as_tibble()
 
     has_path <-
       df_trelliscope_params |> has_name("path")
@@ -3208,7 +3206,7 @@ plot_hc_trelliscope <-
       glue("GDELT Full Text API {search_mode} Trelliscope")
 
     df_trelliscope_params <-
-      trelliscope_parameters |> flatten_df()
+      trelliscope_parameters |> tibble::as_tibble()
 
     has_path <-
       df_trelliscope_params |> has_name("path")
@@ -3260,10 +3258,8 @@ plot_hc_trelliscope <-
 
   period_time <-
     timespan |> parse_number()
-  period_timeframe <-
-    timespan |> str_split_1('\\ ') |> str_to_lower() |> {
-      .[2]
-    }()
+  parts <- timespan |> str_split_1('\\ ') |> str_to_lower()
+  period_timeframe <- parts[2]
   tibble(period_time, period_timeframe)
 }
 
@@ -3496,7 +3492,7 @@ dictionary_ft_codebook <-
 
     if (source_language |> length() > 0) {
       source_language_slug <-
-        glue("&sourcelang:{source_language}")
+        glue("%20sourcelang:{source_language}")
     } else {
       source_language_slug <- ""
     }
@@ -3677,24 +3673,24 @@ dictionary_ft_codebook <-
 .parse_json_api_2 <-
   function(url = "http://api.gdeltproject.org/api/v2/doc/doc?query=domain:netsdaily.com&timespan=1m&maxrecords=250&format=json") {
     tryCatch({
-      set_config(config(ssl_verifypeer = 0L))
+      httr::set_config(httr::config(ssl_verifypeer = 0L))
       res <-
-        GET(url) |>
-        content(as = "text")
+        httr::GET(url) |>
+        httr::content(as = "text")
 
       data <-
         res |>
-        fromJSON(simplifyDataFrame = TRUE)
+        jsonlite::fromJSON(simplifyDataFrame = TRUE)
 
       data_names <- names(data)
 
-      if (data_names == "articles") {
+      if ("articles" %in% data_names) {
         data <- data$articles |> as_tibble()
       }
 
 
       if (data_names |> str_detect("timeline") |> sum(na.rm = TRUE) > 0)  {
-        tbl_params <- data$query_details |> flatten_df()
+        tbl_params <- data$query_details |> tibble::as_tibble()
         data <-
           as_tibble(data$timeline) |>
           unnest(cols = everything())
@@ -3922,14 +3918,15 @@ dictionary_ft_codebook <-
     }
 
 
-    if (query_params |> flatten_df() |> ncol() == 0) {
+    # Remove NA entries from query params
+    query_params_clean <- query_params[!vapply(query_params, function(x) all(is.na(x)), logical(1))]
+
+    if (length(query_params_clean) == 0) {
       stop("Please enter query parameters")
     }
 
     df_query_params <-
-      query_params |>
-      flatten_df() |>
-      dplyr::select(which(colMeans(is.na(.data)) < 1))
+      tibble::as_tibble(query_params_clean)
 
     df_search <-
       df_query_params |>
@@ -4045,7 +4042,9 @@ dictionary_ft_codebook <-
            sleep_time = NULL,
            sort_by = 'DateDesc',
            nest_data = FALSE,
-           return_message = TRUE) {
+           return_message = TRUE,
+           use_parallel = FALSE,
+           workers = NULL) {
     df_terms <-
       list(
         tibble(term = terms),
@@ -4142,7 +4141,7 @@ dictionary_ft_codebook <-
         )
 
       }) |>
-      dplyr::select(which(colMeans(is.na(.data)) < 1)) |>
+      dplyr::select(where(~!all(is.na(.x)))) |>
       distinct()
 
     search_params <-
@@ -4158,6 +4157,10 @@ dictionary_ft_codebook <-
 
     all_data <-
       .parse_v2_urls_safe(urls = all_url_df$urlGDELTV2FTAPI, return_message = return_message, use_parallel = use_parallel, workers = workers)
+
+    if (nrow(all_data) == 0 || !"urlGDELTV2FTAPI" %in% names(all_data)) {
+      return(tibble())
+    }
 
     all_data <-
       all_data |> nest(data = -urlGDELTV2FTAPI)
@@ -4370,7 +4373,9 @@ ft_v2_api <-
           sort_by = sort_by,
           nest_data = nest_data,
           return_message = return_message,
-          sleep_time = sleep_time
+          sleep_time = sleep_time,
+          use_parallel = use_parallel,
+          workers = workers
         )
       }, error = function(e) {
         cli::cli_alert_danger("Failed: {e$message}")
