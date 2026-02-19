@@ -752,6 +752,10 @@ ft_v1_api <-
 
       dat <- parse_v1_ft_urls(urls = tbl_urls$url_gdelt_v1_api, return_message = return_message)
 
+      if (nrow(dat) == 0 || !"url_gdelt_v1_api" %in% names(dat)) {
+        return(tbl_urls |> mutate(across(everything(), ~NA)))
+      }
+
       dat <-
         tbl_urls |>
         left_join(dat, by = "url_gdelt_v1_api") |>
