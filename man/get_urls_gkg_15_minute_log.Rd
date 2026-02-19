@@ -6,6 +6,9 @@
 \usage{
 get_urls_gkg_15_minute_log()
 }
+\value{
+A `tibble` of GKG 15-minute log URLs with date and file metadata
+}
 \description{
 Loads gdelt v2 Global Knowledge Graph master log data, updated every 15 minutes
 }

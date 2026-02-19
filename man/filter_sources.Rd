@@ -16,6 +16,14 @@ filter_sources(
 
 \item{sources}{vector of sources}
 }
+\value{
+A filtered `tibble` containing only rows matching the specified sources
+}
 \description{
 Filters a gdelt data frame to specified sources
+}
+\examples{
+\dontrun{
+filter_sources()
+}
 }

@@ -6,6 +6,9 @@
 \usage{
 get_codes_cameo_ethnic()
 }
+\value{
+A `tibble` of CAMEO ethnic group codes and names
+}
 \description{
 Retrieves GDELT CAMEO ethnic code book
 }

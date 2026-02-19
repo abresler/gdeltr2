@@ -17,6 +17,8 @@ visualize_vgkg_trelliscope(
 )
 }
 \arguments{
+\item{data}{A \code{tibble} of data to process.}
+
 \item{vgkg_parse}{\itemize{
 \item faces,
 \item labels,
@@ -26,6 +28,8 @@ visualize_vgkg_trelliscope(
 \item ocr
 }}
 
+\item{domains}{Character vector of domain names to filter.}
+
 \item{trelliscope_parameters}{\itemize{
 \item title: Trelliscope title
 \item rows: Trelliscope rows
@@ -33,8 +37,20 @@ visualize_vgkg_trelliscope(
 \item path: file path to save trelliscope, if NULL no where
 }}
 
-\item{only_pictures}{}
+\item{random_domains}{Integer. Number of random domains to sample.}
+
+\item{only_pictures}{Logical. If \code{TRUE}, returns only picture-containing entries.}
+
+\item{extra_columns}{Character vector of additional columns to include.}
+}
+\value{
+A trelliscope visualization of VGKG Cloud Vision data
 }
 \description{
 Visualize Cloudvision trelliscope
+}
+\examples{
+\dontrun{
+visualize_vgkg_trelliscope()
+}
 }

@@ -17,6 +17,9 @@ generate_gdelt_api_parameters_values(
 
 \item{use_exact_quote}{If `TRUE` uses exact quote}
 }
+\value{
+A URL-encoded character string of parameter:value pairs
+}
 \description{
 Generate API Query Parameters Values
 }

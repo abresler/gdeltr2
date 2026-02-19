@@ -4,11 +4,23 @@
 \alias{parse_gkg_mentioned_names}
 \title{Returns mentioned names from a GKG data frame.}
 \usage{
-parse_gkg_mentioned_names(gdelt_data, filter_na = T, return_wide = T)
+parse_gkg_mentioned_names(gdelt_data, filter_na = TRUE, return_wide = TRUE)
 }
 \arguments{
-\item{return_wide}{}
+\item{gdelt_data}{A \code{tibble} of GDELT data to parse.}
+
+\item{filter_na}{Logical. If \code{TRUE}, removes rows with \code{NA} values.}
+
+\item{return_wide}{Logical. If \code{TRUE}, returns data in wide format; otherwise long format.}
+}
+\value{
+A `tibble` of parsed mentioned names from GKG data
 }
 \description{
 Returns mentioned names from a GKG data frame.
+}
+\examples{
+\dontrun{
+parse_gkg_mentioned_names()
+}
 }

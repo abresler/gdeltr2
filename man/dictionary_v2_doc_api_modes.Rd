@@ -6,6 +6,14 @@
 \usage{
 dictionary_v2_doc_api_modes()
 }
+\value{
+A character vector of available V2 Document API mode names
+}
 \description{
 V2 Document API Modes
+}
+\examples{
+\dontrun{
+dictionary_v2_doc_api_modes()
+}
 }

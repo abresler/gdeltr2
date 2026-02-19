@@ -29,10 +29,35 @@ plot_wc_trelliscope(
 )
 }
 \arguments{
-\item{trelliscope_parameters}{}
+\item{data}{A \code{tibble} of data to process.}
+
+\item{remove_columns}{Character vector of column names to remove.}
+
+\item{group_columns}{Character vector of column names to group by.}
+
+\item{id_columns}{Named list of column specifications for the trelliscope.}
+
+\item{word_size}{Numeric. Size parameter for the word cloud.}
+
+\item{widget_size}{Numeric vector. Width and height of the widget.}
+
+\item{trelliscope_parameters}{List of trelliscope display parameters.}
+}
+\value{
+A trelliscope wordcloud visualization widget
+
+A trelliscope wordcloud visualization widget
 }
 \description{
 Plot wordcloud trelliscope
 
 Plot wordcloud trelliscope
+}
+\examples{
+\dontrun{
+plot_wc_trelliscope()
+}
+\dontrun{
+plot_wc_trelliscope()
+}
 }

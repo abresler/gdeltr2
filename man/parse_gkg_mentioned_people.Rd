@@ -7,15 +7,27 @@
 parse_gkg_mentioned_people(
   gdelt_data,
   people_column = "personsCharLoc",
-  filter_na = T,
-  return_wide = T
+  filter_na = TRUE,
+  return_wide = TRUE
 )
 }
 \arguments{
+\item{gdelt_data}{A \code{tibble} of GDELT data to parse.}
+
 \item{people_column}{options \code{c('person', 'persons', 'persons.count', 'personsCharLoc', 'charLoc'))}}
 
-\item{return_wide}{}
+\item{filter_na}{Logical. If \code{TRUE}, removes rows with \code{NA} values.}
+
+\item{return_wide}{Logical. If \code{TRUE}, returns data in wide format; otherwise long format.}
+}
+\value{
+A `tibble` of parsed mentioned people from GKG data
 }
 \description{
 Returns long or wide mentioned people from a GKG data frame
+}
+\examples{
+\dontrun{
+parse_gkg_mentioned_people()
+}
 }

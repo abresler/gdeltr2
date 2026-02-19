@@ -10,11 +10,11 @@ Description: A tool to efficently and interactively interface with GDELT data an
 Depends:
     R (>= 3.4.0)
 License: MIT + file LICENSE
+Encoding: UTF-8
 LazyData: TRUE
 Imports:
     dplyr,
     stringr,
-    magrittr,
     purrr,
     tidyr,
     rvest,
@@ -34,16 +34,11 @@ Imports:
     wordcloud2,
     ggthemes,
     ggplot2,
-    purrrlyr,
     rlang,
     tibble,
-    RColorBrewer,
-    devtools,
     hrbrthemes,
     memoise,
     data.table,
-    crayon,
     cli,
-    tidyr,
-    tibble
-RoxygenNote: 7.3.2
+    janitor
+RoxygenNote: 7.3.3

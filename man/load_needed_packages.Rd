@@ -7,11 +7,20 @@
 load_needed_packages(required_packages = c("dplyr"))
 }
 \arguments{
-\item{required_packages}{vector of pckages to lad}
+\item{required_packages}{Character vector of package names to load}
 }
 \value{
-invisible
+Invisible NULL
 }
 \description{
-Loads needed packages
+`r lifecycle::badge("deprecated")`
+
+This function is deprecated. Package dependencies are now managed
+automatically through the NAMESPACE file. Use `library()` directly
+if you need to load packages interactively.
+}
+\examples{
+\dontrun{
+load_needed_packages(c("dplyr", "stringr"))
+}
 }

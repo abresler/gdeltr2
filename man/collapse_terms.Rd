@@ -11,6 +11,9 @@ collapse_terms(terms = NULL, encode = FALSE)
 
 \item{encode}{If `TRUE` encodes for URL}
 }
+\value{
+A character string of terms collapsed with " OR "
+}
 \description{
 Collapse Set of Terms Across Or
 }

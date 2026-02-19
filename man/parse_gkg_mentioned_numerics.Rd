@@ -6,11 +6,28 @@
 \usage{
 parse_gkg_mentioned_numerics(
   gdelt_data,
-  filter_na = T,
-  include_char_loc = T,
-  return_wide = T
+  filter_na = TRUE,
+  include_char_loc = TRUE,
+  return_wide = TRUE
 )
+}
+\arguments{
+\item{gdelt_data}{A \code{tibble} of GDELT data to parse.}
+
+\item{filter_na}{Logical. If \code{TRUE}, removes rows with \code{NA} values.}
+
+\item{return_wide}{Logical. If \code{TRUE}, returns data in wide format; otherwise long format.}
+
+\item{include_char_locg}{Logical. If \code{TRUE}, includes character location data.}
+}
+\value{
+A `tibble` of parsed mentioned numerics from GKG data
 }
 \description{
 Returns long or wide mentioned numerics from a GKG data frame
+}
+\examples{
+\dontrun{
+parse_gkg_mentioned_numerics()
+}
 }

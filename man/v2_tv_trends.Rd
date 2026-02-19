@@ -17,6 +17,9 @@ v2_tv_trends(
 
 \item{return_message}{If `TRUE` returns messages}
 }
+\value{
+A `tibble` of trending TV topics by station and market
+}
 \description{
 Returns Trends from TV API
 }

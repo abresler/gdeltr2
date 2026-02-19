@@ -8,10 +8,12 @@ date_columns_to_numeric(
   data,
   column_keyword = "date",
   exclude_col_type = c("character"),
-  return_message = T
+  return_message = TRUE
 )
 }
 \arguments{
+\item{data}{A \code{tibble} of data to process.}
+
 \item{column_keyword}{Keyword of the data frame's columns to look for that signifies dates
 \code{c('date')}}
 
@@ -20,6 +22,14 @@ date_columns_to_numeric(
 
 \item{return_message}{return a message}
 }
+\value{
+A `tibble` with date columns converted to numeric format
+}
 \description{
 Convert date columns to numeric
+}
+\examples{
+\dontrun{
+date_columns_to_numeric()
+}
 }

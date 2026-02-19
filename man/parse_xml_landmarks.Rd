@@ -7,8 +7,18 @@
 parse_xml_landmarks(data, id_vgkg = "20160610194500-2247")
 }
 \arguments{
-\item{id_vgkg}{}
+\item{data}{A \code{tibble} of data to process.}
+
+\item{id_vgkg}{Integer. Row index into the VGKG data.}
+}
+\value{
+A `tibble` of parsed XML landmark data for the specified VGKG record
 }
 \description{
 Parses XML Landmarks
+}
+\examples{
+\dontrun{
+parse_xml_landmarks()
+}
 }

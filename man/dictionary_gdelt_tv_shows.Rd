@@ -11,6 +11,14 @@ dictionary_gdelt_tv_shows(date_start = Sys.Date() - 30, date_end = Sys.Date())
 
 \item{date_end}{End Date.  Default is Default is `Sys.Date()`}
 }
+\value{
+A `tibble` of distinct TV show names and station IDs
+}
 \description{
 Distinct TV Shows for GDELT API
+}
+\examples{
+\dontrun{
+dictionary_gdelt_tv_shows()
+}
 }

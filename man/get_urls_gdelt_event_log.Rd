@@ -4,10 +4,13 @@
 \alias{get_urls_gdelt_event_log}
 \title{Gets GDELT Event data, by year from 1979-2005, by year month 2006 - 2013, then by dat}
 \usage{
-get_urls_gdelt_event_log(return_message = T)
+get_urls_gdelt_event_log(return_message = TRUE)
 }
 \arguments{
-\item{return_message}{}
+\item{return_message}{Logical. If \code{TRUE}, prints progress messages to console.}
+}
+\value{
+A `tibble` of GDELT event log URLs with date and file metadata
 }
 \description{
 Gets GDELT Event data, by year from 1979-2005, by year month 2006 - 2013, then by dat

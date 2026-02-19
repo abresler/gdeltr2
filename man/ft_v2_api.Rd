@@ -6,7 +6,7 @@
 \usage{
 ft_v2_api(
   terms = NA,
-  quote_terms = F,
+  quote_terms = FALSE,
   domains = NA,
   images_face_tone = NA,
   images_num_faces = NA,
@@ -32,11 +32,15 @@ ft_v2_api(
   trelliscope_parameters = list(path = NULL, rows = 1, columns = 2, id_columns = NULL,
     group_columns = NULL),
   nest_data = FALSE,
-  return_message = TRUE
+  return_message = TRUE,
+  use_parallel = FALSE,
+  workers = NULL
 )
 }
 \arguments{
 \item{terms}{a vector of terms}
+
+\item{quote_terms}{Logical. If \code{TRUE}, wraps search terms in quotes.}
 
 \item{domains}{a vector of webdomains}
 
@@ -113,7 +117,7 @@ default \code{NULL}}
 
 \item{visualize_results}{if \code{TRUE} returns a visualization}
 
-\item{sleep_time}{}
+\item{sleep_time}{Numeric. Seconds to sleep between API calls.}
 
 \item{trelliscope_parameters}{list of parameters to pass along to trelliscope \itemize{
 \item path: if not \code{NULL} the path to save the trelliscope

@@ -9,7 +9,9 @@ parse_v3_entity_api_urls(
     c("http://data.gdeltproject.org/gdeltv3/geg_gcnlapi/20190214011500.geg-gcnlapi.json.gz",
     "http://data.gdeltproject.org/gdeltv3/geg_gcnlapi/20190130204500.geg-gcnlapi.json.gz",
     "http://data.gdeltproject.org/gdeltv3/geg_gcnlapi/20190912134500.geg-gcnlapi.json.gz"),
-  return_message = TRUE
+  return_message = TRUE,
+  use_parallel = FALSE,
+  workers = NULL
 )
 }
 \arguments{
@@ -22,4 +24,9 @@ parse_v3_entity_api_urls(
 }
 \description{
 Parse vector of V3 entity API urls
+}
+\examples{
+\dontrun{
+parse_v3_entity_api_urls()
+}
 }

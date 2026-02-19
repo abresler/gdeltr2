@@ -6,6 +6,9 @@
 \usage{
 get_codes_gkg_themes()
 }
+\value{
+A `tibble` of GKG theme codes and descriptions
+}
 \description{
 Retrieves GKG theme code book
 }

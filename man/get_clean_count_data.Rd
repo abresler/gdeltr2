@@ -8,12 +8,24 @@ get_clean_count_data(
   all_counts,
   extra_key = NA,
   count_col = "idArticle.tone",
-  return_wide = F
+  return_wide = FALSE
 )
 }
 \arguments{
-\item{return_wide}{}
+\item{all_counts}{A \code{tibble} of count data to clean.}
+
+\item{count_col}{Character string. Name of the column containing counts.}
+
+\item{return_wide}{Logical. If \code{TRUE}, returns data in wide format; otherwise long format.}
+}
+\value{
+A `tibble` of cleaned count data in long or wide format
 }
 \description{
 Gets clean count data
+}
+\examples{
+\dontrun{
+get_clean_count_data()
+}
 }

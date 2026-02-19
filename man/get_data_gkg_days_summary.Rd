@@ -6,21 +6,34 @@
 \usage{
 get_data_gkg_days_summary(
   dates = c("2016-06-01"),
-  is_count_file = c(T, F),
+  is_count_file = c(TRUE, FALSE),
   file_directory = NULL,
   folder_name = "gdelt_data",
-  remove_files = T,
-  empty_trash = T,
-  nest_data = F,
-  return_message = T
+  remove_files = TRUE,
+  empty_trash = TRUE,
+  nest_data = FALSE,
+  return_message = TRUE,
+  use_parallel = FALSE,
+  workers = NULL
 )
 }
 \arguments{
-\item{return_message}{}
+\item{dates}{Character vector of dates in YYYY-MM-DD format.}
+
+\item{file_directory}{Character string. Path to directory for file storage.}
+
+\item{remove_files}{Logical. If \code{TRUE}, removes temporary files after processing.}
+
+\item{empty_trash}{Logical. If \code{TRUE}, empties trash after file removal.}
+
+\item{return_message}{Logical. If \code{TRUE}, prints progress messages to console.}
+}
+\value{
+A `tibble` of GKG daily summary data for the specified dates
 }
 \description{
 Gets days summary GDELT GKG data by table
 }
 \examples{
-get_data_gkg_days_summary(dates = c("2016-07-18"), is_count_file = c(T, F))
+get_data_gkg_days_summary(dates = c("2016-07-18"), is_count_file = c(TRUE, FALSE))
 }

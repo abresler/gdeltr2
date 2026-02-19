@@ -8,10 +8,10 @@ get_data_gkg_day_summary(
   date_data = "2016-06-01",
   file_directory = NULL,
   folder_name = "gdelt_data",
-  is_count_file = F,
-  remove_files = T,
-  empty_trash = T,
-  return_message = T
+  is_count_file = FALSE,
+  remove_files = TRUE,
+  empty_trash = TRUE,
+  return_message = TRUE
 )
 }
 \arguments{
@@ -22,13 +22,23 @@ get_data_gkg_day_summary(
 \item{is_count_file}{options
 \code{c(TRUE, FALSE)}}
 
-\item{remove_files}{\code{c(TRUE, FALSE)}}
+\item{remove_files}{Logical. If \code{TRUE}, removes temporary files after processing.
+\code{c(TRUE, FALSE)}}
 
 \item{empty_trash}{Empty trash
 \code{c(TRUE, FALSE)}}
 
-\item{return_message}{\code{c(TRUE, FALSE)}}
+\item{return_message}{Logical. If \code{TRUE}, prints progress messages to console.
+\code{c(TRUE, FALSE)}}
+}
+\value{
+A `tibble` of GKG daily summary data for the specified date
 }
 \description{
 Retrieves gkg summary file for a given day
+}
+\examples{
+\dontrun{
+get_data_gkg_day_summary()
+}
 }

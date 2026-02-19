@@ -5,10 +5,13 @@
 
 #' V2 Document API Modes
 #'
-#' @return
+#' @return A character vector of available V2 Document API mode names
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' dictionary_v2_doc_api_modes()
+#' }
 dictionary_v2_doc_api_modes <-
   function() {
     modes <- c(
@@ -155,11 +158,11 @@ dictionary_v2_doc_api_modes <-
     }
 
     if (length(repeat_term) > 0) {
-      repeat_param <- glue::glue("near{repeat_count}")
+      repeat_param <- glue::glue("repeat{repeat_count}")
       repeat_term <- glue::glue("\"{repeat_term}\"")
 
       repeat_slug <-
-        generate_gdelt_api_parameters_values(parameter = repeat_param, values = near_term)
+        generate_gdelt_api_parameters_values(parameter = repeat_param, values = repeat_term)
     } else {
       repeat_slug  <- NULL
     }
@@ -194,7 +197,7 @@ dictionary_v2_doc_api_modes <-
     }
     if (length(tone_absolute) > 0) {
       tone_absolute_slug <-
-        generate_gdelt_api_parameters_values(parameter = "tone", values = tone)
+        generate_gdelt_api_parameters_values(parameter = "toneabs", values = tone_absolute)
     } else {
       tone_absolute_slug <- NULL
     }
@@ -419,12 +422,12 @@ dictionary_v2_doc_api_modes <-
     if (data |> hasName("id_series") &
         data |> hasName("count_mentions")) {
       data <-
-        data |> spread(id_series, count_mentions) |> janitor::clean_names()
+        data |> pivot_wider(names_from = id_series, values_from = count_mentions) |> janitor::clean_names()
     }
 
     if (data |> hasName("id_series") & data |> hasName("value")) {
       data <-
-        data |> spread(id_series, value) |> janitor::clean_names()
+        data |> pivot_wider(names_from = id_series, values_from = value) |> janitor::clean_names()
     }
 
 
@@ -448,7 +451,7 @@ dictionary_v2_doc_api_modes <-
     if (data |> hasName("datetime_article")) {
       data <- data |>
         mutate(
-          datetime_article = datetime_article |> lubridate::ymd_hms() %>% lubridate::with_tz(Sys.timezone())
+          datetime_article = datetime_article |> lubridate::ymd_hms() |> lubridate::with_tz(Sys.timezone())
         )
     }
 
@@ -457,8 +460,7 @@ dictionary_v2_doc_api_modes <-
     if (nest_data) {
       data <-
         data |>
-        nest(-url_gdelt_v2_doc_api) |>
-        rename(data_v2_doc_api = data)
+        nest(data_v2_doc_api = -url_gdelt_v2_doc_api)
     }
 
 
@@ -472,48 +474,36 @@ dictionary_v2_doc_api_modes <-
 #' @param return_message if `TRUE` returns message
 
 #'
-#' @return
+#' @return A `tibble` of parsed V2 Document API response data
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' parse_v2_doc_api_urls()
+#' }
 parse_v2_doc_api_urls <-
   function(urls = NULL,
            nest_data = FALSE,
-           return_message = T) {
+           return_message = TRUE,
+           use_parallel = FALSE,
+           workers = NULL) {
     if (length(urls) == 0) {
-      stop("Enter v2 Documeny API urls")
+      stop("Enter v2 Document API urls")
     }
-
-    df <-
-      tibble()
 
     .parse_v2_doc_api_url_safe <-
       possibly(.parse_v2_doc_api_url, tibble())
 
-    success <- function(res) {
-      url <-
-        res$url
-
-
-      data <-
+    .safe_map_dfr(
+      urls,
+      function(url) {
         .parse_v2_doc_api_url_safe(url = url,
                                    return_message = return_message,
                                    nest_data = nest_data)
-
-      df <<-
-        df %>%
-        bind_rows(data)
-    }
-    failure <- function(msg) {
-      tibble()
-    }
-    urls %>%
-      walk(function(x) {
-        curl_fetch_multi(url = x, success, failure)
-      })
-    multi_run()
-
-    df
+      },
+      use_parallel = use_parallel,
+      workers = workers
+    )
   }
 
 
@@ -602,7 +592,7 @@ parse_v2_doc_api_urls <-
 #' @param widen_variables If `TRUE` variables to unite for API urls.  Default `c("mode", "timespan", "format")`
 #' @param nest_data If `TRUE` nest parsed data
 #'
-#' @return
+#' @return A `tibble` of V2 Document API results for the specified terms
 #' @export
 #'
 #' @examples
@@ -645,777 +635,784 @@ v2_doc_api <-
            widen_url_parameters = FALSE,
            widen_variables = c("mode", "timespan", "format"),
            nest_data = FALSE,
-           return_message = TRUE) {
-    if (length(modes) == 0) {
-      stop("Enter modes")
-    }
-
-    all_data <- tibble::tibble()
-
-    if (length(terms) > 0) {
-      if (use_exact_term) {
-        terms <- glue::glue("\"{terms}\"")
+           return_message = TRUE,
+           use_parallel = FALSE,
+           workers = NULL) {
+    tryCatch({
+      if (length(modes) == 0) {
+        stop("Enter modes")
       }
 
-      dat_input <-
-        expand_grid(
-          term = terms,
-          term_domain = term_domains,
-          term_exact_domain = term_exact_domains,
-          timespan = timespans,
-          mode = modes,
-          format = formats,
-          source_country = source_countries,
-          source_language = source_languages
-        )
+      all_data <- tibble::tibble()
 
-      dat_urls <-
-        1:nrow(dat_input) |>
-        map_dfr(function(x) {
-          dat_row <-
-            dat_input[x, ]
+      if (length(terms) > 0) {
+        if (use_exact_term) {
+          terms <- glue::glue("\"{terms}\"")
+        }
 
-          row_format <- dat_row[["format"]]
-          row_mode <- dat_row[["mode"]]
-          row_source_country <- dat_row[["source_country"]]
-          row_source_language <- dat_row[["source_language"]]
-          if (dat_row |> hasName("term")) {
-            row_term <- dat_row[["term"]]
-          } else {
-            row_term <- NULL
-          }
-
-          if (dat_row |> hasName("timespan")) {
-            row_timespan <- dat_row[["timespan"]]
-          } else {
-            row_timespan <- NULL
-          }
-
-          if (dat_row |> hasName("term_domain")) {
-            row_term_domain <- dat_row[["term_domain"]]
-          } else {
-            row_term_domain <- NULL
-          }
-
-          if (dat_row |> hasName("term_exact_domain")) {
-            row_term_exact_domain <- dat_row[["term_exact_domain"]]
-          } else {
-            row_term_exact_domain <- NULL
-          }
-
-          out <- .generate_v2_doc_url(
-            term = row_term,
-            domain = row_term_domain,
-            domain_exact = row_term_exact_domain,
-            image_face_tone = images_face_tone,
-            image_number_faces = images_number_faces,
-            image_ocr_meta = NULL,
-            image_tag = NULL,
-            image_web_count = NULL,
-            image_web_tag = NULL,
-            theme_gkg = NULL,
-            near_term = NULL,
-            near_length = near_length,
-            repeat_term = repeat_terms,
-            repeat_count = repeat_count,
-            source_language = row_source_language,
-            source_country = row_source_country,
-            tone = tone,
-            tone_absolute = tone_absolute,
-            mode = row_mode,
-            format = row_format,
-            timespan = row_timespan,
-            date_resolution = date_resolution,
-            maximum_records = maximum_records,
-            sort_variable = sort_variable,
-            timeline_smooth = timeline_smooth,
-            start_date = start_date,
-            end_date = end_date,
-            timezone_adjust = timezone_adjust,
-            time_zoom = time_zoom,
-            return_message = return_message
+        dat_input <-
+          expand_grid(
+            term = terms,
+            term_domain = term_domains,
+            term_exact_domain = term_exact_domains,
+            timespan = timespans,
+            mode = modes,
+            format = formats,
+            source_country = source_countries,
+            source_language = source_languages
           )
-        })
+
+        dat_urls <-
+          1:nrow(dat_input) |>
+          map_dfr(function(x) {
+            dat_row <-
+              dat_input[x, ]
+
+            row_format <- dat_row[["format"]]
+            row_mode <- dat_row[["mode"]]
+            row_source_country <- dat_row[["source_country"]]
+            row_source_language <- dat_row[["source_language"]]
+            if (dat_row |> hasName("term")) {
+              row_term <- dat_row[["term"]]
+            } else {
+              row_term <- NULL
+            }
+
+            if (dat_row |> hasName("timespan")) {
+              row_timespan <- dat_row[["timespan"]]
+            } else {
+              row_timespan <- NULL
+            }
+
+            if (dat_row |> hasName("term_domain")) {
+              row_term_domain <- dat_row[["term_domain"]]
+            } else {
+              row_term_domain <- NULL
+            }
+
+            if (dat_row |> hasName("term_exact_domain")) {
+              row_term_exact_domain <- dat_row[["term_exact_domain"]]
+            } else {
+              row_term_exact_domain <- NULL
+            }
+
+            out <- .generate_v2_doc_url(
+              term = row_term,
+              domain = row_term_domain,
+              domain_exact = row_term_exact_domain,
+              image_face_tone = images_face_tone,
+              image_number_faces = images_number_faces,
+              image_ocr_meta = images_ocr_meta,
+              image_tag = image_tags,
+              image_web_count = image_web_counts,
+              image_web_tag = image_web_tags,
+              theme_gkg = themes_gkg,
+              near_term = near_terms,
+              near_length = near_length,
+              repeat_term = repeat_terms,
+              repeat_count = repeat_count,
+              source_language = row_source_language,
+              source_country = row_source_country,
+              tone = tone,
+              tone_absolute = tone_absolute,
+              mode = row_mode,
+              format = row_format,
+              timespan = row_timespan,
+              date_resolution = date_resolution,
+              maximum_records = maximum_records,
+              sort_variable = sort_variable,
+              timeline_smooth = timeline_smooth,
+              start_date = start_date,
+              end_date = end_date,
+              timezone_adjust = timezone_adjust,
+              time_zoom = time_zoom,
+              return_message = return_message
+            )
+          })
 
 
 
-      all_data <- all_data |> bind_rows(dat_urls)
+        all_data <- all_data |> bind_rows(dat_urls)
 
-      if (nrow(dat_urls) > 0) {
-        rm(dat_urls)
+        if (nrow(dat_urls) > 0) {
+          rm(dat_urls)
+        }
+
       }
 
-    }
+      if (length(domains) > 0) {
+        dat_input <-
+          expand_grid(
+            domain = domains,
+            timespan = timespans,
+            mode = modes,
+            format = formats,
+            source_country = source_countries,
+            source_language = source_languages
 
-    if (length(domains) > 0) {
-      dat_input <-
-        expand_grid(
-          domain = domains,
-          timespan = timespans,
-          mode = modes,
-          format = formats,
-          source_country = source_countries,
-          source_language = source_languages
+          )
 
-        )
+        dat_urls <-
+          1:nrow(dat_input) |>
+          map_dfr(function(x) {
+            dat_row <-
+              dat_input[x, ]
 
-      dat_urls <-
-        1:nrow(dat_input) |>
-        map_dfr(function(x) {
-          dat_row <-
-            dat_input[x, ]
+            row_format <- dat_row[["format"]]
+            row_mode <- dat_row[["mode"]]
+            row_source_country <- dat_row[["source_country"]]
+            row_source_language <- dat_row[["source_language"]]
+            if (dat_row |> hasName("domain")) {
+              row_domain <- dat_row[["domain"]]
+            } else {
+              row_domain <- NULL
+            }
 
-          row_format <- dat_row[["format"]]
-          row_mode <- dat_row[["mode"]]
-          row_source_country <- dat_row[["source_country"]]
-          row_source_language <- dat_row[["source_language"]]
-          if (dat_row |> hasName("domain")) {
-            row_domain <- dat_row[["domain"]]
-          } else {
-            row_domain <- NULL
-          }
+            if (dat_row |> hasName("timespan")) {
+              row_timespan <- dat_row[["timespan"]]
+            } else {
+              row_timespan <- NULL
+            }
 
-          if (dat_row |> hasName("timespan")) {
-            row_timespan <- dat_row[["timespan"]]
-          } else {
-            row_timespan <- NULL
-          }
+            if (dat_row |> hasName("term_domain")) {
+              row_term_domain <- dat_row[["term_domain"]]
+            } else {
+              row_term_domain <- NULL
+            }
 
-          if (dat_row |> hasName("term_domain")) {
-            row_term_domain <- dat_row[["term_domain"]]
-          } else {
-            row_term_domain <- NULL
-          }
+            if (dat_row |> hasName("term_exact_domain")) {
+              row_term_exact_domain <- dat_row[["term_exact_domain"]]
+            } else {
+              row_term_exact_domain <- NULL
+            }
 
-          if (dat_row |> hasName("term_exact_domain")) {
-            row_term_exact_domain <- dat_row[["term_exact_domain"]]
-          } else {
-            row_term_exact_domain <- NULL
-          }
+            out <- .generate_v2_doc_url(
+              term = NULL,
+              domain = row_domain,
+              domain_exact = NULL,
+              image_face_tone = images_face_tone,
+              image_number_faces = images_number_faces,
+              image_ocr_meta = NULL,
+              image_tag = NULL,
+              image_web_count = NULL,
+              image_web_tag = NULL,
+              theme_gkg = NULL,
+              near_term = near_terms,
+              near_length = near_length,
+              repeat_term = repeat_terms,
+              repeat_count = repeat_count,
+              source_language = row_source_language,
+              source_country = row_source_country,
+              tone = tone,
+              tone_absolute = tone_absolute,
+              mode = row_mode,
+              format = row_format,
+              timespan = row_timespan,
+              date_resolution = date_resolution,
+              maximum_records = maximum_records,
+              sort_variable = sort_variable,
+              timeline_smooth = timeline_smooth,
+              start_date = start_date,
+              end_date = end_date,
+              timezone_adjust = timezone_adjust,
+              time_zoom = time_zoom,
+              return_message = return_message
+            )
+          })
 
-          out <- .generate_v2_doc_url(
-            term = NULL,
-            domain = row_domain,
-            domain_exact = NULL,
-            image_face_tone = images_face_tone,
-            image_number_faces = images_number_faces,
-            image_ocr_meta = NULL,
-            image_tag = NULL,
-            image_web_count = NULL,
-            image_web_tag = NULL,
-            theme_gkg = NULL,
+        all_data <- all_data |> bind_rows(dat_urls)
+
+        if (nrow(dat_urls) > 0) {
+          rm(dat_urls)
+        }
+      }
+
+      if (length(domains_exact) > 0) {
+        dat_input <-
+          expand_grid(
+            domain_exact = domains_exact,
+            timespan = timespans,
+            mode = modes,
+            format = formats,
+            source_country = source_countries,
+            source_language = source_languages
+          )
+
+        dat_urls <-
+          1:nrow(dat_input) |>
+          map_dfr(function(x) {
+            dat_row <-
+              dat_input[x, ]
+
+            row_format <- dat_row[["format"]]
+            row_mode <- dat_row[["mode"]]
+            row_source_country <- dat_row[["source_country"]]
+            row_source_language <- dat_row[["source_language"]]
+
+            if (dat_row |> hasName("domain_exact")) {
+              row_domain_exact <- dat_row[["domain_exact"]]
+            } else {
+              row_domain_exact <- NULL
+            }
+
+            if (dat_row |> hasName("timespan")) {
+              row_timespan <- dat_row[["timespan"]]
+            } else {
+              row_timespan <- NULL
+            }
+
+            if (dat_row |> hasName("term_domain")) {
+              row_term_domain <- dat_row[["term_domain"]]
+            } else {
+              row_term_domain <- NULL
+            }
+
+            if (dat_row |> hasName("term_exact_domain")) {
+              row_term_exact_domain <- dat_row[["term_exact_domain"]]
+            } else {
+              row_term_exact_domain <- NULL
+            }
+
+            out <- .generate_v2_doc_url(
+              term = NULL,
+              domain = NULL,
+              domain_exact = row_domain_exact,
+              image_face_tone = images_face_tone,
+              image_number_faces = images_number_faces,
+              image_ocr_meta = NULL,
+              image_tag = NULL,
+              image_web_count = NULL,
+              image_web_tag = NULL,
+              theme_gkg = NULL,
+              near_term = NULL,
+              near_length = near_length,
+              repeat_term = repeat_terms,
+              repeat_count = repeat_count,
+              source_language = row_source_language,
+              source_country = row_source_country,
+              tone = tone,
+              tone_absolute = tone_absolute,
+              mode = row_mode,
+              format = row_format,
+              timespan = row_timespan,
+              date_resolution = date_resolution,
+              maximum_records = maximum_records,
+              sort_variable = sort_variable,
+              timeline_smooth = timeline_smooth,
+              start_date = start_date,
+              end_date = end_date,
+              timezone_adjust = timezone_adjust,
+              time_zoom = time_zoom,
+              return_message = return_message
+            )
+          })
+
+        all_data <- all_data |> bind_rows(dat_urls)
+
+        if (nrow(dat_urls) > 0) {
+          rm(dat_urls)
+        }
+      }
+
+      if (length(images_ocr_meta) > 0) {
+        dat_input <-
+          expand_grid(
+            image_ocr_meta = images_ocr_meta,
+            timespan = timespans,
+            mode = modes,
+            format = formats,
+            source_country = source_countries,
+            source_language = source_languages
+          )
+
+        dat_urls <-
+          1:nrow(dat_input) |>
+          map_dfr(function(x) {
+            dat_row <-
+              dat_input[x, ]
+
+            row_format <- dat_row[["format"]]
+            row_mode <- dat_row[["mode"]]
+            row_source_country <- dat_row[["source_country"]]
+            row_source_language <- dat_row[["source_language"]]
+
+            if (dat_row |> hasName("image_ocr_meta")) {
+              row_image_ocr_meta <- dat_row[["image_ocr_meta"]]
+            } else {
+              row_image_ocr_meta <- NULL
+            }
+
+            if (dat_row |> hasName("timespan")) {
+              row_timespan <- dat_row[["timespan"]]
+            } else {
+              row_timespan <- NULL
+            }
+
+            if (dat_row |> hasName("term_domain")) {
+              row_term_domain <- dat_row[["term_domain"]]
+            } else {
+              row_term_domain <- NULL
+            }
+
+            if (dat_row |> hasName("term_exact_domain")) {
+              row_term_exact_domain <- dat_row[["term_exact_domain"]]
+            } else {
+              row_term_exact_domain <- NULL
+            }
+
+            out <- .generate_v2_doc_url(
+              term = NULL,
+              domain = NULL,
+              domain_exact = NULL,
+              image_face_tone = images_face_tone,
+              image_number_faces = images_number_faces,
+              image_ocr_meta = row_image_ocr_meta,
+              image_tag = NULL,
+              image_web_count = NULL,
+              image_web_tag = NULL,
+              theme_gkg = NULL,
+              near_term = NULL,
+              near_length = near_length,
+              repeat_term = repeat_terms,
+              repeat_count = repeat_count,
+              source_language = row_source_language,
+              source_country = row_source_country,
+              tone = tone,
+              tone_absolute = tone_absolute,
+              mode = row_mode,
+              format = row_format,
+              timespan = row_timespan,
+              date_resolution = date_resolution,
+              maximum_records = maximum_records,
+              sort_variable = sort_variable,
+              timeline_smooth = timeline_smooth,
+              start_date = start_date,
+              end_date = end_date,
+              timezone_adjust = timezone_adjust,
+              time_zoom = time_zoom,
+              return_message = return_message
+            )
+          })
+
+        all_data <- all_data |> bind_rows(dat_urls)
+
+        if (nrow(dat_urls) > 0) {
+          rm(dat_urls)
+        }
+      }
+
+      if (length(image_web_tags) > 0) {
+        dat_input <-
+          expand_grid(
+            image_web_tag = image_web_tags,
+            timespan = timespans,
+            mode = modes,
+            format = formats,
+            source_country = source_countries,
+            source_language = source_languages
+          )
+
+        dat_urls <-
+          1:nrow(dat_input) |>
+          map_dfr(function(x) {
+            dat_row <-
+              dat_input[x, ]
+
+            row_format <- dat_row[["format"]]
+            row_mode <- dat_row[["mode"]]
+            row_source_country <- dat_row[["source_country"]]
+            row_source_language <- dat_row[["source_language"]]
+
+            if (dat_row |> hasName("image_web_tag")) {
+              row_image_web_tag <- dat_row[["image_web_tag"]]
+              row_image_web_tag <-
+                glue::glue("\"{row_image_web_tag}\"")
+
+            } else {
+              row_image_web_tag <- NULL
+            }
+
+            if (dat_row |> hasName("timespan")) {
+              row_timespan <- dat_row[["timespan"]]
+            } else {
+              row_timespan <- NULL
+            }
+
+            if (dat_row |> hasName("term_domain")) {
+              row_term_domain <- dat_row[["term_domain"]]
+            } else {
+              row_term_domain <- NULL
+            }
+
+            if (dat_row |> hasName("term_exact_domain")) {
+              row_term_exact_domain <- dat_row[["term_exact_domain"]]
+            } else {
+              row_term_exact_domain <- NULL
+            }
+
+            out <-
+              .generate_v2_doc_url(
+                term = NULL,
+                domain = NULL,
+                domain_exact = NULL,
+                image_face_tone = images_face_tone,
+                image_number_faces = images_number_faces,
+                image_ocr_meta = NULL,
+                image_tag = NULL,
+                image_web_count = NULL,
+                image_web_tag = row_image_web_tag,
+                theme_gkg = NULL,
+                near_term = NULL,
+                near_length = near_length,
+                repeat_term = repeat_terms,
+                repeat_count = repeat_count,
+                source_language = row_source_language,
+                source_country = row_source_country,
+                tone = tone,
+                tone_absolute = tone_absolute,
+                mode = row_mode,
+                format = row_format,
+                timespan = row_timespan,
+                date_resolution = date_resolution,
+                maximum_records = maximum_records,
+                sort_variable = sort_variable,
+                timeline_smooth = timeline_smooth,
+                start_date = start_date,
+                end_date = end_date,
+                timezone_adjust = timezone_adjust,
+                time_zoom = time_zoom,
+                return_message = return_message
+              )
+          })
+
+        all_data <- all_data |> bind_rows(dat_urls)
+
+        if (nrow(dat_urls) > 0) {
+          rm(dat_urls)
+        }
+      }
+
+      if (length(themes_gkg) > 0) {
+        dat_input <-
+          expand_grid(
+            theme_gkg = themes_gkg,
+            timespan = timespans,
+            mode = modes,
+            format = formats,
+            source_country = source_countries,
+            source_language = source_languages
+          )
+
+        dat_urls <-
+          1:nrow(dat_input) |>
+          map_dfr(function(x) {
+            dat_row <-
+              dat_input[x, ]
+
+            row_format <- dat_row[["format"]]
+            row_mode <- dat_row[["mode"]]
+            row_source_country <- dat_row[["source_country"]]
+            row_source_language <- dat_row[["source_language"]]
+
+            if (dat_row |> hasName("theme_gkg")) {
+              row_theme_gkg <- dat_row[["theme_gkg"]]
+              row_theme_gkg <-
+                glue::glue("\"{row_theme_gkg}\"")
+
+            } else {
+              row_theme_gkg <- NULL
+            }
+
+            if (dat_row |> hasName("timespan")) {
+              row_timespan <- dat_row[["timespan"]]
+            } else {
+              row_timespan <- NULL
+            }
+
+            if (dat_row |> hasName("term_domain")) {
+              row_term_domain <- dat_row[["term_domain"]]
+            } else {
+              row_term_domain <- NULL
+            }
+
+            if (dat_row |> hasName("term_exact_domain")) {
+              row_term_exact_domain <- dat_row[["term_exact_domain"]]
+            } else {
+              row_term_exact_domain <- NULL
+            }
+
+            out <-
+              .generate_v2_doc_url(
+                term = NULL,
+                domain = NULL,
+                domain_exact = NULL,
+                image_face_tone = images_face_tone,
+                image_number_faces = images_number_faces,
+                image_ocr_meta = NULL,
+                image_tag = NULL,
+                image_web_count = NULL,
+                image_web_tag = NULL,
+                theme_gkg = row_theme_gkg,
+                near_term = NULL,
+                near_length = near_length,
+                repeat_term = repeat_terms,
+                repeat_count = repeat_count,
+                source_language = row_source_language,
+                source_country = row_source_country,
+                tone = tone,
+                tone_absolute = tone_absolute,
+                mode = row_mode,
+                format = row_format,
+                timespan = row_timespan,
+                date_resolution = date_resolution,
+                maximum_records = maximum_records,
+                sort_variable = sort_variable,
+                timeline_smooth = timeline_smooth,
+                start_date = start_date,
+                end_date = end_date,
+                timezone_adjust = timezone_adjust,
+                time_zoom = time_zoom,
+                return_message = return_message
+              )
+          })
+
+        all_data <- all_data |> bind_rows(dat_urls)
+
+        if (nrow(dat_urls) > 0) {
+          rm(dat_urls)
+        }
+      }
+
+      if (length(near_terms) > 0) {
+        dat_input <-
+          expand_grid(
             near_term = near_terms,
             near_length = near_length,
+            timespan = timespans,
+            mode = modes,
+            format = formats,
+            source_country = source_countries,
+            source_language = source_languages
+          )
+
+        dat_urls <-
+          1:nrow(dat_input) |>
+          map_dfr(function(x) {
+            dat_row <-
+              dat_input[x, ]
+
+            row_format <- dat_row[["format"]]
+            row_mode <- dat_row[["mode"]]
+            row_source_country <- dat_row[["source_country"]]
+            row_source_language <- dat_row[["source_language"]]
+
+            if (dat_row |> hasName("near_term")) {
+              row_near_term <- dat_row[["near_term"]]
+              row_near_term <-
+                glue::glue("\"{row_near_term}\"")
+
+            } else {
+              row_near_term <- NULL
+            }
+
+            if (dat_row |> hasName("timespan")) {
+              row_timespan <- dat_row[["timespan"]]
+            } else {
+              row_timespan <- NULL
+            }
+
+            if (dat_row |> hasName("term_domain")) {
+              row_term_domain <- dat_row[["term_domain"]]
+            } else {
+              row_term_domain <- NULL
+            }
+
+            if (dat_row |> hasName("near_length")) {
+              row_near_length <- dat_row[["near_length"]]
+            } else {
+              row_near_length <- NULL
+            }
+
+            if (dat_row |> hasName("term_exact_domain")) {
+              row_term_exact_domain <- dat_row[["term_exact_domain"]]
+            } else {
+              row_term_exact_domain <- NULL
+            }
+
+            out <-
+              .generate_v2_doc_url(
+                term = NULL,
+                domain = NULL,
+                domain_exact = NULL,
+                image_face_tone = images_face_tone,
+                image_number_faces = images_number_faces,
+                image_ocr_meta = NULL,
+                image_tag = NULL,
+                image_web_count = NULL,
+                image_web_tag = NULL,
+                theme_gkg = NULL,
+                near_term = row_near_term,
+                near_length = row_near_length,
+                repeat_term = repeat_terms,
+                repeat_count = repeat_count,
+                source_language = row_source_language,
+                source_country = row_source_country,
+                tone = tone,
+                tone_absolute = tone_absolute,
+                mode = row_mode,
+                format = row_format,
+                timespan = row_timespan,
+                date_resolution = date_resolution,
+                maximum_records = maximum_records,
+                sort_variable = sort_variable,
+                timeline_smooth = timeline_smooth,
+                start_date = start_date,
+                end_date = end_date,
+                timezone_adjust = timezone_adjust,
+                time_zoom = time_zoom,
+                return_message = return_message
+              )
+          })
+
+        all_data <- all_data |> bind_rows(dat_urls)
+
+        if (nrow(dat_urls) > 0) {
+          rm(dat_urls)
+        }
+      }
+
+      if (length(repeat_terms) > 0) {
+        dat_input <-
+          expand_grid(
             repeat_term = repeat_terms,
             repeat_count = repeat_count,
-            source_language = row_source_language,
-            source_country = row_source_country,
-            tone = tone,
-            tone_absolute = tone_absolute,
-            mode = row_mode,
-            format = row_format,
-            timespan = row_timespan,
-            date_resolution = date_resolution,
-            maximum_records = maximum_records,
-            sort_variable = sort_variable,
-            timeline_smooth = timeline_smooth,
-            start_date = start_date,
-            end_date = end_date,
-            timezone_adjust = timezone_adjust,
-            time_zoom = time_zoom,
-            return_message = return_message
+            timespan = timespans,
+            mode = modes,
+            format = formats,
+            source_country = source_countries,
+            source_language = source_languages
           )
-        })
 
-      all_data <- all_data |> bind_rows(dat_urls)
+        dat_urls <-
+          1:nrow(dat_input) |>
+          map_dfr(function(x) {
+            dat_row <-
+              dat_input[x, ]
 
-      if (nrow(dat_urls) > 0) {
-        rm(dat_urls)
+            row_format <- dat_row[["format"]]
+            row_mode <- dat_row[["mode"]]
+            row_source_country <- dat_row[["source_country"]]
+            row_source_language <- dat_row[["source_language"]]
+
+            if (dat_row |> hasName("repeat_term")) {
+              row_repeat_term <- dat_row[["repeat_term"]]
+              row_repeat_term <-
+                glue::glue("\"{row_repeat_term}\"")
+
+            } else {
+              row_repeat_term <- NULL
+            }
+
+            if (dat_row |> hasName("timespan")) {
+              row_timespan <- dat_row[["timespan"]]
+            } else {
+              row_timespan <- NULL
+            }
+
+            if (dat_row |> hasName("term_domain")) {
+              row_term_domain <- dat_row[["term_domain"]]
+            } else {
+              row_term_domain <- NULL
+            }
+
+            if (dat_row |> hasName("repeat_count")) {
+              row_repeat_count <- dat_row[["repeat_count"]]
+            } else {
+              row_repeat_count <- NULL
+            }
+
+            if (dat_row |> hasName("term_exact_domain")) {
+              row_term_exact_domain <- dat_row[["term_exact_domain"]]
+            } else {
+              row_term_exact_domain <- NULL
+            }
+
+            out <-
+              .generate_v2_doc_url(
+                term = NULL,
+                domain = NULL,
+                domain_exact = NULL,
+                image_face_tone = images_face_tone,
+                image_number_faces = images_number_faces,
+                image_ocr_meta = NULL,
+                image_tag = NULL,
+                image_web_count = NULL,
+                image_web_tag = NULL,
+                theme_gkg = NULL,
+                near_term = NULL,
+                near_length = NULL,
+                repeat_term = row_repeat_term,
+                repeat_count = row_repeat_count,
+                source_language = row_source_language,
+                source_country = row_source_country,
+                tone = tone,
+                tone_absolute = tone_absolute,
+                mode = row_mode,
+                format = row_format,
+                timespan = row_timespan,
+                date_resolution = date_resolution,
+                maximum_records = maximum_records,
+                sort_variable = sort_variable,
+                timeline_smooth = timeline_smooth,
+                start_date = start_date,
+                end_date = end_date,
+                timezone_adjust = timezone_adjust,
+                time_zoom = time_zoom,
+                return_message = return_message
+              )
+          })
+
+        all_data <- all_data |> bind_rows(dat_urls)
+
+        if (nrow(dat_urls) > 0) {
+          rm(dat_urls)
+        }
       }
-    }
-
-    if (length(domains_exact) > 0) {
-      dat_input <-
-        expand_grid(
-          domain_exact = domains_exact,
-          timespan = timespans,
-          mode = modes,
-          format = formats,
-          source_country = source_countries,
-          source_language = source_languages
-        )
-
-      dat_urls <-
-        1:nrow(dat_input) |>
-        map_dfr(function(x) {
-          dat_row <-
-            dat_input[x, ]
-
-          row_format <- dat_row[["format"]]
-          row_mode <- dat_row[["mode"]]
-          row_source_country <- dat_row[["source_country"]]
-          row_source_language <- dat_row[["source_language"]]
-
-          if (dat_row |> hasName("domain_exact")) {
-            row_domain_exact <- dat_row[["domain_exact"]]
-          } else {
-            row_domain_exact <- NULL
-          }
-
-          if (dat_row |> hasName("timespan")) {
-            row_timespan <- dat_row[["timespan"]]
-          } else {
-            row_timespan <- NULL
-          }
-
-          if (dat_row |> hasName("term_domain")) {
-            row_term_domain <- dat_row[["term_domain"]]
-          } else {
-            row_term_domain <- NULL
-          }
-
-          if (dat_row |> hasName("term_exact_domain")) {
-            row_term_exact_domain <- dat_row[["term_exact_domain"]]
-          } else {
-            row_term_exact_domain <- NULL
-          }
-
-          out <- .generate_v2_doc_url(
-            term = NULL,
-            domain = NULL,
-            domain_exact = row_domain_exact,
-            image_face_tone = images_face_tone,
-            image_number_faces = images_number_faces,
-            image_ocr_meta = NULL,
-            image_tag = NULL,
-            image_web_count = NULL,
-            image_web_tag = NULL,
-            theme_gkg = NULL,
-            near_term = NULL,
-            near_length = near_length,
-            repeat_term = repeat_terms,
-            repeat_count = repeat_count,
-            source_language = row_source_language,
-            source_country = row_source_country,
-            tone = tone,
-            tone_absolute = tone_absolute,
-            mode = row_mode,
-            format = row_format,
-            timespan = row_timespan,
-            date_resolution = date_resolution,
-            maximum_records = maximum_records,
-            sort_variable = sort_variable,
-            timeline_smooth = timeline_smooth,
-            start_date = start_date,
-            end_date = end_date,
-            timezone_adjust = timezone_adjust,
-            time_zoom = time_zoom,
-            return_message = return_message
+      if (!parse_data) {
+        if (widen_url_parameters) {
+          all_data <- widen_gdelt_url_api_parameters(
+            data = all_data,
+            url_gdelt = "url_gdelt_v2_doc_api",
+            widen_variables = widen_variables
           )
-        })
+        }
 
-      all_data <- all_data |> bind_rows(dat_urls)
-
-      if (nrow(dat_urls) > 0) {
-        rm(dat_urls)
-      }
-    }
-
-    if (length(images_ocr_meta) > 0) {
-      dat_input <-
-        expand_grid(
-          image_ocr_meta = images_ocr_meta,
-          timespan = timespans,
-          mode = modes,
-          format = formats,
-          source_country = source_countries,
-          source_language = source_languages
-        )
-
-      dat_urls <-
-        1:nrow(dat_input) |>
-        map_dfr(function(x) {
-          dat_row <-
-            dat_input[x, ]
-
-          row_format <- dat_row[["format"]]
-          row_mode <- dat_row[["mode"]]
-          row_source_country <- dat_row[["source_country"]]
-          row_source_language <- dat_row[["source_language"]]
-
-          if (dat_row |> hasName("image_ocr_meta")) {
-            row_image_ocr_meta <- dat_row[["image_ocr_meta"]]
-          } else {
-            row_image_ocr_meta <- NULL
-          }
-
-          if (dat_row |> hasName("timespan")) {
-            row_timespan <- dat_row[["timespan"]]
-          } else {
-            row_timespan <- NULL
-          }
-
-          if (dat_row |> hasName("term_domain")) {
-            row_term_domain <- dat_row[["term_domain"]]
-          } else {
-            row_term_domain <- NULL
-          }
-
-          if (dat_row |> hasName("term_exact_domain")) {
-            row_term_exact_domain <- dat_row[["term_exact_domain"]]
-          } else {
-            row_term_exact_domain <- NULL
-          }
-
-          out <- .generate_v2_doc_url(
-            term = NULL,
-            domain = NULL,
-            domain_exact = NULL,
-            image_face_tone = images_face_tone,
-            image_number_faces = images_number_faces,
-            image_ocr_meta = row_image_ocr_meta,
-            image_tag = NULL,
-            image_web_count = NULL,
-            image_web_tag = NULL,
-            theme_gkg = NULL,
-            near_term = NULL,
-            near_length = near_length,
-            repeat_term = repeat_terms,
-            repeat_count = repeat_count,
-            source_language = row_source_language,
-            source_country = row_source_country,
-            tone = tone,
-            tone_absolute = tone_absolute,
-            mode = row_mode,
-            format = row_format,
-            timespan = row_timespan,
-            date_resolution = date_resolution,
-            maximum_records = maximum_records,
-            sort_variable = sort_variable,
-            timeline_smooth = timeline_smooth,
-            start_date = start_date,
-            end_date = end_date,
-            timezone_adjust = timezone_adjust,
-            time_zoom = time_zoom,
-            return_message = return_message
-          )
-        })
-
-      all_data <- all_data |> bind_rows(dat_urls)
-
-      if (nrow(dat_urls) > 0) {
-        rm(dat_urls)
-      }
-    }
-
-    if (length(image_web_tags) > 0) {
-      dat_input <-
-        expand_grid(
-          image_web_tag = image_web_tags,
-          timespan = timespans,
-          mode = modes,
-          format = formats,
-          source_country = source_countries,
-          source_language = source_languages
-        )
-
-      dat_urls <-
-        1:nrow(dat_input) |>
-        map_dfr(function(x) {
-          dat_row <-
-            dat_input[x, ]
-
-          row_format <- dat_row[["format"]]
-          row_mode <- dat_row[["mode"]]
-          row_source_country <- dat_row[["source_country"]]
-          row_source_language <- dat_row[["source_language"]]
-
-          if (dat_row |> hasName("image_web_tag")) {
-            row_image_web_tag <- dat_row[["image_web_tag"]]
-            row_image_web_tag <-
-              glue::glue("\"{row_image_web_tag}\"")
-
-          } else {
-            row_image_web_tag <- NULL
-          }
-
-          if (dat_row |> hasName("timespan")) {
-            row_timespan <- dat_row[["timespan"]]
-          } else {
-            row_timespan <- NULL
-          }
-
-          if (dat_row |> hasName("term_domain")) {
-            row_term_domain <- dat_row[["term_domain"]]
-          } else {
-            row_term_domain <- NULL
-          }
-
-          if (dat_row |> hasName("term_exact_domain")) {
-            row_term_exact_domain <- dat_row[["term_exact_domain"]]
-          } else {
-            row_term_exact_domain <- NULL
-          }
-
-          out <-
-            .generate_v2_doc_url(
-              term = NULL,
-              domain = NULL,
-              domain_exact = NULL,
-              image_face_tone = images_face_tone,
-              image_number_faces = images_number_faces,
-              image_ocr_meta = NULL,
-              image_tag = NULL,
-              image_web_count = NULL,
-              image_web_tag = row_image_web_tag,
-              theme_gkg = NULL,
-              near_term = NULL,
-              near_length = near_length,
-              repeat_term = repeat_terms,
-              repeat_count = repeat_count,
-              source_language = row_source_language,
-              source_country = row_source_country,
-              tone = tone,
-              tone_absolute = tone_absolute,
-              mode = row_mode,
-              format = row_format,
-              timespan = row_timespan,
-              date_resolution = date_resolution,
-              maximum_records = maximum_records,
-              sort_variable = sort_variable,
-              timeline_smooth = timeline_smooth,
-              start_date = start_date,
-              end_date = end_date,
-              timezone_adjust = timezone_adjust,
-              time_zoom = time_zoom,
-              return_message = return_message
-            )
-        })
-
-      all_data <- all_data |> bind_rows(dat_urls)
-
-      if (nrow(dat_urls) > 0) {
-        rm(dat_urls)
-      }
-    }
-
-    if (length(themes_gkg) > 0) {
-      dat_input <-
-        expand_grid(
-          theme_gkg = themes_gkg,
-          timespan = timespans,
-          mode = modes,
-          format = formats,
-          source_country = source_countries,
-          source_language = source_languages
-        )
-
-      dat_urls <-
-        1:nrow(dat_input) |>
-        map_dfr(function(x) {
-          dat_row <-
-            dat_input[x, ]
-
-          row_format <- dat_row[["format"]]
-          row_mode <- dat_row[["mode"]]
-          row_source_country <- dat_row[["source_country"]]
-          row_source_language <- dat_row[["source_language"]]
-
-          if (dat_row |> hasName("theme_gkg")) {
-            row_theme_gkg <- dat_row[["theme_gkg"]]
-            row_theme_gkg <-
-              glue::glue("\"{row_theme_gkg}\"")
-
-          } else {
-            row_theme_gkg <- NULL
-          }
-
-          if (dat_row |> hasName("timespan")) {
-            row_timespan <- dat_row[["timespan"]]
-          } else {
-            row_timespan <- NULL
-          }
-
-          if (dat_row |> hasName("term_domain")) {
-            row_term_domain <- dat_row[["term_domain"]]
-          } else {
-            row_term_domain <- NULL
-          }
-
-          if (dat_row |> hasName("term_exact_domain")) {
-            row_term_exact_domain <- dat_row[["term_exact_domain"]]
-          } else {
-            row_term_exact_domain <- NULL
-          }
-
-          out <-
-            .generate_v2_doc_url(
-              term = NULL,
-              domain = NULL,
-              domain_exact = NULL,
-              image_face_tone = images_face_tone,
-              image_number_faces = images_number_faces,
-              image_ocr_meta = NULL,
-              image_tag = NULL,
-              image_web_count = NULL,
-              image_web_tag = NULL,
-              theme_gkg = row_theme_gkg,
-              near_term = NULL,
-              near_length = near_length,
-              repeat_term = repeat_terms,
-              repeat_count = repeat_count,
-              source_language = row_source_language,
-              source_country = row_source_country,
-              tone = tone,
-              tone_absolute = tone_absolute,
-              mode = row_mode,
-              format = row_format,
-              timespan = row_timespan,
-              date_resolution = date_resolution,
-              maximum_records = maximum_records,
-              sort_variable = sort_variable,
-              timeline_smooth = timeline_smooth,
-              start_date = start_date,
-              end_date = end_date,
-              timezone_adjust = timezone_adjust,
-              time_zoom = time_zoom,
-              return_message = return_message
-            )
-        })
-
-      all_data <- all_data |> bind_rows(dat_urls)
-
-      if (nrow(dat_urls) > 0) {
-        rm(dat_urls)
-      }
-    }
-
-    if (length(near_terms) > 0) {
-      dat_input <-
-        expand_grid(
-          near_term = near_terms,
-          near_length = near_length,
-          timespan = timespans,
-          mode = modes,
-          format = formats,
-          source_country = source_countries,
-          source_language = source_languages
-        )
-
-      dat_urls <-
-        1:nrow(dat_input) |>
-        map_dfr(function(x) {
-          dat_row <-
-            dat_input[x, ]
-
-          row_format <- dat_row[["format"]]
-          row_mode <- dat_row[["mode"]]
-          row_source_country <- dat_row[["source_country"]]
-          row_source_language <- dat_row[["source_language"]]
-
-          if (dat_row |> hasName("near_term")) {
-            row_near_term <- dat_row[["near_term"]]
-            row_near_term <-
-              glue::glue("\"{row_near_term}\"")
-
-          } else {
-            row_near_term <- NULL
-          }
-
-          if (dat_row |> hasName("timespan")) {
-            row_timespan <- dat_row[["timespan"]]
-          } else {
-            row_timespan <- NULL
-          }
-
-          if (dat_row |> hasName("term_domain")) {
-            row_term_domain <- dat_row[["term_domain"]]
-          } else {
-            row_term_domain <- NULL
-          }
-
-          if (dat_row |> hasName("near_length")) {
-            row_near_length <- dat_row[["near_length"]]
-          } else {
-            row_near_length <- NULL
-          }
-
-          if (dat_row |> hasName("term_exact_domain")) {
-            row_term_exact_domain <- dat_row[["term_exact_domain"]]
-          } else {
-            row_term_exact_domain <- NULL
-          }
-
-          out <-
-            .generate_v2_doc_url(
-              term = NULL,
-              domain = NULL,
-              domain_exact = NULL,
-              image_face_tone = images_face_tone,
-              image_number_faces = images_number_faces,
-              image_ocr_meta = NULL,
-              image_tag = NULL,
-              image_web_count = NULL,
-              image_web_tag = NULL,
-              theme_gkg = NULL,
-              near_term = row_near_term,
-              near_length = row_near_length,
-              repeat_term = repeat_terms,
-              repeat_count = repeat_count,
-              source_language = row_source_language,
-              source_country = row_source_country,
-              tone = tone,
-              tone_absolute = tone_absolute,
-              mode = row_mode,
-              format = row_format,
-              timespan = row_timespan,
-              date_resolution = date_resolution,
-              maximum_records = maximum_records,
-              sort_variable = sort_variable,
-              timeline_smooth = timeline_smooth,
-              start_date = start_date,
-              end_date = end_date,
-              timezone_adjust = timezone_adjust,
-              time_zoom = time_zoom,
-              return_message = return_message
-            )
-        })
-
-      all_data <- all_data |> bind_rows(dat_urls)
-
-      if (nrow(dat_urls) > 0) {
-        rm(dat_urls)
-      }
-    }
-
-    if (length(repeat_terms) > 0) {
-      dat_input <-
-        expand_grid(
-          repeat_term = repeat_terms,
-          repeat_count = repeat_count,
-          timespan = timespans,
-          mode = modes,
-          format = formats,
-          source_country = source_countries,
-          source_language = source_languages
-        )
-
-      dat_urls <-
-        1:nrow(dat_input) |>
-        map_dfr(function(x) {
-          dat_row <-
-            dat_input[x, ]
-
-          row_format <- dat_row[["format"]]
-          row_mode <- dat_row[["mode"]]
-          row_source_country <- dat_row[["source_country"]]
-          row_source_language <- dat_row[["source_language"]]
-
-          if (dat_row |> hasName("repeat_term")) {
-            row_repeat_term <- dat_row[["repeat_term"]]
-            row_repeat_term <-
-              glue::glue("\"{row_repeat_term}\"")
-
-          } else {
-            row_repeat_term <- NULL
-          }
-
-          if (dat_row |> hasName("timespan")) {
-            row_timespan <- dat_row[["timespan"]]
-          } else {
-            row_timespan <- NULL
-          }
-
-          if (dat_row |> hasName("term_domain")) {
-            row_term_domain <- dat_row[["term_domain"]]
-          } else {
-            row_term_domain <- NULL
-          }
-
-          if (dat_row |> hasName("repeat_count")) {
-            row_repeat_count <- dat_row[["repeat_count"]]
-          } else {
-            row_repeat_count <- NULL
-          }
-
-          if (dat_row |> hasName("term_exact_domain")) {
-            row_term_exact_domain <- dat_row[["term_exact_domain"]]
-          } else {
-            row_term_exact_domain <- NULL
-          }
-
-          out <-
-            .generate_v2_doc_url(
-              term = NULL,
-              domain = NULL,
-              domain_exact = NULL,
-              image_face_tone = images_face_tone,
-              image_number_faces = images_number_faces,
-              image_ocr_meta = NULL,
-              image_tag = NULL,
-              image_web_count = NULL,
-              image_web_tag = NULL,
-              theme_gkg = NULL,
-              near_term = NULL,
-              near_length = NULL,
-              repeat_term = row_repeat_term,
-              repeat_count = row_repeat_count,
-              source_language = row_source_language,
-              source_country = row_source_country,
-              tone = tone,
-              tone_absolute = tone_absolute,
-              mode = row_mode,
-              format = row_format,
-              timespan = row_timespan,
-              date_resolution = date_resolution,
-              maximum_records = maximum_records,
-              sort_variable = sort_variable,
-              timeline_smooth = timeline_smooth,
-              start_date = start_date,
-              end_date = end_date,
-              timezone_adjust = timezone_adjust,
-              time_zoom = time_zoom,
-              return_message = return_message
-            )
-        })
-
-      all_data <- all_data |> bind_rows(dat_urls)
-
-      if (nrow(dat_urls) > 0) {
-        rm(dat_urls)
-      }
-    }
-    if (!parse_data) {
-      if (widen_url_parameters) {
-        all_data <- widen_gdelt_url_api_parameters(
-          data = all_data,
-          url_gdelt = "url_gdelt_v2_doc_api",
-          widen_variables = widen_variables
-        )
+        return(all_data)
       }
 
-      return(all_data)
-    }
+      if (length(modes) >= 2) {
+        nest_data <- TRUE
+      }
 
-    if (length(modes) >= 2) {
-      nest_data <- T
-    }
+      out <-
+        all_data$url_gdelt_v2_doc_api |>
+        parse_v2_doc_api_urls(return_message = return_message, nest_data = TRUE, use_parallel = use_parallel, workers = workers)
 
-    out <-
-      all_data$url_gdelt_v2_doc_api |>
-      parse_v2_doc_api_urls(return_message = return_message, nest_data = T)
+      all_data <-
+        all_data |>
+        mutate(url_gdelt_v2_doc_api = str_to_lower(url_gdelt_v2_doc_api)) |>
+        left_join(out, by = "url_gdelt_v2_doc_api")
 
-    all_data <-
-      all_data |>
-      mutate(url_gdelt_v2_doc_api = str_to_lower(url_gdelt_v2_doc_api)) |>
-      left_join(out, by = "url_gdelt_v2_doc_api")
-
-    if (!nest_data) {
-      all_data <- all_data |> unnest()
-    }
+      if (!nest_data) {
+        all_data <- all_data |> unnest(cols = everything())
+      }
 
 
-    all_data
+      all_data
+    }, error = function(e) {
+      cli::cli_alert_danger("Failed: {e$message}")
+      return(tibble())
+    })
   }
 
 

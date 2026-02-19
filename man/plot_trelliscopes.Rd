@@ -22,6 +22,14 @@ plot_trelliscopes(
 \item id_columns: initial columns
 }}
 }
+\value{
+A list of trelliscope visualization widgets by search mode
+}
 \description{
 Plot list of trelliscope
+}
+\examples{
+\dontrun{
+plot_trelliscopes()
+}
 }

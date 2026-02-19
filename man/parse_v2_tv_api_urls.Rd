@@ -4,7 +4,13 @@
 \alias{parse_v2_tv_api_urls}
 \title{Parse V2 TV API URL}
 \usage{
-parse_v2_tv_api_urls(urls = NULL, nest_data = FALSE, return_message = T)
+parse_v2_tv_api_urls(
+  urls = NULL,
+  nest_data = FALSE,
+  return_message = TRUE,
+  use_parallel = FALSE,
+  workers = NULL
+)
 }
 \arguments{
 \item{urls}{Vector of URLS}
@@ -13,6 +19,14 @@ parse_v2_tv_api_urls(urls = NULL, nest_data = FALSE, return_message = T)
 
 \item{return_message}{if `TRUE` returns message}
 }
+\value{
+A `tibble` of parsed TV API response data
+}
 \description{
 Parse V2 TV API URL
+}
+\examples{
+\dontrun{
+parse_v2_tv_api_urls()
+}
 }

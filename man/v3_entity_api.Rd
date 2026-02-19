@@ -7,7 +7,7 @@
 v3_entity_api(
   start_date = Sys.Date() - 1,
   end_date = Sys.Date(),
-  return_message = T
+  return_message = TRUE
 )
 }
 \arguments{
@@ -17,7 +17,15 @@ v3_entity_api(
 
 \item{return_message}{if \code{TRUE} return message}
 }
+\value{
+A `tibble` of V3 entity data for the specified date range
+}
 \description{
 Acquires data from the GDELT
 entity mention API for period of specified dates
+}
+\examples{
+\dontrun{
+v3_entity_api()
+}
 }

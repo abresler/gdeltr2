@@ -7,8 +7,18 @@
 parse_xml_extras(data, return_wide = FALSE)
 }
 \arguments{
-\item{return_wide}{}
+\item{data}{A \code{tibble} of data to process.}
+
+\item{return_wide}{Logical. If \code{TRUE}, returns data in wide format; otherwise long format.}
+}
+\value{
+A `tibble` of parsed XML extra data from GKG records
 }
 \description{
 Parse XML Extra
+}
+\examples{
+\dontrun{
+parse_xml_extras()
+}
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/tv_api.R
 \name{v2_tv_api}
 \alias{v2_tv_api}
-\title{GDELT V2 TV API Data and URLS}
+\title{Access data from  \href{https://blog.gdeltproject.org/gdelt-2-0-television-api-debuts/}{GDELT Television V2 API}}
 \usage{
 v2_tv_api(
   terms = NULL,
@@ -27,7 +27,9 @@ v2_tv_api(
   end_date = NULL,
   timespan = NULL,
   timezone_adjust = NULL,
-  time_zoom = NULL
+  time_zoom = NULL,
+  use_parallel = FALSE,
+  workers = NULL
 )
 }
 \arguments{
@@ -99,15 +101,15 @@ v2_tv_api(
 \itemize{
 \item `Hours`. Specify a number followed by "h" or "hours" to provide the timespan in hours.
 \item  `Days`. Specify a number followed by "d" or "days" to provide the timespan in days.
- \item `Weeks`. Specify a number followed by "w" or "weeks" to provide the timespan in weeks.
- \item `Months`. Specify a number followed by "m" or "months" to provide the timespan in months.
- \item `Years`. Specify a number followed by "y" or "years" to provide the timespan in years.
 
 }}
 
 \item{timezone_adjust}{By default STARTDATETIME, ENDDATETIME and all returned results are interpreted and reported in the UTC timezone. Use this parameter to adjust to any of the following major timezones: -12:00, -11:00, -10:00, -09:30, -09:00, -08:00, -07:00, -06:00, -05:00, -04:00, -03:30, -03:00, -02:30, -02:00, -01:00, +00:00, +01:00, +02:00, +03:00, +03:30, +04:00, +04:30, +05:00, +05:30, +05:45, +06:00, +06:30, +07:00, +08:00, +08:45, +09:00, +09:30, +10:00, +10:30, +11:00, +12:00, +12:45, +13:00, +13:45 or +14:00. Note that UTC offsets are treated as-is over the entire timespan, meaning that the offset is not adjusted to account for periods in which daylight savings is honored.}
 
 \item{time_zoom}{This option is only available for timeline modes in HTML format output and enables interactive zooming of the timeline using the browser-based visualization. Set to "yes" to enable and set to "no" or do not include the parameter, to disable. By default, the browser-based timeline display allows interactive examination and export of the timeline data, but does not allow the user to rezoom the display to a more narrow time span. If enabled, the user can click-drag horizontally in the graph to select a specific time period. If the visualization is being displayed directly by itself (it is the "parent" page), it will automatically refresh the page to display the revised time span. If the visualization is being embedded in another page via iframe, it will use postMessage to send the new timespan to the parent page with parameters "startdate" and "enddate" in the format needed by the STARTDATETIME and ENDDATETIME API parameters. The parent page can then use these parameters to rewrite the URLs of any API visualizations embedded in the page and reload each of them. This allows the creation of dashboard-like displays that contain multiple TV API visualizations where the user can zoom the timeline graph at the top and have all of the other displays automatically refresh to narrow their coverage to that revised time frame}
+}
+\value{
+A `tibble` of TV API results for the specified terms and modes
 }
 \description{
 Access data from  \href{https://blog.gdeltproject.org/gdelt-2-0-television-api-debuts/}{GDELT Television V2 API}

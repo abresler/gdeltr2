@@ -6,18 +6,26 @@
 \usage{
 gkg_tv_days(
   dates = c("2016-06-01", "2016-02-01"),
-  only_most_recent = F,
-  return_message = T
+  only_most_recent = FALSE,
+  return_message = TRUE
 )
 }
 \arguments{
 \item{dates}{specified dates, year, month day format}
 
 \item{only_most_recent}{returns only the most recent period
-\code{c(T, F)}}
+\code{c(TRUE, FALSE)}}
 
-\item{return_message}{}
+\item{return_message}{Logical. If \code{TRUE}, prints progress messages to console.}
+}
+\value{
+A `tibble` of GKG TV data for the specified dates
 }
 \description{
 Gets GKG TV data for specified days
+}
+\examples{
+\dontrun{
+gkg_tv_days()
+}
 }

@@ -6,6 +6,9 @@
 \usage{
 get_codes_cameo_country()
 }
+\value{
+A `tibble` of CAMEO country codes and names
+}
 \description{
 Retrieves GDELT CAMEO country code book
 }

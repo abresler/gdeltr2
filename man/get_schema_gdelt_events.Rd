@@ -6,6 +6,9 @@
 \usage{
 get_schema_gdelt_events()
 }
+\value{
+A `tibble` of GDELT event column names and their descriptions
+}
 \description{
 Retrieves GDELT event database schema
 }

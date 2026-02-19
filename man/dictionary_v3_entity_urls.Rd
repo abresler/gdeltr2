@@ -6,6 +6,9 @@
 \usage{
 dictionary_v3_entity_urls()
 }
+\value{
+A `tibble` of V3 entity API URLs with datetime metadata
+}
 \description{
 Dictionary of URLs from the V3 API
 updated on 15 minute intervals

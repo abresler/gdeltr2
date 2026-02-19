@@ -6,6 +6,9 @@
 \usage{
 get_schema_gkg_general()
 }
+\value{
+A `tibble` of GKG general column names and descriptions
+}
 \description{
 Gets gkg general schema
 }

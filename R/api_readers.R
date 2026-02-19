@@ -6,22 +6,25 @@
 
 #' Widen API URLs
 #'
-#' @param data A `tibbile`
+#' @param data A `tibble`
 #' @param url_gdelt Name of GDELT API url variables
 #' @param widen_variables Vector of variables to unite and widen
 #'
-#' @return
+#' @return A widened `tibble` with URL parameters spread across columns
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' widen_gdelt_url_api_parameters()
+#' }
 widen_gdelt_url_api_parameters <-
   function(data, url_gdelt = NULL, widen_variables = NULL) {
     if (is.null(url_gdelt)) {
-      message("Enter GDELT API URL")
+      cli::cli_alert_warning("Enter GDELT API URL")
       return(data)
     }
     if (is.null(widen_variables)) {
-      message("Enter Widen Variables")
+      cli::cli_alert_warning("Enter Widen Variables")
       return(data)
     }
     key_cols <- data |> select(-one_of(url_gdelt)) |> names()
@@ -31,7 +34,7 @@ widen_gdelt_url_api_parameters <-
                            names_to = "url_type",
                            values_to  = "url") |>
       unite(url_type, !!!syms(unite_columns)) |>
-      spread(url_type, url) |>
+      pivot_wider(names_from = url_type, values_from = url) |>
       janitor::clean_names()
 
     data
@@ -171,12 +174,12 @@ dictionary_gdelt_api_names <-
 
     dict <- dictionary_gdelt_api_names()
     actual_names <-
-      names_dict %>%
+      names_dict |>
       map_chr(function(name) {
         df_row <-
-          dict %>% filter(name_gdelt == name)
+          dict |> filter(name_gdelt == name)
         if (nrow(df_row) == 0) {
-          glue("Missing {name}") %>% message()
+          cli::cli_alert_warning("Missing {name}")
           return(name)
         }
 
@@ -203,7 +206,7 @@ dictionary_gdelt_api_names <-
   actual_tables <- names(out)[!names(out) %in% actual_tables]
 
   data <-
-    out[[actual_tables]] |> as_tibble() |> unnest()
+    out[[actual_tables]] |> as_tibble() |> unnest(cols = everything())
 
   data <- .munge_gdelt_names(data)
 

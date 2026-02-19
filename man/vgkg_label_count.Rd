@@ -6,6 +6,14 @@
 \usage{
 vgkg_label_count()
 }
+\value{
+A `tibble` with columns: typeEntity, midGoogle, countClassifications
+}
 \description{
 Counts classified CloudVision labels
+}
+\examples{
+\dontrun{
+vgkg_label_count()
+}
 }

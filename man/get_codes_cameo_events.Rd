@@ -6,6 +6,9 @@
 \usage{
 get_codes_cameo_events()
 }
+\value{
+A `tibble` of CAMEO event codes with descriptions and categories
+}
 \description{
 Retrieves CAMEO CAMEO event code book
 }

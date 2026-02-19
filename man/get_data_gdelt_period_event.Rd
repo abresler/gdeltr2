@@ -8,13 +8,24 @@ get_data_gdelt_period_event(
   period = 1983,
   file_directory = NULL,
   folder_name = "gdelt_data",
-  remove_files = T,
-  empty_trash = T,
-  return_message = T
+  remove_files = TRUE,
+  empty_trash = TRUE,
+  return_message = TRUE
 )
 }
 \arguments{
 \item{period}{the GDELT period}
+
+\item{file_directory}{Character string. Path to directory for file storage.}
+
+\item{remove_files}{Logical. If \code{TRUE}, removes temporary files after processing.}
+
+\item{empty_trash}{Logical. If \code{TRUE}, empties trash after file removal.}
+
+\item{return_message}{Logical. If \code{TRUE}, prints progress messages to console.}
+}
+\value{
+A `tibble` of GDELT event data for the specified period
 }
 \description{
 Retreive GDELT data for a given period

@@ -4,14 +4,19 @@
 \alias{get_urls_gkg_daily_summaries}
 \title{Gets Global Knowledge Graph summary files by day since April 2013}
 \usage{
-get_urls_gkg_daily_summaries(remove_count_files = F, return_message = T)
+get_urls_gkg_daily_summaries(remove_count_files = FALSE, return_message = TRUE)
 }
 \arguments{
-\item{return_message}{}
+\item{remove_count_files}{Logical. If \code{TRUE}, removes count files after processing.}
+
+\item{return_message}{Logical. If \code{TRUE}, prints progress messages to console.}
+}
+\value{
+A `tibble` of GKG daily summary URLs with date metadata
 }
 \description{
 Gets Global Knowledge Graph summary files by day since April 2013
 }
 \examples{
-get_urls_gkg_daily_summaries(remove_count_files = T)
+get_urls_gkg_daily_summaries(remove_count_files = TRUE)
 }

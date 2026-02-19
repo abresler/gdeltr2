@@ -8,12 +8,22 @@ get_clean_count_vkg_data(
   all_counts,
   extra_key = NA,
   count_col = "idImageLabel",
-  return_wide = T
+  return_wide = TRUE
 )
 }
 \arguments{
-\item{id_dateTime}{}
+\item{data}{A \code{tibble} of data to process.}
+
+\item{id_dateTime}{Character string. DateTime identifier column name.}
+}
+\value{
+A `tibble` of cleaned VGKG count data in long or wide format
 }
 \description{
 Parse XML Labels
+}
+\examples{
+\dontrun{
+get_clean_count_vkg_data()
+}
 }

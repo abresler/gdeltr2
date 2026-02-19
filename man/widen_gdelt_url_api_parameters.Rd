@@ -7,12 +7,20 @@
 widen_gdelt_url_api_parameters(data, url_gdelt = NULL, widen_variables = NULL)
 }
 \arguments{
-\item{data}{A `tibbile`}
+\item{data}{A `tibble`}
 
 \item{url_gdelt}{Name of GDELT API url variables}
 
 \item{widen_variables}{Vector of variables to unite and widen}
 }
+\value{
+A widened `tibble` with URL parameters spread across columns
+}
 \description{
 Widen API URLs
+}
+\examples{
+\dontrun{
+widen_gdelt_url_api_parameters()
+}
 }

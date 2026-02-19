@@ -9,10 +9,12 @@ get_data_gkg_days_detailed(
   table_name = c("gkg"),
   file_directory = NULL,
   folder_name = "gdelt_data",
-  only_most_recent = F,
-  remove_files = T,
-  empty_trash = T,
-  return_message = T
+  only_most_recent = FALSE,
+  remove_files = TRUE,
+  empty_trash = TRUE,
+  return_message = TRUE,
+  use_parallel = FALSE,
+  workers = NULL
 )
 }
 \arguments{
@@ -22,16 +24,24 @@ options \code{c('gkg', 'export', 'mentions'))}}
 \item{file_directory}{where are the files to be saved}
 
 \item{remove_files}{Do you want to remove the files
-\code{T, F}}
+\code{TRUE, FALSE}}
 
 \item{empty_trash}{Do You want to empy the trash
-\code{T, F}}
+\code{TRUE, FALSE}}
 
 \item{return_message}{Do you want to return a message
-\code{T, F}}
+\code{TRUE, FALSE}}
 
 \item{date_data}{must be a date in Year - Month - Day format}
 }
+\value{
+A `tibble` of detailed GKG data for the specified dates
+}
 \description{
 Get dates detailed data from a specified table
+}
+\examples{
+\dontrun{
+get_data_gkg_days_detailed()
+}
 }

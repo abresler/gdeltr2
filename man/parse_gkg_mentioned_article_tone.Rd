@@ -4,11 +4,27 @@
 \alias{parse_gkg_mentioned_article_tone}
 \title{Returns article tones from a gkg data frame}
 \usage{
-parse_gkg_mentioned_article_tone(gdelt_data, filter_na = T, return_wide = T)
+parse_gkg_mentioned_article_tone(
+  gdelt_data,
+  filter_na = TRUE,
+  return_wide = TRUE
+)
 }
 \arguments{
-\item{return_wide}{}
+\item{gdelt_data}{A \code{tibble} of GDELT data to parse.}
+
+\item{filter_na}{Logical. If \code{TRUE}, removes rows with \code{NA} values.}
+
+\item{return_wide}{Logical. If \code{TRUE}, returns data in wide format; otherwise long format.}
+}
+\value{
+A `tibble` of parsed article tone scores from GKG data
 }
 \description{
 Returns article tones from a gkg data frame
+}
+\examples{
+\dontrun{
+parse_gkg_mentioned_article_tone()
+}
 }

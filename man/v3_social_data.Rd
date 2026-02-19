@@ -4,14 +4,22 @@
 \alias{v3_social_data}
 \title{GDELT Social Media Links}
 \usage{
-v3_social_data(dates = NULL, return_message = T)
+v3_social_data(dates = NULL, return_message = TRUE)
 }
 \arguments{
 \item{dates}{vector of dates}
 
-\item{return_message}{if \code{true} returns message}
+\item{return_message}{if \code{TRUE} returns message}
+}
+\value{
+A `tibble` of social media link data for the specified dates
 }
 \description{
 Data of articles linking
 to social media mentions
+}
+\examples{
+\dontrun{
+v3_social_data()
+}
 }

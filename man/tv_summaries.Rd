@@ -8,7 +8,7 @@ tv_summaries(
   date_start = Sys.Date() - 1,
   date_end = Sys.Date(),
   snake_names = FALSE,
-  return_message = T
+  return_message = TRUE
 )
 }
 \arguments{
@@ -16,7 +16,7 @@ tv_summaries(
 
 \item{date_end}{End date of data, cannot exceed current date}
 
-\item{return_message}{if \code{TRUE} returns a messag}
+\item{return_message}{if \code{TRUE} returns a message}
 }
 \value{
 a \code{tibble}

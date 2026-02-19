@@ -7,15 +7,27 @@
 parse_gkg_mentioned_social_embeds(
   gdelt_data,
   social_embed_column = "urlSocialMediaImageEmbeds",
-  filter_na = T,
-  return_wide = T
+  filter_na = TRUE,
+  return_wide = TRUE
 )
 }
 \arguments{
+\item{gdelt_data}{A \code{tibble} of GDELT data to parse.}
+
 \item{social_embed_column}{options \code{c('urlSocialMediaImageEmbeds', 'images', 'urlSocialMediaVideoEmbeds', 'video', 'videos'))}}
 
-\item{return_wide}{}
+\item{filter_na}{Logical. If \code{TRUE}, removes rows with \code{NA} values.}
+
+\item{return_wide}{Logical. If \code{TRUE}, returns data in wide format; otherwise long format.}
+}
+\value{
+A `tibble` of parsed social media embed URLs from GKG data
 }
 \description{
 Returns social embed information from a gkg data frame
+}
+\examples{
+\dontrun{
+parse_gkg_mentioned_social_embeds()
+}
 }

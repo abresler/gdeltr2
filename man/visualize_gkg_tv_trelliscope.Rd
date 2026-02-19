@@ -13,6 +13,10 @@ visualize_gkg_tv_trelliscope(
 )
 }
 \arguments{
+\item{data}{A \code{tibble} of data to process.}
+
+\item{only_pictures}{Logical. If \code{TRUE}, returns only picture-containing entries.}
+
 \item{gkg_parse}{\itemize{
 \item 'tone',
 \item 'dates',
@@ -28,7 +32,19 @@ visualize_gkg_tv_trelliscope(
 \item 'themes',
 \item 'xml
 }}
+
+\item{domains}{Character vector of domain names to filter.}
+
+\item{random_domains}{Integer. Number of random domains to sample.}
+}
+\value{
+A trelliscope visualization of GKG TV data
 }
 \description{
 Trelliscope gkg data
+}
+\examples{
+\dontrun{
+visualize_gkg_tv_trelliscope()
+}
 }

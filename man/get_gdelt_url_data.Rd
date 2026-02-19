@@ -8,15 +8,35 @@ get_gdelt_url_data(
   url = "http://data.gdeltproject.org/gdeltv2/20160531000000.gkg.csv.zip",
   file_directory = NULL,
   folder_name = "gdelt_data",
-  remove_existing_folder = T,
-  remove_files = T,
-  empty_trash = T,
-  return_message = T
+  remove_existing_folder = TRUE,
+  remove_files = TRUE,
+  empty_trash = TRUE,
+  return_message = TRUE
 )
 }
 \arguments{
-\item{return_message}{}
+\item{url}{Character string. URL to fetch data from.}
+
+\item{file_directory}{Character string. Path to directory for file storage.}
+
+\item{folder_name}{Character string. Name of the folder for file storage.}
+
+\item{remove_existing_folder}{Logical. If \code{TRUE}, removes existing folder before download.}
+
+\item{remove_files}{Logical. If \code{TRUE}, removes temporary files after processing.}
+
+\item{empty_trash}{Logical. If \code{TRUE}, empties trash after file removal.}
+
+\item{return_message}{Logical. If \code{TRUE}, prints progress messages to console.}
+}
+\value{
+A `tibble` of parsed GDELT data from the specified URL
 }
 \description{
 Get GDELT url data
+}
+\examples{
+\dontrun{
+get_gdelt_url_data()
+}
 }

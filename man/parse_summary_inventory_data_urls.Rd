@@ -2,12 +2,14 @@
 % Please edit documentation in R/tv_api.R
 \name{parse_summary_inventory_data_urls}
 \alias{parse_summary_inventory_data_urls}
-\title{Parsse Inventory URLs}
+\title{Parse Inventory URLs}
 \usage{
 parse_summary_inventory_data_urls(
   urls = "http://data.gdeltproject.org/gdeltv3/iatv/inventory/20240805.inventory.csv",
   snake_names = FALSE,
-  return_message = T
+  return_message = TRUE,
+  use_parallel = FALSE,
+  workers = NULL
 )
 }
 \arguments{
@@ -17,8 +19,11 @@ parse_summary_inventory_data_urls(
 
 \item{return_message}{if `TRUE` returns message}
 }
+\value{
+A `tibble` of parsed TV inventory data
+}
 \description{
-Parsse Inventory URLs
+Parse Inventory URLs
 }
 \examples{
 parse_summary_inventory_data_urls("http://data.gdeltproject.org/gdeltv3/iatv/inventory/20240805.inventory.csv")

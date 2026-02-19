@@ -6,14 +6,28 @@
 \usage{
 parse_gkg_mentioned_themes(
   gdelt_data,
-  filter_na = T,
+  filter_na = TRUE,
   theme_column = "themes",
-  return_wide = T
+  return_wide = TRUE
 )
 }
 \arguments{
+\item{gdelt_data}{A \code{tibble} of GDELT data to parse.}
+
+\item{filter_na}{Logical. If \code{TRUE}, removes rows with \code{NA} values.}
+
+\item{return_wide}{Logical. If \code{TRUE}, returns data in wide format; otherwise long format.}
+
 \item{organization_column}{options \code{c('theme', 'themes', 'countThemes', 'themesCharLoc', 'charLoc'))}}
+}
+\value{
+A `tibble` of parsed mentioned themes from GKG data
 }
 \description{
 Returns mentioned themes from a gkg data frame
+}
+\examples{
+\dontrun{
+parse_gkg_mentioned_themes()
+}
 }

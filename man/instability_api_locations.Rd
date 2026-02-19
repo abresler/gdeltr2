@@ -10,11 +10,13 @@ instability_api_locations(
   variable_names = c("instability", "conflict", "tone", "protest", "artvolnorm"),
   days_moving_average = NA,
   time_periods = "daily",
-  use_multi_locations = F,
-  return_wide = T,
-  visualize = F,
-  nest_data = F,
-  return_message = T
+  use_multi_locations = FALSE,
+  return_wide = TRUE,
+  visualize = FALSE,
+  nest_data = FALSE,
+  return_message = TRUE,
+  use_parallel = FALSE,
+  workers = NULL
 )
 }
 \arguments{

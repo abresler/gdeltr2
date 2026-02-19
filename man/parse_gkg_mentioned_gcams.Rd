@@ -6,14 +6,28 @@
 \usage{
 parse_gkg_mentioned_gcams(
   gdelt_data,
-  merge_gcam_codes = F,
-  filter_na = T,
-  return_wide = T
+  merge_gcam_codes = FALSE,
+  filter_na = TRUE,
+  return_wide = TRUE
 )
 }
 \arguments{
-\item{return_wide}{}
+\item{gdelt_data}{A \code{tibble} of GDELT data to parse.}
+
+\item{merge_gcam_codes}{Logical. If \code{TRUE}, merges GCAM code descriptions.}
+
+\item{filter_na}{Logical. If \code{TRUE}, removes rows with \code{NA} values.}
+
+\item{return_wide}{Logical. If \code{TRUE}, returns data in wide format; otherwise long format.}
+}
+\value{
+A `tibble` of parsed GCAM scores from GKG data
 }
 \description{
 Returns GCAM codes from a gkg data frame
+}
+\examples{
+\dontrun{
+parse_gkg_mentioned_gcams()
+}
 }

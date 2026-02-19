@@ -9,9 +9,32 @@ get_data_vgkg_dates(
   include_translations = FALSE,
   only_most_recent = FALSE,
   remove_json_column = TRUE,
-  return_message = TRUE
+  return_message = TRUE,
+  use_parallel = FALSE,
+  workers = NULL
 )
+}
+\arguments{
+\item{include_translations}{Logical. If \code{TRUE}, includes translation data.}
+
+\item{return_message}{Logical. If \code{TRUE}, prints progress messages to console.}
+
+\item{date_data}{Character string. Date in YYYY-MM-DD format.}
+
+\item{file_directory}{Character string. Path to directory for file storage.}
+
+\item{remove_files}{Logical. If \code{TRUE}, removes temporary files after processing.}
+
+\item{empty_trash}{Logical. If \code{TRUE}, empties trash after file removal.}
+}
+\value{
+A `tibble` of parsed VGKG data for the specified dates
 }
 \description{
 Gets CV Data for stated periods
+}
+\examples{
+\dontrun{
+get_data_vgkg_dates()
+}
 }

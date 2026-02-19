@@ -6,6 +6,9 @@
 \usage{
 get_urls_vgkg_most_recent()
 }
+\value{
+A `tibble` of the most recent VGKG Cloud Vision log URLs
+}
 \description{
 Gets most recent CV log URLs
 }

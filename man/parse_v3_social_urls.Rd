@@ -4,13 +4,26 @@
 \alias{parse_v3_social_urls}
 \title{Parse V3 Social Link URLs}
 \usage{
-parse_v3_social_urls(urls = NULL, return_message = T)
+parse_v3_social_urls(
+  urls = NULL,
+  return_message = TRUE,
+  use_parallel = FALSE,
+  workers = NULL
+)
 }
 \arguments{
 \item{urls}{vector of social link urls}
 
-\item{return_message}{if \code{TRUE} rturns message}
+\item{return_message}{if \code{TRUE} returns message}
+}
+\value{
+A `tibble` of parsed social link data
 }
 \description{
 Parse V3 Social Link URLs
+}
+\examples{
+\dontrun{
+parse_v3_social_urls()
+}
 }

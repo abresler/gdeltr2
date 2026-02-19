@@ -26,7 +26,7 @@
 #' @param terms Vector of terms
 #' @param encode If `TRUE` encodes for URL
 #'
-#' @return
+#' @return A character string of terms collapsed with " OR "
 #' @export
 #'
 #' @examples
@@ -50,7 +50,7 @@ collapse_terms <-
 #' @param values Vector of Values
 #' @param use_exact_quote If `TRUE` uses exact quote
 #'
-#' @return
+#' @return A URL-encoded character string of parameter:value pairs
 #' @export
 #'
 #' @examples
@@ -61,7 +61,7 @@ generate_gdelt_api_parameters_values <-
            values = NULL,
            use_exact_quote = FALSE) {
     if (length(values) == 0) {
-      stop("Enter parameterers")
+      stop("Enter parameters")
     }
 
     if (use_exact_quote) {
@@ -86,10 +86,13 @@ generate_gdelt_api_parameters_values <-
 
 #' V2 TV API Modes
 #'
-#' @return
+#' @return A character vector of available TV API mode names
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' dictionary_v2_tv_api_modes()
+#' }
 dictionary_v2_tv_api_modes <-
   function() {
     modes <- c("ClipGallery",
@@ -147,8 +150,7 @@ dictionary_v2_tv_api_modes <-
     if (nest_data) {
       data <-
         data |>
-        nest(-url_gdelt_tv_api) |>
-        rename(data_gdelt_tv_api = data)
+        nest(data_gdelt_tv_api = -url_gdelt_tv_api)
     }
 
     data
@@ -160,46 +162,34 @@ dictionary_v2_tv_api_modes <-
 #' @param nest_data If `TRUE` nests data
 #' @param return_message if `TRUE` returns message
 #'
-#' @return
+#' @return A `tibble` of parsed TV API response data
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' parse_v2_tv_api_urls()
+#' }
 parse_v2_tv_api_urls <-
   function(urls = NULL,
            nest_data = FALSE,
-           return_message = T) {
-    if (length(urls) ==0) {
+           return_message = TRUE,
+           use_parallel = FALSE,
+           workers = NULL) {
+    if (length(urls) == 0) {
       stop("Enter v2 TV API urls")
     }
-
-    df <-
-      tibble()
 
     .parse_v2_tv_api_url_safe <-
       possibly(.parse_v2_tv_api_url, tibble())
 
-    success <- function(res) {
-      url <-
-        res$url
-
-
-      data <-
+    .safe_map_dfr(
+      urls,
+      function(url) {
         .parse_v2_tv_api_url_safe(url = url, return_message = return_message, nest_data = nest_data)
-
-      df <<-
-        df %>%
-        bind_rows(data)
-    }
-    failure <- function(msg) {
-      tibble()
-    }
-    urls %>%
-      walk(function(x) {
-        curl_fetch_multi(url = x, success, failure)
-      })
-    multi_run()
-
-    df
+      },
+      use_parallel = use_parallel,
+      workers = workers
+    )
   }
 
 
@@ -514,7 +504,6 @@ parse_v2_tv_api_urls <-
     )
   }
 
-#'  GDELT V2 TV API Data and URLS
 #'
 #' Access data from  \href{https://blog.gdeltproject.org/gdelt-2-0-television-api-debuts/}{GDELT Television V2 API}
 #'
@@ -564,9 +553,6 @@ parse_v2_tv_api_urls <-
 #' \itemize{
 #' \item `Hours`. Specify a number followed by "h" or "hours" to provide the timespan in hours.
 #' \item  `Days`. Specify a number followed by "d" or "days" to provide the timespan in days.
-#'  \item `Weeks`. Specify a number followed by "w" or "weeks" to provide the timespan in weeks.
-#'  \item `Months`. Specify a number followed by "m" or "months" to provide the timespan in months.
-#'  \item `Years`. Specify a number followed by "y" or "years" to provide the timespan in years.
 #'
 #' }
 #' @param timezone_adjust By default STARTDATETIME, ENDDATETIME and all returned results are interpreted and reported in the UTC timezone. Use this parameter to adjust to any of the following major timezones: -12:00, -11:00, -10:00, -09:30, -09:00, -08:00, -07:00, -06:00, -05:00, -04:00, -03:30, -03:00, -02:30, -02:00, -01:00, +00:00, +01:00, +02:00, +03:00, +03:30, +04:00, +04:30, +05:00, +05:30, +05:45, +06:00, +06:30, +07:00, +08:00, +08:45, +09:00, +09:30, +10:00, +10:30, +11:00, +12:00, +12:45, +13:00, +13:45 or +14:00. Note that UTC offsets are treated as-is over the entire timespan, meaning that the offset is not adjusted to account for periods in which daylight savings is honored.
@@ -574,7 +560,7 @@ parse_v2_tv_api_urls <-
 #' @param return_message If `TRUE` returns a message
 #' @param use_exact_term If `TRUE` uses exact term
 #'
-#' @return
+#' @return A `tibble` of TV API results for the specified terms and modes
 #' @export
 #'
 #' @examples
@@ -603,74 +589,83 @@ v2_tv_api <-
            end_date = NULL,
            timespan = NULL,
            timezone_adjust = NULL,
-           time_zoom = NULL) {
+           time_zoom = NULL,
+           use_parallel = FALSE,
+           workers = NULL) {
 
-    if (length(modes) == 0) {
-      stop("Enter modes")
-    }
-    tbl_params <-
-      expand.grid(
-        term = terms,
-        mode = modes,
-        format = formats,
-        stringsAsFactors = FALSE
-      ) |> as_tibble()
+    tryCatch({
+      if (length(modes) == 0) {
+        stop("Enter modes")
+      }
+      tbl_params <-
+        expand.grid(
+          term = terms,
+          mode = modes,
+          format = formats,
+          stringsAsFactors = FALSE
+        ) |> as_tibble()
 
-    all_data <-
-      seq_along(1:nrow(tbl_params)) |>
-      map_dfr(function(i) {
-        tbl_row <- tbl_params[i, ]
-        term <- tbl_row$term
-        if (use_exact_term) {
-          term <- glue::glue("\"{term}\"")
-        }
-        format <- tbl_row$format
-        mode  <- tbl_row$mode
-        .generate_tv_url(
-          term = term,
-          networks = networks,
-          stations = stations,
-          contexts = contexts,
-          markets = markets,
-          shows = shows,
-          mode = mode,
-          format = format,
-          use_combined_stations = use_combined_stations,
-          data_normalization_parameter = data_normalization_parameter,
-          date_resolution = date_resolution,
-          include_last_24_hours = include_last_24_hours,
-          maximum_records = maximum_records,
-          sort_variable = sort_variable,
-          timeline_smooth = timeline_smooth,
-          start_date = start_date,
-          end_date = end_date,
-          timespan = timespan,
-          timezone_adjust = timezone_adjust,
-          time_zoom = time_zoom,
-          return_message = return_message
-        )
-      })
+      all_data <-
+        seq_along(1:nrow(tbl_params)) |>
+        map_dfr(function(i) {
+          tbl_row <- tbl_params[i, ]
+          term <- tbl_row$term
+          if (use_exact_term) {
+            term <- glue::glue("\"{term}\"")
+          }
+          format <- tbl_row$format
+          mode  <- tbl_row$mode
+          .generate_tv_url(
+            term = term,
+            networks = networks,
+            stations = stations,
+            contexts = contexts,
+            markets = markets,
+            shows = shows,
+            mode = mode,
+            format = format,
+            use_combined_stations = use_combined_stations,
+            data_normalization_parameter = data_normalization_parameter,
+            date_resolution = date_resolution,
+            include_last_24_hours = include_last_24_hours,
+            maximum_records = maximum_records,
+            sort_variable = sort_variable,
+            timeline_smooth = timeline_smooth,
+            start_date = start_date,
+            end_date = end_date,
+            timespan = timespan,
+            timezone_adjust = timezone_adjust,
+            time_zoom = time_zoom,
+            return_message = return_message
+          )
+        })
 
-    if (!parse_data) {
-      return(all_data)
-    }
+      if (!parse_data) {
+        return(all_data)
+      }
 
-    all_data <- all_data |> filter(!format |> str_detect("html"))
+      all_data <- all_data |> filter(!format |> str_detect("html"))
 
-     nest_data <- length(modes) > 1
+       nest_data <- length(modes) > 1
 
-     dat_gdelt <- parse_v2_tv_api_urls(
-       urls = all_data$url_gdelt_tv_api,
-       nest_data = nest_data,
-       return_message = FALSE
-     )
+       dat_gdelt <- parse_v2_tv_api_urls(
+         urls = all_data$url_gdelt_tv_api,
+         nest_data = nest_data,
+         return_message = FALSE,
+         use_parallel = use_parallel,
+         workers = workers
+       )
 
-     all_data <-
-       all_data |>
-       mutate(url_gdelt_tv_api = str_to_lower(url_gdelt_tv_api)) |>
-       left_join(dat_gdelt, by = "url_gdelt_tv_api")
+       all_data <-
+         all_data |>
+         mutate(url_gdelt_tv_api = str_to_lower(url_gdelt_tv_api)) |>
+         left_join(dat_gdelt, by = "url_gdelt_tv_api")
 
-    all_data
+      all_data
+    }, error = function(e) {
+      cli::cli_alert_danger("Failed: {e$message}")
+      return(tibble())
+    })
 
   }
 
@@ -686,23 +681,20 @@ v2_tv_api <-
 
 # json --------------------------------------------------------------------
 
-.parse_tv <- function(url = "https://api.gdeltproject.org/api/v2/tv/tv?query=trump%20Network:CBS&mode=timelinevolnorm&format=csv&datanorm=perc&timelinesmooth=0&datacomb=sep&last24=yes&timezoom=yes") {
-
-}
-
-.parse_tv_show_url <-
-  function(url = "https://api.gdeltproject.org/api/v2/tv/tv?format=csv&timespan=FULL&last24=yes&query=%22Thomas%20Crooks%22%20(station:CNN%20OR%20station:FOXNEWS%20OR%20station:MSNBC%20OR%20%20station:WNBC%20)%20&mode=showchart") {
-
-  }
+# NOTE: .parse_tv and .parse_tv_show_url were empty stubs -- removed.
+# Use .parse_v2_tv_api_url() for TV API URL parsing.
 
 #' Widen TV Trend data
 #'
 #' @param data `tibble`
 #'
-#' @return
+#' @return A widened `tibble` of TV trend topics with numbered columns per station
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' widen_tv_trends()
+#' }
 widen_tv_trends <-
   function(data) {
     data <-
@@ -713,7 +705,9 @@ widen_tv_trends <-
 
     data <-
       data |>
-      unite(type, type, id_station) |> spread(type, topic) |> janitor::clean_names()
+      unite(type, type, id_station) |>
+      pivot_wider(names_from = type, values_from = topic) |>
+      janitor::clean_names()
 
     data
   }
@@ -724,7 +718,7 @@ widen_tv_trends <-
 #' @param return_wide If `TRUE` returns data in wide form.
 #' @param return_message If `TRUE` returns messages
 #'
-#' @return
+#' @return A `tibble` of trending TV topics by station and market
 #' @export
 #'
 #' @examples
@@ -735,49 +729,50 @@ v2_tv_trends <-
   function(include_national_topics = TRUE,
            return_wide = FALSE,
            return_message = TRUE) {
-    dat <- "https://api.gdeltproject.org/api/v2/tv/tv?mode=TrendingTopics&format=json" |> fromJSON(simplifyDataFrame = TRUE)
-    time_generated <- dat$`DateGenerated:` |> ymd_hms() |> lubridate::with_tz(Sys.timezone())
-    tbl_trending <- dat$StationTrendingTopics |> as_tibble() |> unnest() |> mutate(type = "trending")
-    tbl_top <-
-      dat$StationTopTopics |> as_tibble() |> unnest() |> mutate(type = "top")
-    trending_phrases <- dat$OverallTrendingPhrases |> str_to_title()
-    trending_topics <- dat$OverallTrendingTopics |> str_to_title()
+    tryCatch({
+      dat <- "https://api.gdeltproject.org/api/v2/tv/tv?mode=TrendingTopics&format=json" |> fromJSON(simplifyDataFrame = TRUE)
+      time_generated <- dat$`DateGenerated:` |> ymd_hms() |> lubridate::with_tz(Sys.timezone())
+      tbl_trending <- dat$StationTrendingTopics |> as_tibble() |> unnest(cols = everything()) |> mutate(type = "trending")
+      tbl_top <-
+        dat$StationTopTopics |> as_tibble() |> unnest(cols = everything()) |> mutate(type = "top")
+      trending_phrases <- dat$OverallTrendingPhrases |> str_to_title()
+      trending_topics <- dat$OverallTrendingTopics |> str_to_title()
 
-    if (return_message) {
-      tp <- trending_phrases |> sort() |> str_c(collapse = "\n")
-      topics <- trending_topics |> sort() |> str_c(collapse = "\n")
-      glue::glue(
-        '{crayon::red("GDELT Trending National Phrases")} at {crayon::green(time_generated)}:\n{tp}\n\n'
-      ) |> cat(fill = TRUE)
-      glue::glue(
-        '{crayon::red("\n\nGDELT Trending National Topics")} at {crayon::green(time_generated)}:\n{topics}'
-      ) |> cat(fill = TRUE, sep = "\n")
-    }
+      if (return_message) {
+        tp <- trending_phrases |> sort() |> str_c(collapse = "\n")
+        topics <- trending_topics |> sort() |> str_c(collapse = "\n")
+        cli::cli_alert_info("{cli::col_red('GDELT Trending National Phrases')} at {cli::col_green(time_generated)}:\n{tp}")
+        cli::cli_alert_info("{cli::col_red('GDELT Trending National Topics')} at {cli::col_green(time_generated)}:\n{topics}")
+      }
 
-    data <-
-      list(tbl_trending, tbl_top) |> reduce(bind_rows) |>
-      setNames(c("id_station", "topic", "type")) |>
-      select(type, everything())
-
-    if (include_national_topics) {
-      dat_phrases <- tibble(topic = trending_phrases) |>
-        mutate(type = "trending") |>
-        mutate(id_station = "National Phrases")
-
-      dat_topic <-
-        tibble(topic = trending_topics) |>
-        mutate(type = "top") |>
-        mutate(id_station = "National Topic")
-
-      data <- list(dat_phrases, dat_topic, data) |> reduce(bind_rows) |>
+      data <-
+        list(tbl_trending, tbl_top) |> reduce(bind_rows) |>
+        setNames(c("id_station", "topic", "type")) |>
         select(type, everything())
-    }
 
-    if (return_wide) {
-      data <- widen_tv_trends(data)
-    }
+      if (include_national_topics) {
+        dat_phrases <- tibble(topic = trending_phrases) |>
+          mutate(type = "trending") |>
+          mutate(id_station = "National Phrases")
 
-    data
+        dat_topic <-
+          tibble(topic = trending_topics) |>
+          mutate(type = "top") |>
+          mutate(id_station = "National Topic")
+
+        data <- list(dat_phrases, dat_topic, data) |> reduce(bind_rows) |>
+          select(type, everything())
+      }
+
+      if (return_wide) {
+        data <- widen_tv_trends(data)
+      }
+
+      data
+    }, error = function(e) {
+      cli::cli_alert_danger("Failed: {e$message}")
+      return(tibble())
+    })
 
   }
 
@@ -795,49 +790,52 @@ v2_tv_trends <-
 #'
 #' @return a \code{tibble}
 #' @export
-#' @import dplyr jsonlite lubridate purrr
-#' @importFrom tidyr separate
 #'
 #' @examples
 #' dictionary_gdelt_tv_stations()
 dictionary_gdelt_tv_stations <-
   memoise::memoise(function(snake_names = FALSE) {
-    json_data <-
-      "https://api.gdeltproject.org/api/v2/tv/tv?mode=stationdetails&format=json" %>%
-      fromJSON(simplifyVector = T)
+    tryCatch({
+      json_data <-
+        "https://api.gdeltproject.org/api/v2/tv/tv?mode=stationdetails&format=json" |>
+        fromJSON(simplifyVector = TRUE)
 
-    data <- json_data$station_details %>%
-      as_tibble() |>
-      janitor::clean_names()
+      data <- json_data$station_details |>
+        as_tibble() |>
+        janitor::clean_names()
 
-    data <- .munge_gdelt_names(data = data, snake_names = FALSE)
-    data <-
-      data %>%
-      separate(
-        col = "nameStation",
-        into = c("nameStation", "slugAffiliate"),
-        sep = "\\(",
-        extra = "merge",
-        fill = "left"
-      ) |>
-      mutate(slugAffiliate = slugAffiliate %>% str_replace_all("\\)", "")) %>%
-      mutate_all(str_trim)
+      data <- .munge_gdelt_names(data = data, snake_names = FALSE)
+      data <-
+        data |>
+        separate(
+          col = "nameStation",
+          into = c("nameStation", "slugAffiliate"),
+          sep = "\\(",
+          extra = "merge",
+          fill = "left"
+        ) |>
+        mutate(slugAffiliate = slugAffiliate |> str_replace_all("\\)", "")) |>
+        mutate(across(everything(), str_trim))
 
-    data <-
-      data %>%
-      mutate(
-        datetimeStartData = datetimeStartData %>% lubridate::ymd_hms() %>% lubridate::with_tz(Sys.timezone()),
-        datetimeEndData = datetimeEndData %>% lubridate::ymd_hms() %>% lubridate::with_tz(Sys.timezone()),
-        yearDataStart = lubridate::year(datetimeStartData),
-        yearDataEnd  = lubridate::year(datetimeEndData),
-        isActiveStation =  yearDataEnd == (lubridate::year(Sys.Date()))
-      )
+      data <-
+        data |>
+        mutate(
+          datetimeStartData = datetimeStartData |> lubridate::ymd_hms() |> lubridate::with_tz(Sys.timezone()),
+          datetimeEndData = datetimeEndData |> lubridate::ymd_hms() |> lubridate::with_tz(Sys.timezone()),
+          yearDataStart = lubridate::year(datetimeStartData),
+          yearDataEnd  = lubridate::year(datetimeEndData),
+          isActiveStation =  yearDataEnd == (lubridate::year(Sys.Date()))
+        )
 
-    if (snake_names) {
-      data <- data |> janitor::clean_names()
-    }
+      if (snake_names) {
+        data <- data |> janitor::clean_names()
+      }
 
-    data
+      data
+    }, error = function(e) {
+      cli::cli_alert_danger("Failed: {e$message}")
+      return(tibble())
+    })
 
   })
 
@@ -852,12 +850,12 @@ dictionary_gdelt_tv_stations <-
   }
 
   date_slug <-
-    date %>% lubridate::ymd() %>% str_replace_all("\\-", "")
+    date |> lubridate::ymd() |> str_replace_all("\\-", "")
 
   base <- "http://data.gdeltproject.org/gdeltv3/iatv/inventory"
 
   url <-
-    glue("{base}/{date_slug}.inventory.csv") %>% as.character()
+    glue("{base}/{date_slug}.inventory.csv") |> as.character()
 
   tibble(dateData = date, urlGDELTInventory = url)
 
@@ -866,7 +864,7 @@ dictionary_gdelt_tv_stations <-
 .generate_tv_inventory_urls <-
   function(date_start = c("2018-02-01"),
            date_end = NULL) {
-    if (date_start %>% is_null()) {
+    if (date_start |> is_null()) {
       stop("Please enter a date")
     }
 
@@ -896,7 +894,7 @@ dictionary_gdelt_tv_stations <-
     data <- data.table::fread(url) |> as_tibble()
 
     data <-
-      data %>%
+      data |>
       set_names(
         c(
           "idShow",
@@ -908,19 +906,19 @@ dictionary_gdelt_tv_stations <-
           "datetimeShowStart",
           "datetimeShowEnd"
         )
-      ) %>%
+      ) |>
       mutate(urlGDELTInventory = url)
 
     data
   }
 
-#' Parsse Inventory URLs
+#' Parse Inventory URLs
 #'
 #' @param urls vector of GDELT v3 URLSs
 #' @param snake_names if `TRUE` snakes names
 #' @param return_message if `TRUE` returns message
 #'
-#' @return
+#' @return A `tibble` of parsed TV inventory data
 #' @export
 #'
 #' @examples
@@ -928,36 +926,24 @@ dictionary_gdelt_tv_stations <-
 parse_summary_inventory_data_urls <-
   function(urls = "http://data.gdeltproject.org/gdeltv3/iatv/inventory/20240805.inventory.csv",
            snake_names = FALSE,
-           return_message = T) {
-    df <-
-      tibble()
+           return_message = TRUE,
+           use_parallel = FALSE,
+           workers = NULL) {
 
     .parse_summary_inventory_data_url_safe <-
       possibly(.parse_summary_inventory_data_url, tibble())
 
-    success <- function(res) {
-      url <-
-        res$url
-      if (return_message) {
-        glue("Parsing {url}") %>% cat(fill = T)
-      }
-
-      data <-
-        url %>%
-        .parse_summary_inventory_data_url_safe()
-
-      df <<-
-        df %>%
-        bind_rows(data)
-    }
-    failure <- function(msg) {
-      tibble()
-    }
-    urls %>%
-      walk(function(x) {
-        curl_fetch_multi(url = x, success, failure)
-      })
-    multi_run()
+    df <- .safe_map_dfr(
+      urls,
+      function(url) {
+        if (return_message) {
+          cli::cli_alert_info("Parsing {url}")
+        }
+        .parse_summary_inventory_data_url_safe(url = url)
+      },
+      use_parallel = use_parallel,
+      workers = workers
+    )
 
     if (snake_names) {
       df <- df |> janitor::clean_names()
@@ -972,7 +958,7 @@ parse_summary_inventory_data_urls <-
 #'
 #' @param date_start Start date of data, cannot be before June 16th, 2009
 #' @param date_end End date of data, cannot exceed current date
-#' @param return_message if \code{TRUE} returns a messag
+#' @param return_message if \code{TRUE} returns a message
 #'
 #' @return a \code{tibble}
 #' @export
@@ -982,7 +968,7 @@ tv_summaries <-
   function(date_start = Sys.Date() - 1,
            date_end = Sys.Date(),
            snake_names = FALSE,
-           return_message = T) {
+           return_message = TRUE) {
     df_urls <-
       .generate_tv_inventory_urls(date_start = date_start, date_end = date_end)
 
@@ -994,17 +980,17 @@ tv_summaries <-
       )
 
     all_data <-
-      all_data %>%
+      all_data |>
       left_join(df_urls, by = "urlGDELTInventory") |>
       select(dateData, everything()) |>
       arrange(dateData)
 
 
     all_data <-
-      all_data %>%
+      all_data |>
       mutate(
-        datetimeShowStart = datetimeShowStart %>% lubridate::with_tz(Sys.timezone()),
-        datetimeShowEnd = datetimeShowEnd %>% lubridate::with_tz(Sys.timezone())
+        datetimeShowStart = datetimeShowStart |> lubridate::with_tz(Sys.timezone()),
+        datetimeShowEnd = datetimeShowEnd |> lubridate::with_tz(Sys.timezone())
       )
 
     if (snake_names) {
@@ -1021,10 +1007,13 @@ tv_summaries <-
 #' @param date_start Start Date.  Default is `Sys.Date()-1`
 #' @param date_end End Date.  Default is Default is `Sys.Date()`
 #'
-#' @return
+#' @return A `tibble` of distinct TV show names and station IDs
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' dictionary_gdelt_tv_shows()
+#' }
 dictionary_gdelt_tv_shows <-
   function(date_start = Sys.Date() - 30,
            date_end = Sys.Date()) {

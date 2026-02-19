@@ -7,8 +7,18 @@
 parse_xml_safe_search(data, id_vgkg = 1)
 }
 \arguments{
-\item{id_vgkg}{}
+\item{data}{A \code{tibble} of data to process.}
+
+\item{id_vgkg}{Integer. Row index into the VGKG data.}
+}
+\value{
+A `tibble` of parsed XML safe search data for the specified VGKG record
 }
 \description{
 Parses Safe Search
+}
+\examples{
+\dontrun{
+parse_xml_safe_search()
+}
 }

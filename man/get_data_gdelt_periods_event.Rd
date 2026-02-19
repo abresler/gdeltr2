@@ -8,10 +8,28 @@ get_data_gdelt_periods_event(
   periods = c(1983, 1989),
   file_directory = NULL,
   folder_name = "gdelt_data",
-  remove_files = T,
-  empty_trash = T,
-  return_message = T
+  remove_files = TRUE,
+  empty_trash = TRUE,
+  return_message = TRUE,
+  use_parallel = FALSE,
+  workers = NULL
 )
+}
+\arguments{
+\item{periods}{Character vector of GDELT time periods.}
+
+\item{file_directory}{Character string. Path to directory for file storage.}
+
+\item{remove_files}{Logical. If \code{TRUE}, removes temporary files after processing.}
+
+\item{empty_trash}{Logical. If \code{TRUE}, empties trash after file removal.}
+
+\item{return_message}{Logical. If \code{TRUE}, prints progress messages to console.}
+
+\item{is_count_file}{Logical. If \code{TRUE}, treats input as count file.}
+}
+\value{
+A `tibble` of GDELT event data for the specified periods
 }
 \description{
 Returns GDELT event data for a given periods

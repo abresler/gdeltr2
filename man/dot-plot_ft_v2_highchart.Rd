@@ -11,8 +11,20 @@
 )
 }
 \arguments{
-\item{include_title}{}
+\item{data}{A \code{tibble} of data to process.}
+
+\item{search_mode}{Character string. The GDELT API search mode.}
+
+\item{include_title}{Logical. If \code{TRUE}, includes article titles.}
+}
+\value{
+A Highcharts visualization of Full Text API timeline data
 }
 \description{
 Title
+}
+\examples{
+\dontrun{
+# Example usage
+}
 }

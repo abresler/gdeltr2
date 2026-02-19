@@ -6,6 +6,9 @@
 \usage{
 get_codes_gcam()
 }
+\value{
+A `tibble` of GCAM codebook entries with dimension and variable metadata
+}
 \description{
 Retrives most recent GDELT Global Content Analysis Measures (GCAM) code book
 }

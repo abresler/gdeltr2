@@ -21,23 +21,6 @@ ft_geo_query(
 }
 \arguments{
 \item{query_parameters}{list of query parameters \itemize{
- \item term: search team
- \item domain: web domain
- \item image_face_tone: image face tone
- \item image_num_face: number of faces
- \item image_ocr: OCR to find
- \item image_tag: image tagcode
- \item image_web_tag: image web code
- \item image_web_count: image count
- \item location_name: name of the location
- \item location_adm1: adm code
- \item location_country: country
- \item near: specified distances
- \item source_country: source country
- \item source_language: source language
- \item gkg_theme: GKG theme
- \item tone: numeric tone
- \item tone_absolute_value:
 }}
 
 \item{mode}{visualization mode \itemize{
@@ -80,6 +63,9 @@ ft_geo_query(
 }}
 
 \item{browse_url}{if \code{TRUE} open url in browser}
+}
+\value{
+A `tibble` of geographic query results from the GDELT GEO API
 }
 \description{
 This function will generate a V2 GEO api query and either open

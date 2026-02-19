@@ -7,8 +7,18 @@
 parse_language_types(data, id_vgkg = 1)
 }
 \arguments{
-\item{id_vgkg}{}
+\item{data}{A \code{tibble} of data to process.}
+
+\item{id_vgkg}{Integer. Row index into the VGKG data.}
+}
+\value{
+A `tibble` of parsed language type data for the specified VGKG record
 }
 \description{
 Parses XML Language Type
+}
+\examples{
+\dontrun{
+parse_language_types()
+}
 }

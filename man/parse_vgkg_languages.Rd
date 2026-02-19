@@ -4,11 +4,23 @@
 \alias{parse_vgkg_languages}
 \title{Parses Cloud Vision Languages}
 \usage{
-parse_vgkg_languages(gdelt_data, filter_na = T, return_wide = T)
+parse_vgkg_languages(gdelt_data, filter_na = TRUE, return_wide = TRUE)
 }
 \arguments{
-\item{return_wide}{}
+\item{gdelt_data}{A \code{tibble} of GDELT data to parse.}
+
+\item{filter_na}{Logical. If \code{TRUE}, removes rows with \code{NA} values.}
+
+\item{return_wide}{Logical. If \code{TRUE}, returns data in wide format; otherwise long format.}
+}
+\value{
+A `tibble` of parsed Cloud Vision detected languages from VGKG data
 }
 \description{
 Parses Cloud Vision Languages
+}
+\examples{
+\dontrun{
+parse_vgkg_languages()
+}
 }

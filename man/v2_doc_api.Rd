@@ -41,7 +41,9 @@ v2_doc_api(
   widen_url_parameters = FALSE,
   widen_variables = c("mode", "timespan", "format"),
   nest_data = FALSE,
-  return_message = TRUE
+  return_message = TRUE,
+  use_parallel = FALSE,
+  workers = NULL
 )
 }
 \arguments{
@@ -150,6 +152,9 @@ v2_doc_api(
 \item{nest_data}{If `TRUE` nest parsed data}
 
 \item{return_message}{If `TRUE` returns message}
+}
+\value{
+A `tibble` of V2 Document API results for the specified terms
 }
 \description{
 Interact with the GDELT V2 Document API \href{https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/}{Documentation}

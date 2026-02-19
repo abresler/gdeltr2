@@ -6,6 +6,14 @@
 \usage{
 dictionary_v2_tv_api_modes()
 }
+\value{
+A character vector of available TV API mode names
+}
 \description{
 V2 TV API Modes
+}
+\examples{
+\dontrun{
+dictionary_v2_tv_api_modes()
+}
 }

@@ -7,13 +7,27 @@
 parse_gkg_mentioned_source_data(
   gdelt_data,
   source_column = "sources",
-  filter_na = T,
-  return_wide = F
+  filter_na = TRUE,
+  return_wide = FALSE
 )
 }
 \arguments{
+\item{gdelt_data}{A \code{tibble} of GDELT data to parse.}
+
 \item{source_column}{options \code{c('sources', 'source', 'sources.url', 'source.url'))}}
+
+\item{filter_na}{Logical. If \code{TRUE}, removes rows with \code{NA} values.}
+
+\item{return_wide}{Logical. If \code{TRUE}, returns data in wide format; otherwise long format.}
+}
+\value{
+A `tibble` of parsed source URLs and domains from GKG data
 }
 \description{
 Returns source name or source url from a gkg data frame
+}
+\examples{
+\dontrun{
+parse_gkg_mentioned_source_data()
+}
 }

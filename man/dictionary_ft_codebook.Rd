@@ -25,6 +25,9 @@ interactive trelliscope}
 
 \item{path}{file path where you want to save the trelliscope if \code{TRUE}}
 }
+\value{
+A `tibble` of Full Text API codebook entries for the specified type
+}
 \description{
 GDELT Full Text API 2.0 Codebooks
 }

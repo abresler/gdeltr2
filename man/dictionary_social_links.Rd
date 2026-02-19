@@ -6,6 +6,14 @@
 \usage{
 dictionary_social_links()
 }
+\value{
+A `tibble` with columns: dateData, urlGDELT
+}
 \description{
 Social Media Link Dictionary
+}
+\examples{
+\dontrun{
+dictionary_social_links()
+}
 }

@@ -29,10 +29,33 @@ plot_hc_trelliscope(
 )
 }
 \arguments{
-\item{trelliscope_parameters}{}
+\item{data}{A \code{tibble} of data to process.}
+
+\item{remove_columns}{Character vector of column names to remove.}
+
+\item{group_columns}{Character vector of column names to group by.}
+
+\item{id_columns}{Named list of column specifications for the trelliscope.}
+
+\item{include_title}{Logical. If \code{TRUE}, includes article titles.}
+
+\item{trelliscope_parameters}{List of trelliscope display parameters.}
+}
+\value{
+A trelliscope Highcharts visualization widget
+
+A trelliscope Highcharts visualization widget
 }
 \description{
 Plot a highchart trelliscope
 
 Plot a highchart trelliscope
+}
+\examples{
+\dontrun{
+plot_hc_trelliscope()
+}
+\dontrun{
+plot_hc_trelliscope()
+}
 }

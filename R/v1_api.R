@@ -2,9 +2,8 @@
   function(url = "https://api.gdeltproject.org/api/v1/search_ftxtsearch/search_ftxtsearch?query='donald%20trump'%20sourcelang:english&output=artimglist&sort=date&maxrows=1000&dropdup=true&trans=googtrans") {
     url_parts <- url |> str_split("\\?") |> flatten_chr()
     query_params <- url_parts[[2]]
-    query_params |> str_remove_all("")
     tibble(query_params) |>
-      separate_rows(query_params, sep = "\\:")
+      separate_longer_delim(query_params, delim = ":")
   }
 
 # url_gen -----------------------------------------------------------------
@@ -25,7 +24,7 @@
            absolute_tone_less_than = NA,
            tone_less_than = NA,
            tone_more_than = NA,
-           dedeup_results = T,
+           dedeup_results = TRUE,
            sort_by = 'date',
            use_google_translate = TRUE) {
     url_base <-
@@ -38,8 +37,8 @@
         'all words'
     } else {
       term_slug <-
-        term %>%
-        str_to_lower() %>%
+        term |>
+        str_to_lower() |>
         URLencode()
       term_word <-
         term
@@ -47,15 +46,15 @@
         glue::glue("term:{term_word}")
     }
 
-    if (no_term & !domain %>% is.na()) {
+    if (no_term & !(\(x) is.na(x))(domain)) {
       term_word <-
         domain
     }
 
-    if (!domain %>% is.na()) {
+    if (!(\(x) is.na(x))(domain)) {
       domain_slug <-
-        '%20domain:' %>%
-        paste0(domain %>% URLencode())
+        '%20domain:' |>
+        paste0(URLencode(domain))
       search_term <-
         glue::glue("domain:{domain}")
     } else {
@@ -63,65 +62,65 @@
         ''
     }
 
-    if (!last_minutes %>% is.na()) {
+    if (!(\(x) is.na(x))(last_minutes)) {
       last_minute_slug <-
-        '%20lastminutes:' %>%
+        '%20lastminutes:' |>
         paste0(last_minutes)
     } else {
       last_minute_slug <-
         ''
     }
 
-    if (!tone_more_than %>% is.na()) {
+    if (!(\(x) is.na(x))(tone_more_than)) {
       if (tone_more_than > 100) {
         stop("Tone can't be over 100")
       }
       tone_more_slug <-
-        '%20tonemorethan:' %>%
+        '%20tonemorethan:' |>
         paste0(tone_more_than)
     } else {
       tone_more_slug <-
         ''
     }
 
-    if (!absolute_tone_more_than %>% is.na()) {
+    if (!(\(x) is.na(x))(absolute_tone_more_than)) {
       if (absolute_tone_more_than > 100) {
         stop("Tone can't be over 100")
       }
       absolute_tone_more_slug <-
-        '%20tonemorethanabs:' %>%
-        paste0(tone_more_than)
+        '%20tonemorethanabs:' |>
+        paste0(absolute_tone_more_than)
     } else {
       absolute_tone_more_slug <-
         ''
     }
 
-    if (!tone_less_than %>% is.na()) {
+    if (!(\(x) is.na(x))(tone_less_than)) {
       if (tone_less_than < -100) {
         stop("Tone can't be under -100")
       }
       tone_less_slug <-
-        '%20tonelessthan:' %>%
+        '%20tonelessthan:' |>
         paste0(tone_less_than)
     } else {
       tone_less_slug <-
         ''
     }
 
-    if (!absolute_tone_less_than %>% is.na()) {
+    if (!(\(x) is.na(x))(absolute_tone_less_than)) {
       if (absolute_tone_less_than < 0) {
         stop("Absolute tone can't be under 0")
       }
       absolute_tone_less_slug <-
-        '%20tonelessthanabs:' %>%
-        paste0(tone_less_than)
+        '%20tonelessthanabs:' |>
+        paste0(absolute_tone_less_than)
     } else {
       absolute_tone_less_slug <-
         ''
     }
 
     term_slug <-
-      term_slug %>%
+      term_slug |>
       paste0(domain_slug,
              last_minute_slug,
              tone_more_slug,
@@ -133,23 +132,23 @@
         sort_slug = c('date', 'rel', 'toneasc', 'tonedesc')
       )
 
-    if (str_to_lower(sort_by) %in% sort_df$sort_term == F) {
-      stop("Sorry sort terms can only be\n" %>%
+    if (str_to_lower(sort_by) %in% sort_df$sort_term == FALSE) {
+      stop("Sorry sort terms can only be\n" |>
              paste0(paste0(sort_df$sort_term, collapse = '\n')))
     }
 
     slug_sort <-
-      sort_df %>%
-      dplyr::filter(sort_term == str_to_lower(sort_by)) %>%
-      .$sort_slug
+      sort_df |>
+      dplyr::filter(sort_term == str_to_lower(sort_by)) |>
+      (\(x) x$sort_slug)()
 
     slug_sort <-
-      '&sort=' %>%
+      '&sort=' |>
       paste0(slug_sort)
 
-    if (!max_rows %>% is.na()) {
+    if (!(\(x) is.na(x))(max_rows)) {
       max_row_slug <-
-        '&maxrows=' %>%
+        '&maxrows=' |>
         paste0(max_rows)
 
     } else {
@@ -161,7 +160,7 @@
       source_country <-
         source_country |> str_to_lower() |> str_remove_all("\\-|\\ ")
       source_country_slug <-
-        '%20sourcecountry:' %>%
+        '%20sourcecountry:' |>
         paste0(source_country)
     } else {
       source_country_slug <-
@@ -172,7 +171,7 @@
       source_language <-
         source_language |> str_to_lower() |> str_remove_all("\\-|\\ ")
       source_language_slug <-
-        '%20sourcelang:' %>%
+        '%20sourcelang:' |>
         paste0(source_language)
     } else {
       source_language_slug <-
@@ -183,8 +182,8 @@
       exclude_country <-
         exclude_country |> str_to_lower() |> str_remove_all("\\-|\\ ")
       exclude_country_slug <-
-        '%20sourcecountry:' %>%
-        paste0(source_country)
+        '%20-sourcecountry:' |>
+        paste0(exclude_country)
     } else {
       exclude_country_slug <-
         ''
@@ -194,7 +193,7 @@
       exclude_language <-
         exclude_language |> str_to_lower() |> str_remove_all("\\-|\\ ")
       exclude_language_slug <-
-        '%20sourcelangnot:' %>%
+        '%20sourcelangnot:' |>
         paste0(exclude_language)
     } else {
       exclude_language_slug <-
@@ -232,7 +231,7 @@
 
 
     url <-
-      url_base %>%
+      url_base |>
       paste0(
         term_slug,
         source_language_slug,
@@ -268,11 +267,11 @@
            absolute_tone_less_than = NA,
            tone_less_than = NA,
            tone_more_than = NA,
-           dedeup_results = T,
+           dedeup_results = TRUE,
            sort_by = 'date',
            use_google_translate = TRUE) {
     tbl_terms <-
-      expand.grid(term = terms, stringsAsFactors = F) |> as_tibble()
+      expand.grid(term = terms, stringsAsFactors = FALSE) |> as_tibble()
 
     all_data <-
       seq_along(terms) |>
@@ -342,11 +341,11 @@
   absolute_tone_less_than = NA,
   tone_less_than = NA,
   tone_more_than = NA,
-  dedeup_results = T,
+  dedeup_results = TRUE,
   sort_by = 'date',
   use_google_translate = TRUE) {
     tbl_domains <-
-      expand.grid(domain = domains, stringsAsFactors = F) |> as_tibble()
+      expand.grid(domain = domains, stringsAsFactors = FALSE) |> as_tibble()
 
     all_data <-
       seq_along(domains) |>
@@ -376,7 +375,7 @@
     all_data
   }
 
-#' Generate GDELT V1 API Searhc URLs
+#' Generate GDELT V1 API Search URLs
 #'
 #' @param terms Vector of terms if not NA
 #' @param domains Vector of domains if not NA
@@ -386,31 +385,34 @@
 #' \item artimgonlylist `This produces an HTML formatted article list suitable for iframe embedding that includes ONLY those articles that include a featured social sharing image`
 #' \item artimglist `This produces an HTML formatted article list suitable for iframe embedding that includes both image and non-image matching articles, displaying images for articles that include them and a blank square for articles that do not include them`
 #' \item artimgonlycollage `This produces an HTML formatted article list suitable for iframe embedding that includes ONLY those articles that include a featured social sharing image and displays each article as a simple thumbnail image linked to the article. Thumbnails automatically tile to fill the available display space by rows`
-#' \item output=timelinecsv `CSV output suitable for using with your own alternative visualization tools or ingesting into automated workflows. Supports the same “outputtype” options.`
+#' \item output=timelinecsv `CSV output suitable for using with your own alternative visualization tools or ingesting into automated workflows. Supports the same "outputtype" options.`
 #' }
 #' @param output_timeline_type  \itemize{
 #' \item volume `Amount of articles`
 #' \item tone `Tone of articles`
 #' }
-#' @param source_country
-#' @param exclude_country
-#' @param source_language
-#' @param exclude_language
-#' @param last_minutes
-#' @param max_rows
-#' @param absolute_tone_more_than
-#' @param absolute_tone_less_than
-#' @param tone_less_than
-#' @param tone_more_than
-#' @param dedeup_results
-#' @param sort_by
-#' @param use_google_translate
-#' @param use_exact_term
+#' @param source_country Character string. Two-letter country code filter.
+#' @param exclude_country Character string. Country code to exclude.
+#' @param source_language Character string. Language code filter.
+#' @param exclude_language Character string. Language code to exclude.
+#' @param last_minutes Integer. Number of recent minutes to search.
+#' @param max_rows Integer. Maximum number of rows to return.
+#' @param absolute_tone_more_than Numeric. Minimum absolute tone filter.
+#' @param absolute_tone_less_than Numeric. Maximum absolute tone filter.
+#' @param tone_less_than Numeric. Maximum tone filter.
+#' @param tone_more_than Numeric. Minimum tone filter.
+#' @param dedeup_results Logical. If \code{TRUE}, deduplicates results.
+#' @param sort_by Character string. Sort order for results.
+#' @param use_google_translate Logical. If \code{TRUE}, uses Google Translate.
+#' @param use_exact_term Logical. If \code{TRUE}, requires exact term match.
 #'
-#' @return
+#' @return A `tibble` of V1 Full Text Search API URLs for the specified terms
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' ft_v1_api_urls()
+#' }
 ft_v1_api_urls <-
   function(terms = NA,
            domains = NA,
@@ -427,7 +429,7 @@ ft_v1_api_urls <-
            absolute_tone_less_than = NA,
            tone_less_than = NA,
            tone_more_than = NA,
-           dedeup_results = T,
+           dedeup_results = TRUE,
            sort_by = 'date',
            use_google_translate = TRUE) {
     all_data <- tibble()
@@ -437,7 +439,7 @@ ft_v1_api_urls <-
         terms = terms,
         output = output,
         output_timeline_type = output_timeline_type,
-        domain = domain,
+        domain = NA,
         source_country = source_country,
         exclude_country = exclude_country,
         source_language = source_language,
@@ -487,7 +489,7 @@ ft_v1_api_urls <-
         parameter_search_term,
         into = c("parameter", "term"),
         sep = "\\:",
-        remove = F
+        remove = FALSE
       )
 
     all_data
@@ -507,7 +509,7 @@ ft_v1_api_urls <-
     dat <-
       dat |>
       mutate(
-        datetime_human = datetime_human |> lubridate::mdy_hms(tz = 'UTC') %>%  lubridate::with_tz(Sys.timezone()),
+        datetime_human = datetime_human |> lubridate::mdy_hms(tz = 'UTC') |> lubridate::with_tz(Sys.timezone()),
         datetime_numeric = datetime_numeric |> lubridate::ymd_hms() |> lubridate::with_tz(Sys.timezone())
       ) |>
       select(datetime_data = datetime_numeric, value) |>
@@ -537,7 +539,7 @@ ft_v1_api_urls <-
      url_gdelt_v1_api = url
    )
 
-   sources_css <- page %>%
+   sources_css <- page |>
      html_nodes('.sourceinfo')
 
 
@@ -571,7 +573,7 @@ ft_v1_api_urls <-
        separate("language_country",
                 into = c("language", "country"),
                 sep = "\\ / ") |>
-       mutate_if(is.character, list(function(x) {
+       mutate(across(where(is.character), function(x) {
          x |> str_squish() |> str_remove_all("\\(|\\)")
        })) |>
        mutate(
@@ -625,9 +627,7 @@ ft_v1_api_urls <-
       count_matches <- nrow(data)
       term <-
         url |> str_split("\\?") |> flatten_chr() |> str_split("query=") |> flatten_chr() |> last() |> str_split("sourcelang") |> flatten_chr() |> first() |> str_replace_all("%20", " ") |> str_to_upper() |> str_trim()
-      glue::glue(
-        "Found {crayon::red(count_matches)} results for {crayon::blue(term)} using {crayon::green('GDELT V1 Freetext API')}"
-      ) %>% message()
+      cli::cli_alert_info("Found {cli::col_red(count_matches)} results for {cli::col_blue(term)} using {cli::col_green('GDELT V1 Freetext API')}")
     }
 
     data
@@ -639,39 +639,31 @@ ft_v1_api_urls <-
 #' @param urls Vector of URLs
 #' @param return_message If \code{TRUE} returns message
 #'
-#' @return
+#' @return A `tibble` of parsed V1 Full Text API response data
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' parse_v1_ft_urls()
+#' }
 parse_v1_ft_urls <-
-  function(urls, return_message = TRUE) {
-    all_data <-
-      tibble()
+  function(urls, return_message = TRUE, use_parallel = FALSE, workers = NULL) {
+    tryCatch({
+      .parse_v1_ft_safe <-
+        possibly(.parse_v1_ft, tibble())
 
-    .parse_v1_ft_safe <-
-      possibly(.parse_v1_ft, tibble())
-
-    success <- function(res) {
-
-      data <-
-        res$url |>
-        .parse_v1_ft_safe(return_message = return_message)
-
-      all_data <<-
-        all_data %>%
-        bind_rows(data)
-    }
-    failure <- function(msg) {
-      tibble()
-    }
-    urls %>%
-      walk(function(x) {
-        curl_fetch_multi(url = x, success, failure)
-      })
-
-    multi_run()
-
-    all_data
+      .safe_map_dfr(
+        urls,
+        function(url) {
+          .parse_v1_ft_safe(url = url, return_message = return_message)
+        },
+        use_parallel = use_parallel,
+        workers = workers
+      )
+    }, error = function(e) {
+      cli::cli_alert_danger("Failed: {e$message}")
+      return(tibble())
+    })
 
   }
 
@@ -685,29 +677,29 @@ parse_v1_ft_urls <-
 #' \item artimgonlylist `This produces an HTML formatted article list suitable for iframe embedding that includes ONLY those articles that include a featured social sharing image`
 #' \item artimglist `This produces an HTML formatted article list suitable for iframe embedding that includes both image and non-image matching articles, displaying images for articles that include them and a blank square for articles that do not include them`
 #' \item artimgonlycollage `This produces an HTML formatted article list suitable for iframe embedding that includes ONLY those articles that include a featured social sharing image and displays each article as a simple thumbnail image linked to the article. Thumbnails automatically tile to fill the available display space by rows`
-#' \item output=timelinecsv `CSV output suitable for using with your own alternative visualization tools or ingesting into automated workflows. Supports the same “outputtype” options.`
+#' \item output=timelinecsv `CSV output suitable for using with your own alternative visualization tools or ingesting into automated workflows. Supports the same "outputtype" options.`
 #' }
 #' @param output_timeline_type  \itemize{
 #' \item volume `Amount of articles`
 #' \item tone `Tone of articles`
 #' }
-#' @param source_country
-#' @param exclude_country
-#' @param source_language
-#' @param exclude_language
-#' @param last_minutes
-#' @param max_rows
-#' @param absolute_tone_more_than
-#' @param absolute_tone_less_than
-#' @param tone_less_than
-#' @param tone_more_than
-#' @param dedeup_results
-#' @param sort_by
-#' @param use_google_translate
-#' @param use_exact_term
-#' @param return_message
+#' @param source_country Character string. Two-letter country code filter.
+#' @param exclude_country Character string. Country code to exclude.
+#' @param source_language Character string. Language code filter.
+#' @param exclude_language Character string. Language code to exclude.
+#' @param last_minutes Integer. Number of recent minutes to search.
+#' @param max_rows Integer. Maximum number of rows to return.
+#' @param absolute_tone_more_than Numeric. Minimum absolute tone filter.
+#' @param absolute_tone_less_than Numeric. Maximum absolute tone filter.
+#' @param tone_less_than Numeric. Maximum tone filter.
+#' @param tone_more_than Numeric. Minimum tone filter.
+#' @param dedeup_results Logical. If \code{TRUE}, deduplicates results.
+#' @param sort_by Character string. Sort order for results.
+#' @param use_google_translate Logical. If \code{TRUE}, uses Google Translate.
+#' @param use_exact_term Logical. If \code{TRUE}, requires exact term match.
+#' @param return_message Logical. If \code{TRUE}, prints progress messages to console.
 #'
-#' @return
+#' @return A `tibble` of V1 Full Text API results for the specified terms
 #' @export
 #'
 #' @examples
@@ -728,38 +720,43 @@ ft_v1_api <-
            absolute_tone_less_than = NA,
            tone_less_than = NA,
            tone_more_than = NA,
-           dedeup_results = T,
+           dedeup_results = TRUE,
            sort_by = 'date',
            use_google_translate = TRUE,
            return_message = TRUE) {
-    tbl_urls <-
-      ft_v1_api_urls(
-        terms = terms,
-        domains = domains,
-        use_exact_term = use_exact_term,
-        output = output,
-        output_timeline_type = output_timeline_type,
-        source_country = source_country,
-        exclude_country = exclude_country,
-        source_language = source_language,
-        exclude_language = exclude_language,
-        last_minutes = last_minutes,
-        max_rows = max_rows,
-        absolute_tone_more_than = absolute_tone_more_than,
-        absolute_tone_less_than = absolute_tone_less_than,
-        tone_less_than = tone_less_than,
-        tone_more_than = tone_more_than,
-        dedeup_results = dedeup_results,
-        sort_by = sort_by,
-        use_google_translate = use_google_translate
-      )
+    tryCatch({
+      tbl_urls <-
+        ft_v1_api_urls(
+          terms = terms,
+          domains = domains,
+          use_exact_term = use_exact_term,
+          output = output,
+          output_timeline_type = output_timeline_type,
+          source_country = source_country,
+          exclude_country = exclude_country,
+          source_language = source_language,
+          exclude_language = exclude_language,
+          last_minutes = last_minutes,
+          max_rows = max_rows,
+          absolute_tone_more_than = absolute_tone_more_than,
+          absolute_tone_less_than = absolute_tone_less_than,
+          tone_less_than = tone_less_than,
+          tone_more_than = tone_more_than,
+          dedeup_results = dedeup_results,
+          sort_by = sort_by,
+          use_google_translate = use_google_translate
+        )
 
-    dat <- parse_v1_ft_urls(urls = tbl_urls$url_gdelt_v1_api, return_message = return_message)
+      dat <- parse_v1_ft_urls(urls = tbl_urls$url_gdelt_v1_api, return_message = return_message)
 
-    dat <-
-      tbl_urls |>
-      left_join(dat, by = "url_gdelt_v1_api") |>
-      select(-url_gdelt_v1_api, everything())
+      dat <-
+        tbl_urls |>
+        left_join(dat, by = "url_gdelt_v1_api") |>
+        select(-url_gdelt_v1_api, everything())
 
-    dat
+      dat
+    }, error = function(e) {
+      cli::cli_alert_danger("Failed: {e$message}")
+      return(tibble())
+    })
   }

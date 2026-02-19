@@ -7,15 +7,27 @@
 parse_gkg_mentioned_organizations(
   gdelt_data,
   organization_column = "organizations",
-  filter_na = T,
-  return_wide = T
+  filter_na = TRUE,
+  return_wide = TRUE
 )
 }
 \arguments{
+\item{gdelt_data}{A \code{tibble} of GDELT data to parse.}
+
 \item{organization_column}{options \code{c('organization', 'organizations', 'organizations.count', 'organizationsCharLoc', 'charLoc'))}}
 
-\item{return_wide}{}
+\item{filter_na}{Logical. If \code{TRUE}, removes rows with \code{NA} values.}
+
+\item{return_wide}{Logical. If \code{TRUE}, returns data in wide format; otherwise long format.}
+}
+\value{
+A `tibble` of parsed mentioned organizations from GKG data
 }
 \description{
 Returns long or wide mentioned organizations from a GKG data frame
+}
+\examples{
+\dontrun{
+parse_gkg_mentioned_organizations()
+}
 }

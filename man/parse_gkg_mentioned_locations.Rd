@@ -7,16 +7,30 @@
 parse_gkg_mentioned_locations(
   gdelt_data,
   location_column = "locations",
-  isCharLoc = F,
-  filter_na = T,
-  return_wide = T
+  isCharLoc = FALSE,
+  filter_na = TRUE,
+  return_wide = TRUE
 )
 }
 \arguments{
+\item{gdelt_data}{A \code{tibble} of GDELT data to parse.}
+
 \item{location_column}{options \code{c('location', 'locations', 'locationsCharLoc', 'locationCharLoc', 'charLoc'))}}
 
-\item{return_wide}{}
+\item{isCharLoc}{Logical. If \code{TRUE}, uses character location variant.}
+
+\item{filter_na}{Logical. If \code{TRUE}, removes rows with \code{NA} values.}
+
+\item{return_wide}{Logical. If \code{TRUE}, returns data in wide format; otherwise long format.}
+}
+\value{
+A `tibble` of parsed mentioned locations from GKG data
 }
 \description{
 Returns mentioned locations from a gkg data frame
+}
+\examples{
+\dontrun{
+parse_gkg_mentioned_locations()
+}
 }

@@ -21,7 +21,7 @@ v2_api_url_df(
   use_or = FALSE,
   mode = "ArtGallery",
   timespan = "104 weeks",
-  quote_terms = F,
+  quote_terms = FALSE,
   format = "html",
   dates = NULL,
   maximum_records = 250,
@@ -32,8 +32,62 @@ v2_api_url_df(
 )
 }
 \arguments{
-\item{quote_terms}{}
+\item{terms}{Character vector of search terms.}
+
+\item{domains}{Character vector of domain names to filter.}
+
+\item{image_face_tone}{Character string. Image face tone filter.}
+
+\item{image_num_faces}{Integer. Number of faces filter.}
+
+\item{image_ocr}{Character string. Image OCR text filter.}
+
+\item{image_tag}{Character string. Image tag filter.}
+
+\item{image_web_tag}{Character string. Image web entity tag filter.}
+
+\item{image_web_count}{Integer. Image web entity count filter.}
+
+\item{source_country}{Character string. Two-letter country code filter.}
+
+\item{source_language}{Character string. Language code filter.}
+
+\item{gkg_theme}{Character string. GKG theme filter slug.}
+
+\item{tone}{Numeric. Tone score filter.}
+
+\item{tone_absolute_value}{Numeric. Absolute tone value filter.}
+
+\item{use_or}{Logical. If \code{TRUE}, uses OR logic for terms; otherwise AND.}
+
+\item{mode}{Character string. The API mode (e.g., "artlist", "timelinevol").}
+
+\item{timespan}{Character string. Time span for the query (e.g., "3 months").}
+
+\item{quote_terms}{Logical. If \code{TRUE}, wraps search terms in quotes.}
+
+\item{format}{Character string. Output format (e.g., "json", "csv").}
+
+\item{dates}{Character vector of dates in YYYY-MM-DD format.}
+
+\item{maximum_records}{Integer. Maximum number of records to return.}
+
+\item{translate}{Logical. If \code{TRUE}, enables translation.}
+
+\item{timeline_smooth}{Integer. Smoothing factor for timeline data.}
+
+\item{sort_by}{Character string. Sort order for results.}
+
+\item{return_message}{Logical. If \code{TRUE}, prints progress messages to console.}
+}
+\value{
+A `tibble` of constructed V2 API URLs for the specified query parameters
 }
 \description{
 Creates data frame of gdeltv2 API queries.
+}
+\examples{
+\dontrun{
+v2_api_url_df()
+}
 }

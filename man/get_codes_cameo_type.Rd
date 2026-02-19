@@ -6,6 +6,9 @@
 \usage{
 get_codes_cameo_type()
 }
+\value{
+A `tibble` of CAMEO actor type codes and descriptions
+}
 \description{
 Retrieves GDELT CAMEO type code book
 }

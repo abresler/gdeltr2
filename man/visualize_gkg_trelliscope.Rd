@@ -18,6 +18,16 @@ visualize_gkg_trelliscope(
 )
 }
 \arguments{
+\item{data}{A \code{tibble} of data to process.}
+
+\item{domains}{Character vector of domain names to filter.}
+
+\item{random_domains}{Integer. Number of random domains to sample.}
+
+\item{only_pictures}{Logical. If \code{TRUE}, returns only picture-containing entries.}
+
+\item{extra_columns}{Character vector of additional columns to include.}
+
 \item{trelliscope_parameters}{\itemize{
 \item title: Trelliscope title
 \item rows: Trelliscope rows
@@ -41,6 +51,14 @@ visualize_gkg_trelliscope(
 \item 'xml
 }}
 }
+\value{
+A trelliscope visualization of GKG parsed data
+}
 \description{
 Trelliscope gkg data
+}
+\examples{
+\dontrun{
+visualize_gkg_trelliscope()
+}
 }

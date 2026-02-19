@@ -6,6 +6,9 @@
 \usage{
 get_urls_gkgtv_most_recent_log()
 }
+\value{
+A `tibble` of GKG TV log URLs with date metadata
+}
 \description{
 Gets most recent GKG TV log URLs
 }

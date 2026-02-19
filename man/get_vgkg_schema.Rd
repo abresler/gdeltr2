@@ -6,6 +6,14 @@
 \usage{
 get_vgkg_schema()
 }
+\value{
+A `tibble` of VGKG column names and descriptions
+}
 \description{
 get_vgkg_schema
+}
+\examples{
+\dontrun{
+get_vgkg_schema()
+}
 }

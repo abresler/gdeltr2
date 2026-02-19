@@ -4,14 +4,19 @@
 \alias{dictionary_gkg_tv_daily_summaries}
 \title{Gets Global Knowledge Graph TV Summary Files}
 \usage{
-dictionary_gkg_tv_daily_summaries(return_message = T)
+dictionary_gkg_tv_daily_summaries(return_message = TRUE)
 }
 \arguments{
-\item{return_message}{}
+\item{return_message}{Logical. If \code{TRUE}, prints progress messages to console.}
+
+\item{remove_count_files}{Logical. If \code{TRUE}, removes count files after processing.}
+}
+\value{
+A `tibble` of GKG TV daily summary URLs with date metadata
 }
 \description{
 Gets Global Knowledge Graph TV Summary Files
 }
 \examples{
-get_urls_gkg_daily_summaries(remove_count_files = T)
+get_urls_gkg_daily_summaries(remove_count_files = TRUE)
 }

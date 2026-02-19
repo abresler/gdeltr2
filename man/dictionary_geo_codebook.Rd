@@ -16,6 +16,9 @@ dictionary_geo_codebook(code_book = "adm")
 \item countries: country
 }}
 }
+\value{
+A `tibble` of codebook entries for the specified GDELT geo code type
+}
 \description{
 GDELT Geo API code book
 }

@@ -4,14 +4,19 @@
 \alias{dictionary_stability_locations}
 \title{Code book for instability locations}
 \usage{
-dictionary_stability_locations(snake_names = F)
+dictionary_stability_locations(snake_names = FALSE)
 }
 \arguments{
-\item{snake_names}{}
+\item{snake_names}{Logical. If \code{TRUE}, converts column names to snake_case.}
 }
 \value{
 a \code{tibble}
 }
 \description{
 Code book for instability locations
+}
+\examples{
+\dontrun{
+dictionary_stability_locations()
+}
 }

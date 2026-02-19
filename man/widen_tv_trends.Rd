@@ -9,6 +9,14 @@ widen_tv_trends(data)
 \arguments{
 \item{data}{`tibble`}
 }
+\value{
+A widened `tibble` of TV trend topics with numbered columns per station
+}
 \description{
 Widen TV Trend data
+}
+\examples{
+\dontrun{
+widen_tv_trends()
+}
 }

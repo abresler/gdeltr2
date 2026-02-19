@@ -98,6 +98,8 @@ default \code{NULL}}
 
 \item{maximum_records}{Number between 1 and 250}
 
+\item{translate}{Logical. If \code{TRUE}, enables translation.}
+
 \item{timeline_smooth}{if \code{mode} is a time-line}
 
 \item{sort_by}{sorting method \itemize{
@@ -110,8 +112,22 @@ default \code{NULL}}
 
 \item{rows}{rows of}
 
-\item{return_message}{}
+\item{columns}{Character vector of column names to include.}
+
+\item{id_columns}{Named list of column specifications for the trelliscope.}
+
+\item{group_columns}{Character vector of column names to group by.}
+
+\item{return_message}{Logical. If \code{TRUE}, prints progress messages to console.}
+}
+\value{
+A list of trelliscope visualization bundles for GDELT Full Text API data
 }
 \description{
 Generates a bundle of trelliscopes for publishing to the web
+}
+\examples{
+\dontrun{
+generate_trelliscope_bundle()
+}
 }

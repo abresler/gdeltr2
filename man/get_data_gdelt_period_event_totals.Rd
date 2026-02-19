@@ -6,8 +6,8 @@
 \usage{
 get_data_gdelt_period_event_totals(
   period = "yearly",
-  by_country = T,
-  return_message = T
+  by_country = TRUE,
+  return_message = TRUE
 )
 }
 \arguments{
@@ -18,9 +18,12 @@ can be \code{c(TRUE, FALSE)}}
 
 \item{return_message}{returns message}
 }
+\value{
+A `tibble` of GDELT event totals for the specified period
+}
 \description{
 Retrieves GDELT event summary by period
 }
 \examples{
-get_data_gdelt_period_event_totals(period = 'monthly', by_country = T)
+get_data_gdelt_period_event_totals(period = 'monthly', by_country = TRUE)
 }

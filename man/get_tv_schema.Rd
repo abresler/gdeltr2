@@ -6,6 +6,9 @@
 \usage{
 get_tv_schema()
 }
+\value{
+A `tibble` of GKG TV column names and descriptions
+}
 \description{
 Retrieves GKG TV Schema
 }

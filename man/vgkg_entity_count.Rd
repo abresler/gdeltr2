@@ -6,7 +6,15 @@
 \usage{
 vgkg_entity_count()
 }
+\value{
+A `tibble` with columns: typeEntity, midGoogle, countClassifications
+}
 \description{
 Counts classified entities from 2017
 to 2019
+}
+\examples{
+\dontrun{
+vgkg_entity_count()
+}
 }

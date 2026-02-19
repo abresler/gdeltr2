@@ -7,15 +7,27 @@
 parse_gkg_mentioned_event_counts(
   gdelt_data,
   count_column = "counts",
-  filter_na = T,
-  return_wide = T
+  filter_na = TRUE,
+  return_wide = TRUE
 )
 }
 \arguments{
+\item{gdelt_data}{A \code{tibble} of GDELT data to parse.}
+
 \item{count_column}{options \code{c('count', 'counts'))}}
 
-\item{return_wide}{}
+\item{filter_na}{Logical. If \code{TRUE}, removes rows with \code{NA} values.}
+
+\item{return_wide}{Logical. If \code{TRUE}, returns data in wide format; otherwise long format.}
+}
+\value{
+A `tibble` of parsed CAMEO event counts from GKG data
 }
 \description{
 Returns mentioned CAMEO event count from a gkg data frame
+}
+\examples{
+\dontrun{
+parse_gkg_mentioned_event_counts()
+}
 }

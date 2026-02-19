@@ -6,6 +6,9 @@
 \usage{
 get_schema_gkg_counts()
 }
+\value{
+A `tibble` of GKG count column names and descriptions
+}
 \description{
 Gets gkg count schema
 }

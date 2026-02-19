@@ -6,6 +6,9 @@
 \usage{
 get_schema_gkg_mentions()
 }
+\value{
+A `tibble` of GKG mention column names and descriptions
+}
 \description{
 Gets gkg mention schema
 }

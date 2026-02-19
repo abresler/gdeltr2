@@ -6,6 +6,14 @@
 \usage{
 get_urls_vgkg()
 }
+\value{
+A `tibble` of VGKG data URLs with datetime metadata
+}
 \description{
 get_urls_vgkg
+}
+\examples{
+\dontrun{
+get_urls_vgkg()
+}
 }

@@ -6,6 +6,9 @@
 \usage{
 get_codes_cameo_religion()
 }
+\value{
+A `tibble` of CAMEO religion codes and descriptions
+}
 \description{
 Retrives GDELT CAMEO religion code book
 }
