@@ -56,16 +56,16 @@ Parent-level conventions (devtools workflow, naming, dependencies) are in `r_pac
 - **`return_wide` parameter**: Parse functions accept `return_wide` to toggle between long and wide output formats
 - **Parallel execution**: Uses `furrr::future_map()` for parallel downloads when processing multiple dates/periods
 
-## GDELT API Base URLs
+## GDELT API Base URLs & Limits
 
-| Endpoint | Base URL |
-|----------|----------|
-| V2 bulk data | `http://data.gdeltproject.org/gdeltv2/` |
-| V1 events | `http://data.gdeltproject.org/events/` |
-| V2 API | `https://api.gdeltproject.org/api/v2/` |
-| TV API | `https://api.gdeltproject.org/api/v2/tv/tv` |
-| TV inventory | `http://data.gdeltproject.org/gdeltv3/iatv/inventory` |
-| Television legacy | `http://television.gdeltproject.org/cgi-bin/iatv_ftxtsearch/` |
+| Endpoint | Base URL | Notes |
+|----------|----------|-------|
+| V2 bulk data | `http://data.gdeltproject.org/gdeltv2/` | |
+| V1 events | `http://data.gdeltproject.org/events/` | |
+| V2 API | `https://api.gdeltproject.org/api/v2/` | **250 result max per query; actual data coverage ~45 days back despite `timespan="1 year"` or `"365 days"` params** |
+| TV API | `https://api.gdeltproject.org/api/v2/tv/tv` | |
+| TV inventory | `http://data.gdeltproject.org/gdeltv3/iatv/inventory` | |
+| Television legacy | `http://television.gdeltproject.org/cgi-bin/iatv_ftxtsearch/` | |
 
 ## Modernization Status (2026-02-19)
 
@@ -85,11 +85,13 @@ Parent-level conventions (devtools workflow, naming, dependencies) are in `r_pac
 - Added curl connection pooling infrastructure (.get_curl_handle, .gdelt_curl_pool)
 
 **Phase 4 (Complete)**: Critical bug fixes in ft_v2_api pipeline.
-- Fixed missing use_parallel/workers param forwarding from ft_v2_api to .query_gdelt_ft_v2_api
+- Fixed missing use_parallel/workers param forwarding from ft_v2_api to .query_gdelt_ft_v2_api (Commits 9142594, a2429e1)
 - Fixed vector if-condition in .parse_json_api_2 (`==` to `%in%` for data_names check)
+- Fixed ft_v1_api join error when API returns empty results (guard on nrow/column existence before left_join)
 - Fixed sourcelang URL encoding, curl/httr/jsonlite namespace prefixes
 - Fixed .parse_timespan() native pipe compatibility, colMeans/flatten_df deprecations
-- All ft_v2_api modes verified working: ArtList, TimelineVol, TimelineTone, TimelineSourceCountry, ToneChart
+- All ft_v2_api modes verified working: ArtList (25-250 rows), TimelineVol (155 rows), TimelineTone, TimelineSourceCountry, ToneChart (31 rows)
+- **CRITICAL FOOTGUN**: `possibly(fn, tibble())` pattern silently swallows errors (including mismatched function args), returning empty tibble with 0 columns. Downstream code assuming column existence then fails with confusing "Join columns in `y` must be present" errors. Used extensively; future devs should add defensive checks or debug with `fn()` unwrapped when joining empty results.
 
 ## Missing V3 Data Stores (Not Yet Implemented)
 
@@ -98,7 +100,7 @@ Parent-level conventions (devtools workflow, naming, dependencies) are in `r_pac
 | Global Difference Graph (GDG) | `gdeltv3/gdg/` | News article deletions, URL redirects, title/text changes |
 | Global Geographic Graph (GGG) | `gdeltv3/ggg/` | 1.6B+ location mentions with 600-char context snippets |
 | Global Embedded Metadata Graph (GEMG) | `gdeltv3/gemg/` | HTML META tags and JSON-LD structured data from articles |
-| GDELT Article List (GAL) | `gdeltv3/gal/` | Standardized article metadata with RSS feed |
+| GDELT Article List (GAL) | `gdeltv3/gal/` | Standardized article metadata. **RSS feed only (real-time ~1 min window); no timestamped file downloads** (MASTERFILELIST.TXT, LASTUPDATE.TXT, YYYYMMDDHHMMSS.gal.json.gz all return 404). Accessible via BigQuery (`gdelt-bq.gdeltv2.gal`) or real-time RSS feed. |
 | Web NGrams 3.0 (JSONNL) | `gdeltv3/webngrams/` | Per-ngram provenance, 152 languages (newer format than current) |
 | Visual Global Entity Graph v2 (VGEG) | `gdeltv3/iatv/vgeg/` | Google Cloud Video AI on TV news (vgkg.R only has static 2019 CSVs) |
 
@@ -106,7 +108,7 @@ Also missing: Summary API (`api/v2/summary/summary`), Thematic Word Cloud Dashbo
 
 Key remaining items:
 - Fix remaining ~200 suppressWarnings in gdelt_event_gkg.R GKG field parsers (case-by-case separate() fixes)
-- Fix known bugs (ft_v1_api_urls domain variable, .parse_v1_url_parameters no-op)
+- Fix known bugs (ft_v1_api_urls domain variable, .parse_v1_url_parameters no-op, V1 API's limited ~48hr rolling window)
 - Wire .safe_http_get into more functions beyond core API readers
 - Add testthat test suite
-- Implement missing V3 data stores (GDG, GGG, GEMG, GAL, WebNgrams 3.0, VGEG v2)
+- Implement missing V3 data stores (GDG, GGG, GEMG, GAL file downloads [RSS only for now], WebNgrams 3.0, VGEG v2)
