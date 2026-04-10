@@ -3674,9 +3674,14 @@ dictionary_ft_codebook <-
   function(url = "http://api.gdeltproject.org/api/v2/doc/doc?query=domain:netsdaily.com&timespan=1m&maxrecords=250&format=json") {
     tryCatch({
       httr::set_config(httr::config(ssl_verifypeer = 0L))
-      res <-
-        httr::GET(url) |>
-        httr::content(as = "text")
+      resp <- .safe_http_get(url, max_retries = 3L, backoff_base = 5, timeout_seconds = 30)
+
+      if (is.null(resp)) {
+        cli::cli_alert_warning("No response for {.url {url}}")
+        return(tibble())
+      }
+
+      res <- httr::content(resp, as = "text", encoding = "UTF-8")
 
       data <-
         res |>

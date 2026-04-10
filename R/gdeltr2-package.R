@@ -152,14 +152,22 @@
       if (status < 400) {
         return(resp)
       }
+      if (status == 429 && attempt < max_retries) {
+        wait_time <- max(5, backoff_base * (2 ^ (attempt - 1)))
+        cli::cli_alert_warning("Rate limited (429), retrying in {wait_time}s (attempt {attempt}/{max_retries})")
+        Sys.sleep(wait_time)
+        next
+      }
       if (status >= 500 && attempt < max_retries) {
         wait_time <- backoff_base * (2 ^ (attempt - 1))
         cli::cli_alert_warning("Server error {status}, retrying in {wait_time}s (attempt {attempt}/{max_retries})")
         Sys.sleep(wait_time)
         next
       }
-      cli::cli_alert_danger("HTTP {status} for {url}")
-      return(NULL)
+      if (status >= 400) {
+        cli::cli_alert_danger("HTTP {status} for {url}")
+        return(NULL)
+      }
     }
 
     if (attempt < max_retries) {
