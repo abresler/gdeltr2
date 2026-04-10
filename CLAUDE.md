@@ -93,6 +93,13 @@ Parent-level conventions (devtools workflow, naming, dependencies) are in `r_pac
 - All ft_v2_api modes verified working: ArtList (25-250 rows), TimelineVol (155 rows), TimelineTone, TimelineSourceCountry, ToneChart (31 rows)
 - **CRITICAL FOOTGUN**: `possibly(fn, tibble())` pattern silently swallows errors (including mismatched function args), returning empty tibble with 0 columns. Downstream code assuming column existence then fails with confusing "Join columns in `y` must be present" errors. Used extensively; future devs should add defensive checks or debug with `fn()` unwrapped when joining empty results.
 
+**Phase 5 (Complete, 2026-04-09)**: Rate limit handling + HTTP reliability.
+- `.safe_http_get`: Added 429 rate limit retry with 5s minimum exponential backoff (was only retrying 5xx)
+- `.parse_json_api_2`: Replaced raw `httr::GET()` with `.safe_http_get()` — was the ONLY function bypassing retry infrastructure, causing silent empty results on any rate limit or transient error
+- `instability_api_locations`: V1 endpoint (`/api/v1/dash_stabilitytimeline/`) returns 404 — **decommissioned by GDELT upstream**. Function is dead until GDELT provides replacement or we implement V2/V3 equivalent.
+- `v3_entity_api`: Works correctly but takes `start_date`/`end_date` (bulk download), NOT a search `term` parameter. GdeltBrief skill incorrectly documents `v3_entity_api(term = 'X')`.
+- Verified working after fix: `ft_v2_api` (ArtList: 10 rows, TimelineVol: 247 rows, TimelineTone: 247 rows), `v2_tv_api` (ClipGallery: 5 rows)
+
 ## Missing V3 Data Stores (Not Yet Implemented)
 
 | Dataset | Path | Description |
@@ -109,6 +116,6 @@ Also missing: Summary API (`api/v2/summary/summary`), Thematic Word Cloud Dashbo
 Key remaining items:
 - Fix remaining ~200 suppressWarnings in gdelt_event_gkg.R GKG field parsers (case-by-case separate() fixes)
 - Fix known bugs (ft_v1_api_urls domain variable, .parse_v1_url_parameters no-op, V1 API's limited ~48hr rolling window)
-- Wire .safe_http_get into more functions beyond core API readers
+- Replace or remove `instability_api_locations` — V1 endpoint is 404 (decommissioned by GDELT)
 - Add testthat test suite
 - Implement missing V3 data stores (GDG, GGG, GEMG, GAL file downloads [RSS only for now], WebNgrams 3.0, VGEG v2)
