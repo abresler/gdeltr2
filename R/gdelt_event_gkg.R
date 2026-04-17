@@ -4401,8 +4401,7 @@ get_data_gkg_days_detailed <-
 
   var_matrix <-
     expand.grid(date = dates,
-                table_name = table_name,
-                stringsAsFactors = FALSE) |>
+                table_name = table_name) |>
     as_tibble()
 
   all_data <-
@@ -4587,8 +4586,7 @@ get_data_gkg_days_summary <- function(dates = c("2016-06-01"),
   var_matrix <-
     expand.grid(
       date = dates,
-      is_count_file = is_count_file,
-      stringsAsFactors = FALSE
+      is_count_file = is_count_file
     ) |>
     as_tibble() |>
     suppressWarnings()

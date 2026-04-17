@@ -271,7 +271,7 @@
            sort_by = 'date',
            use_google_translate = TRUE) {
     tbl_terms <-
-      expand.grid(term = terms, stringsAsFactors = FALSE) |> as_tibble()
+      expand.grid(term = terms) |> as_tibble()
 
     all_data <-
       seq_along(terms) |>
@@ -345,7 +345,7 @@
   sort_by = 'date',
   use_google_translate = TRUE) {
     tbl_domains <-
-      expand.grid(domain = domains, stringsAsFactors = FALSE) |> as_tibble()
+      expand.grid(domain = domains) |> as_tibble()
 
     all_data <-
       seq_along(domains) |>

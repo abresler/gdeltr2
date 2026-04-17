@@ -601,8 +601,7 @@ v2_tv_api <-
         expand.grid(
           term = terms,
           mode = modes,
-          format = formats,
-          stringsAsFactors = FALSE
+          format = formats
         ) |> as_tibble()
 
       all_data <-

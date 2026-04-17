@@ -380,8 +380,7 @@ instability_api_locations <-
         variable_name = variable_names,
         day_moving_average = days_moving_average,
         time_period = time_periods,
-        use_multi_locations = use_multi_locations,
-        stringsAsFactors = FALSE
+        use_multi_locations = use_multi_locations
       ) |>
       as_tibble()
 
@@ -4858,8 +4857,7 @@ v2_api_url_df <-
       source_language = source_language,
       gkg_theme = gkg_theme,
       image_web_count = image_web_count,
-      source_country = source_country,
-      stringsAsFactors = FALSE
+      source_country = source_country
     ) |>
       as_tibble()
     all_data <-
