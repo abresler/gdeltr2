@@ -6299,7 +6299,7 @@ date_columns_to_numeric <-
     mutate_cols <-
       data |>
       dplyr::select(dplyr::matches(column_keyword)) |>
-      dplyr::select(-one_of(exclude_cols)) |> names()
+      dplyr::select(-any_of(exclude_cols)) |> names()
 
     data <-
       data |>
@@ -6445,7 +6445,7 @@ visualize_vgkg_trelliscope <-
     if (!extra_columns |> is_null()) {
       df_extra <-
         data |>
-        dplyr::select(idVGKG, one_of(extra_columns))
+        dplyr::select(idVGKG, any_of(extra_columns))
     }
     has_domains <-
       !domains |> is_null() |
@@ -7009,7 +7009,7 @@ visualize_gkg_trelliscope <-
       plot_data <-
         plot_data |>
         left_join(
-          data |> dplyr::select(one_of(c('idGKG', extra_columns)))
+          data |> dplyr::select(any_of(c('idGKG', extra_columns)))
         ) |>
         suppressMessages()
     }

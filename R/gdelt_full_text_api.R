@@ -895,10 +895,10 @@ ft_geo_query <-
       columns <- id_columns$columns
       is_except <- id_columns$is_except
       if (is_except) {
-        name_columns <- data |> dplyr::select(-one_of(columns)) |> names()
+        name_columns <- data |> dplyr::select(-any_of(columns)) |> names()
       } else {
         name_columns <-
-          data |> dplyr::select(one_of(columns)) |> names()
+          data |> dplyr::select(any_of(columns)) |> names()
       }
       column_id_names <-
         column_id_names |> append(name_columns)
@@ -1110,7 +1110,7 @@ ft_geo_query <-
     if (!remove_columns |> is_null()) {
       data <-
         data |>
-        dplyr::select(-one_of(remove_columns)) |>
+        dplyr::select(-any_of(remove_columns)) |>
         suppressWarnings()
     }
 
@@ -1146,7 +1146,7 @@ ft_geo_query <-
         columns <-
           df_group$column
         nest_columns <-
-          data |> dplyr::select(one_of(columns)) |> names()
+          data |> dplyr::select(any_of(columns)) |> names()
 
         nest_names <-
           nest_names |> append(nest_columns)
@@ -1282,7 +1282,7 @@ plot_wc_trelliscope <-
   function(data) {
     gather_cols <-
       data |>
-      dplyr::select(-one_of(c("modeSearch", "periodtimeSearch"))) |>
+      dplyr::select(-any_of(c("modeSearch", "periodtimeSearch"))) |>
       dplyr::select(dplyr::matches("Search")) |> names()
 
     df_keys <-
@@ -1316,7 +1316,7 @@ plot_wc_trelliscope <-
     data <-
       data |>
       dplyr::mutate(typeChart = search_mode) |>
-      dplyr::select(-one_of(c(
+      dplyr::select(-any_of(c(
         'countMaximumRecords', 'urlGDELTV2FTAPI', 'isOR'
       ))) |>
       suppressMessages() |>
@@ -1825,10 +1825,10 @@ generate_dates <-
       columns <- id_columns$columns
       is_except <- id_columns$is_except
       if (is_except) {
-        name_columns <- data |> dplyr::select(-one_of(columns)) |> names()
+        name_columns <- data |> dplyr::select(-any_of(columns)) |> names()
       } else {
         name_columns <-
-          data |> dplyr::select(one_of(columns)) |> names()
+          data |> dplyr::select(any_of(columns)) |> names()
       }
       column_id_names <-
         column_id_names |> append(name_columns)
@@ -2007,7 +2007,7 @@ generate_dates <-
         names(df)[!names(df) %in% col_order])
 
     df |>
-      dplyr::select(one_of(columns))
+      dplyr::select(any_of(columns))
   }
 
 # wordcloud ---------------------------------------------------------------
@@ -2078,7 +2078,7 @@ generate_dates <-
     if (!remove_columns |> is_null()) {
       data <-
         data |>
-        dplyr::select(-dplyr::one_of(remove_columns)) |>
+        dplyr::select(-dplyr::any_of(remove_columns)) |>
         suppressWarnings()
     }
 
@@ -2114,7 +2114,7 @@ generate_dates <-
         columns <-
           df_group$column
         nest_columns <-
-          data |> dplyr::select(one_of(columns)) |> names()
+          data |> dplyr::select(any_of(columns)) |> names()
 
         nest_names <-
           nest_names |> append(nest_columns)
@@ -2304,7 +2304,7 @@ plot_panel_trelliscope <-
 
     data <-
       data |>
-      dplyr::select(-one_of('idPanel'))
+      dplyr::select(-any_of('idPanel'))
 
     data <-
       data |>
@@ -2774,7 +2774,7 @@ codebook_trelliscope <-
   function(data) {
     gather_cols <-
       data |>
-      dplyr::select(-one_of(c("modeSearch", "periodtimeSearch"))) |>
+      dplyr::select(-any_of(c("modeSearch", "periodtimeSearch"))) |>
       dplyr::select(dplyr::matches("Search")) |> names()
 
     df_keys <-
@@ -2816,7 +2816,7 @@ codebook_trelliscope <-
     data <-
       data |>
       dplyr::mutate(typeChart = search_mode) |>
-      dplyr::select(-one_of(c(
+      dplyr::select(-any_of(c(
         'countMaximumRecords', 'urlGDELTV2FTAPI', 'isOR'
       ))) |>
       suppressMessages() |>
@@ -4155,7 +4155,7 @@ dictionary_ft_codebook <-
 
     all_url_df <-
       all_url_df |>
-      dplyr::select(one_of(search_params), everything())
+      dplyr::select(any_of(search_params), everything())
     .parse_v2_urls_safe <-
       possibly(.parse_v2_urls, tibble())
 
@@ -4386,6 +4386,16 @@ ft_v2_api <-
         return(tibble())
       })
 
+    # Empty result = rate-limit or no matches. Exit BEFORE the visualization
+    # path: running trelliscope prep on an empty tibble emits misleading
+    # secondary errors (missing modeSearch/isOR columns) that mask the root cause.
+    if (nrow(all_data) == 0) {
+      cli::cli_alert_warning(
+        "GDELT returned no data (rate-limited 429 or zero matches) — returning empty tibble"
+      )
+      return(invisible(all_data))
+    }
+
     if (all_data |> has_name("datetimeArticle")) {
       all_data <-
         all_data |>
@@ -4406,7 +4416,7 @@ ft_v2_api <-
 
     all_data <-
       all_data |>
-      dplyr::select(-one_of(c("isOR", "countMaximumRecords")))
+      dplyr::select(-any_of(c("isOR", "countMaximumRecords")))
 
     all_data |>
       plot_trelliscopes(trelliscope_parameters = trelliscope_parameters)

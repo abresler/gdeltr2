@@ -27,7 +27,7 @@ widen_gdelt_url_api_parameters <-
       cli::cli_alert_warning("Enter Widen Variables")
       return(data)
     }
-    key_cols <- data |> select(-one_of(url_gdelt)) |> names()
+    key_cols <- data |> select(-any_of(url_gdelt)) |> names()
     unite_columns <- c("url_type", widen_variables)
     data <-
       data |> pivot_longer(cols = url_gdelt,

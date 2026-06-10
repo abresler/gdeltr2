@@ -154,6 +154,11 @@
       }
       if (status == 429 && attempt < max_retries) {
         wait_time <- max(5, backoff_base * (2 ^ (attempt - 1)))
+        # GDELT free tier is a shared global quota; honor Retry-After when sent (capped at 120s)
+        retry_after <- suppressWarnings(as.numeric(httr::headers(resp)[["retry-after"]]))
+        if (length(retry_after) == 1 && !is.na(retry_after)) {
+          wait_time <- max(wait_time, min(retry_after, 120))
+        }
         cli::cli_alert_warning("Rate limited (429), retrying in {wait_time}s (attempt {attempt}/{max_retries})")
         Sys.sleep(wait_time)
         next
