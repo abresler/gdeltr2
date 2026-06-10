@@ -119,6 +119,42 @@
   invisible(.x)
 }
 
+# --- GDELT Cross-Process Serialization ---
+
+#' Best-effort cross-process lock for GDELT API calls
+#'
+#' The GDELT free tier is one SHARED GLOBAL quota; concurrent calls from
+#' parallel R processes (e.g. parallel agents each running Rscript) burst the
+#' quota and 429 the whole machine. This lock serializes GDELT requests across
+#' processes via a /tmp lockfile. FAIL-OPEN by design: a stale lock (>120s) is
+#' broken, and a waiter gives up after timeout_seconds rather than deadlocking —
+#' best-effort burst prevention, never a hard mutex.
+#'
+#' @param timeout_seconds Numeric. Max seconds to wait before proceeding anyway.
+#' @param stale_seconds Numeric. Lock age after which it is considered stale.
+#' @return Path to the lock file (caller must unlink on exit).
+#' @keywords internal
+.acquire_gdelt_lock <- function(timeout_seconds = 90, stale_seconds = 120) {
+  lock <- "/tmp/gdeltr2-api.lock"
+  t0 <- Sys.time()
+  repeat {
+    if (!file.exists(lock)) break
+    age <- suppressWarnings(
+      as.numeric(difftime(Sys.time(), file.mtime(lock), units = "secs"))
+    )
+    if (is.na(age) || age > stale_seconds) {
+      unlink(lock)
+      break
+    }
+    if (as.numeric(difftime(Sys.time(), t0, units = "secs")) > timeout_seconds) {
+      break  # fail-open: proceed rather than deadlock
+    }
+    Sys.sleep(0.5)
+  }
+  try(writeLines(as.character(Sys.getpid()), lock), silent = TRUE)
+  lock
+}
+
 # --- HTTP Retry Infrastructure ---
 
 #' Safe HTTP GET with retry logic
@@ -136,6 +172,12 @@
   if (!is.character(url) || nchar(url) == 0) {
     cli::cli_alert_danger("Invalid URL provided")
     return(NULL)
+  }
+
+  # Serialize GDELT API calls across processes (shared global quota; fail-open)
+  if (grepl("gdeltproject\\.org", url)) {
+    gdelt_lock <- .acquire_gdelt_lock()
+    on.exit(unlink(gdelt_lock), add = TRUE)
   }
 
   for (attempt in seq_len(max_retries)) {
