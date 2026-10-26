@@ -44,5 +44,7 @@ Imports:
     parallel
 Suggests:
     bigrquery,
-    callr
+    callr,
+    testthat (>= 3.0.0)
 RoxygenNote: 7.3.3
+Config/testthat/edition: 3
